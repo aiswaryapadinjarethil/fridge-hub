@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -984,22 +984,27 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
   function stopTimerFlash(){ $("timerDisplay").classList.remove("done"); }
   function timerDone(){ pauseTimer(); timerRemaining=0; renderTimer(); $("timerDisplay").classList.add("done"); $("timerMsg").textContent="⏰ Time's up!"; beepAlarm(); toast("⏰ Time's up!"); }
   function beepAlarm(){
+    // vibrate as fallback on mobile
+    if(navigator.vibrate) navigator.vibrate([400,200,400,200,400,200,400,200,400]);
     try {
       const ctx = new (window.AudioContext||window.webkitAudioContext)();
-      let start = ctx.currentTime;
-      function beep(i){
-        if(i>=12){ setTimeout(()=>ctx.close(),200); return; }
-        const osc=ctx.createOscillator(), gain=ctx.createGain();
-        osc.type="sine"; osc.frequency.value=i%2===0?880:1046;
-        gain.gain.setValueAtTime(0.0001,start);
-        gain.gain.exponentialRampToValueAtTime(0.7,start+0.02);
-        gain.gain.exponentialRampToValueAtTime(0.0001,start+0.35);
-        osc.connect(gain); gain.connect(ctx.destination);
-        osc.start(start); osc.stop(start+0.37);
-        start+=0.42;
-        setTimeout(()=>beep(i+1), 420);
-      }
-      beep(0);
+      const resume = ctx.state==="suspended" ? ctx.resume() : Promise.resolve();
+      resume.then(()=>{
+        let count=0;
+        function beep(){
+          if(count>=12){ setTimeout(()=>ctx.close(),500); return; }
+          const osc=ctx.createOscillator(), gain=ctx.createGain();
+          osc.type="sine"; osc.frequency.value=count%2===0?880:1046;
+          const t=ctx.currentTime;
+          gain.gain.setValueAtTime(0.0001,t);
+          gain.gain.exponentialRampToValueAtTime(0.8,t+0.02);
+          gain.gain.exponentialRampToValueAtTime(0.0001,t+0.35);
+          osc.connect(gain); gain.connect(ctx.destination);
+          osc.start(t); osc.stop(t+0.37);
+          count++; setTimeout(beep,420);
+        }
+        beep();
+      });
     } catch(e){ console.warn("beepAlarm failed",e); }
   }
   function toggleTimer(){ if(timerRunning) pauseTimer(); else startTimer(); }
