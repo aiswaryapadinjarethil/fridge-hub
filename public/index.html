@@ -1,4 +1,4 @@
-﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -1004,166 +1004,16 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
   // ---------- HA ----------
   function haURL(){ return (load(LS.ha,DEFAULT_HA_URL)||DEFAULT_HA_URL).replace(/\/$/,""); }
   function haToken(){ return load(LS.haToken,"")||""; }
-  function haHeaders(){ return { "Authorization":"Bearer "+haToken(), "Content-Type":"application/json" }; }
-  function isOn(state){ return /^(on|open|home|playing|true)$/i.test(String(state||"")); }
-  function safeHAName(c){ return esc(c.name||c.entity||"Control"); }
-  function setHAStatus(msg,kind){ const el=$("haStatus"); if(!el) return; el.textContent=msg; el.className="ha-status"+(kind?" "+kind:""); }
-  function actionFor(control){
-    const domain=(control.entity||"").split(".")[0]||"";
-    if(control.action==="toggle") return {domain,service:"toggle"};
-    if(control.action==="on") return {domain,service:"turn_on"};
-    if(control.action==="off") return {domain,service:"turn_off"};
-    return {domain,service:(domain==="scene"||domain==="script")?"turn_on":"toggle"};
-  }
-  function defaultHAControls(){
-    return [
-      { id:uid(), name:"Hej hej — all lights off", icon:"👋", entity:"scene.hej_hej", action:"auto" },
-      { id:uid(), name:"Theatre lights", icon:"🎬", entity:"light.theatre", action:"toggle" },
-      { id:uid(), name:"Bedroom lights", icon:"🛏️", entity:"light.bedroom", action:"toggle" }
-    ];
-  }
-  async function testHA(){
-    setHAStatus("Testing…","");
-    if(!haToken()){ setHAStatus("Add a token first, then Save.","err"); return; }
-    try {
-      const r=await fetch(haURL()+"/api/", { headers: haHeaders() });
-      if(!r.ok) throw new Error("HTTP "+r.status);
-      setHAStatus("✓ Connected to Home Assistant.","ok");
-      refreshHAStates();
-    } catch(e){
-      setHAStatus("Couldn't connect. Check URL/token, or add CORS below.","err");
-    }
-  }
-  function saveHA(){
-    let url=$("haUrl").value.trim()||DEFAULT_HA_URL;
-    if(!/^https?:\/\//i.test(url)) url="https://"+url;
-    url=url.replace(/\/$/,"");
-    save(LS.ha,url);
-    save(LS.haToken,$("haToken").value.trim());
-    setHAStatus("Settings saved on this phone only.","ok");
-    renderHAControls();
-    renderHomeControls();
-  }
-  function openHA(){ window.open(haURL(),"_blank","noopener"); }
-  async function runHAControl(id){
-    const c=haControls.find(x=>x.id===id); if(!c) return;
-    if(!haToken()){ toast("Add your HA token on the Smart tab"); goToPage(3); return; }
-    if(!c.entity || c.entity.indexOf(".")<0){ toast("Set an entity ID for this control first"); openHAControl(id); return; }
-    const {domain,service}=actionFor(c);
-    c._state="Running…"; renderHAControls();
-    try {
-      const r=await fetch(haURL()+"/api/services/"+encodeURIComponent(domain)+"/"+encodeURIComponent(service), {
-        method:"POST", headers:haHeaders(), body:JSON.stringify({entity_id:c.entity})
-      });
-      if(!r.ok) throw new Error("HTTP "+r.status);
-      toast(c.icon+" "+c.name+" done");
-      c._error=false;
-      setTimeout(refreshHAStates,700);
-    } catch(e){
-      c._state="Error"; c._error=true; renderHAControls();
-      toast("Couldn't reach Home Assistant"); goToPage(3);
-    }
-  }
-  async function refreshHAStates(){
-    if(!haToken() || !haControls.length) return;
-    let anyOk=false;
-    await Promise.all(haControls.map(async c=>{
-      if(!c.entity || c.entity.indexOf(".")<0){ c._state="Set entity"; c._error=true; return; }
-      try {
-        const r=await fetch(haURL()+"/api/states/"+encodeURIComponent(c.entity), { headers:haHeaders() });
-        if(!r.ok) throw new Error();
-        const j=await r.json();
-        c._state=j.state; c._error=false; anyOk=true;
-      } catch(e){ c._state="Unavailable"; c._error=true; }
-    }));
-    renderHAControls();
-    renderHomeControls();
-    if(anyOk) setHAStatus("✓ States refreshed.","ok");
-    else setHAStatus("Couldn't refresh states. Check URL/token/CORS.","err");
-  }
-  function renderHA(){
-    if(!haControls.length){ haControls=load(LS.haControls,null) || defaultHAControls(); save(LS.haControls,haControls); }
-    $("haUrl").value=haURL();
-    $("haToken").value=haToken();
-    setHAStatus(haToken()?"":"Paste your long-lived access token, then Save.","");
-    renderHAControls();
-    renderHomeControls();
-  }
-  function renderHAControls(){
-    const wrap=$("haControls"); if(!wrap) return;
-    wrap.innerHTML="";
-    if(!haControls.length){ wrap.innerHTML='<div class="empty" style="grid-column:1/-1">No controls yet — add one below.</div>'; return; }
-    haControls.forEach(c=>{
-      const state=c._state||"Not refreshed", stateClass=c._error?"err":(isOn(state)?"on":"");
-      const card=document.createElement("div");
-      card.setAttribute("role","button"); card.tabIndex=0;
-      card.className="ha-control-card "+(isOn(state)?"on":"");
-      card.innerHTML='<span class="ha-icon">'+esc(c.icon||"💡")+'</span><span class="ha-name">'+safeHAName(c)+'</span><span class="ha-entity">'+esc(c.entity||"Set entity ID")+'</span><span class="ha-state '+stateClass+'">'+esc(state)+'</span><span class="ha-card-tools"><button data-edit="1" title="Edit">✎</button><button data-del="1" title="Delete">✕</button></span>';
-      const activate=e=>{
-        if(e && e.target && e.target.closest && e.target.closest("[data-edit]")){ e.stopPropagation(); openHAControl(c.id); return; }
-        if(e && e.target && e.target.closest && e.target.closest("[data-del]")){ e.stopPropagation(); deleteHAControl(c.id); return; }
-        runHAControl(c.id);
-      };
-      card.onclick=activate;
-      card.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); activate(e); } };
-      wrap.appendChild(card);
+  function haFetch(path, opts){
+    const base = '/api/ha-proxy?path='+encodeURIComponent(path);
+    const headers = Object.assign({}, (opts&&opts.headers)||{}, {
+      'Authorization': 'Bearer '+haToken(),
+      'Content-Type': 'application/json',
+      'X-HA-URL': haURL()
     });
+    return fetch(base, Object.assign({}, opts, { headers }));
   }
-  function renderHomeControls(){
-    const wrap=$("homeHAGrid"); if(!wrap) return;
-    wrap.innerHTML="";
-    if(!haToken()){
-      wrap.innerHTML='<div class="page-sub" style="grid-column:1/-1;text-align:center;">Tap above to connect Home Assistant</div>';
-      return;
-    }
-    haControls.slice(0,3).forEach(c=>{
-      const state=c._state||"", on=isOn(state);
-      const card=document.createElement("div");
-      card.className="ha-home-card"+(on?" on":"");
-      card.setAttribute("role","button"); card.tabIndex=0;
-      card.innerHTML='<span class="em">'+esc(c.icon||"💡")+'</span><span class="ha-name">'+safeHAName(c)+'</span>';
-      card.onclick=()=>runHAControl(c.id);
-      card.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); runHAControl(c.id); } };
-      wrap.appendChild(card);
-    });
-  }
-  function openHAControl(id){
-    editingHAControlId=id||null;
-    const c=id?haControls.find(x=>x.id===id):null;
-    $("haControlTitle").textContent=id?"Edit control":"Add control";
-    $("haCName").value=c?c.name:"";
-    $("haCIcon").value=c?c.icon:"💡";
-    $("haCEntity").value=c?c.entity:"";
-    $("haCAction").value=c?c.action:"toggle";
-    $("haControlDelete").style.display=id?"":"none";
-    $("haControlModal").classList.add("show");
-    setTimeout(()=>$("haCName").focus(),50);
-  }
-  function closeHAControl(){ $("haControlModal").classList.remove("show"); editingHAControlId=null; }
-  function saveHAControl(){
-    const name=$("haCName").value.trim(); if(!name){ toast("Enter a name"); return; }
-    const icon=$("haCIcon").value.trim()||"💡";
-    const entity=$("haCEntity").value.trim();
-    const action=$("haCAction").value;
-    if(editingHAControlId){
-      const c=haControls.find(x=>x.id===editingHAControlId);
-      Object.assign(c,{name,icon,entity,action});
-    } else {
-      haControls.push({id:uid(),name,icon,entity,action});
-    }
-    save(LS.haControls,haControls);
-    closeHAControl();
-    renderHAControls(); renderHomeControls();
-    toast("Control saved");
-  }
-  function deleteHAControl(id){
-    if(!window.confirm("Delete this control?")) return;
-    haControls=haControls.filter(x=>x.id!==id);
-    save(LS.haControls,haControls);
-    closeHAControl();
-    renderHAControls(); renderHomeControls();
-  }
-
+  function haHeaders(){ return { "Authorization":"Bearer "+haToken(), "Content-Type":"application/json", "X-HA-URL":haURL() }; }
   function populateCats(){
     const fc=$("fCat"), flt=$("filterCat");
     Object.keys(CATS).forEach(c=>{
