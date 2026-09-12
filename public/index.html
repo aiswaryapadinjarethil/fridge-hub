@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -985,10 +985,22 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
   function timerDone(){ pauseTimer(); timerRemaining=0; renderTimer(); $("timerDisplay").classList.add("done"); $("timerMsg").textContent="⏰ Time's up!"; beepAlarm(); toast("⏰ Time's up!"); }
   function beepAlarm(){
     try {
-      audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
-      const ctx=audioCtx; let start=ctx.currentTime;
-      for(let i=0;i<12;i++){ const osc=ctx.createOscillator(), gain=ctx.createGain(); osc.type="sine"; osc.frequency.value= i%2===0?880:1046; gain.gain.setValueAtTime(0.0001,start); gain.gain.exponentialRampToValueAtTime(0.6,start+0.02); gain.gain.exponentialRampToValueAtTime(0.0001,start+0.35); osc.connect(gain); gain.connect(ctx.destination); osc.start(start); osc.stop(start+0.37); start+=0.42; }
-    } catch(e){}
+      const ctx = new (window.AudioContext||window.webkitAudioContext)();
+      let start = ctx.currentTime;
+      function beep(i){
+        if(i>=12){ setTimeout(()=>ctx.close(),200); return; }
+        const osc=ctx.createOscillator(), gain=ctx.createGain();
+        osc.type="sine"; osc.frequency.value=i%2===0?880:1046;
+        gain.gain.setValueAtTime(0.0001,start);
+        gain.gain.exponentialRampToValueAtTime(0.7,start+0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001,start+0.35);
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.start(start); osc.stop(start+0.37);
+        start+=0.42;
+        setTimeout(()=>beep(i+1), 420);
+      }
+      beep(0);
+    } catch(e){ console.warn("beepAlarm failed",e); }
   }
   function toggleTimer(){ if(timerRunning) pauseTimer(); else startTimer(); }
   function buildPresets(){ const wrap=$("timerPresets"); [1,3,5,10,15,30].forEach(m=>{ const b=document.createElement("button"); b.className="preset-btn"; b.dataset.sec=m*60; b.textContent=m+"m"; b.onclick=()=>setTimer(m*60); wrap.appendChild(b); }); }
