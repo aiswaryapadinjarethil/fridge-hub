@@ -275,17 +275,21 @@
   .mode-toggle { display: flex; background: var(--panel-2); border-radius: 12px; padding: 4px; gap: 4px; margin: 10px 14px 0; }
   .mode-toggle button { flex: 1; background: transparent; color: var(--muted); padding: 11px 8px; min-height: 46px; font-weight: 700; border-radius: 9px; font-size: 14px; }
   .mode-toggle button.active { background: var(--accent); color: #06120f; }
-  .cam-body { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .cam-body { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
   .cam-stage { position: relative; width: 100%; max-width: 500px; aspect-ratio: 3/4; background: #000; border-radius: 16px; overflow: hidden; border: 1px solid #333; }
   .cam-stage video { width: 100%; height: 100%; object-fit: cover; display: block; }
   .cam-stage canvas { display: none; }
-  .scan-line { position: absolute; left: 8%; right: 8%; top: 50%; height: 3px; background: var(--accent); box-shadow: 0 0 14px var(--accent); animation: scan 2s ease-in-out infinite; }
-  @keyframes scan { 0%,100% { top: 25%; } 50% { top: 75%; } }
-  .cam-hint { color: var(--muted); font-size: 14px; text-align: center; }
-  .cam-error { background: var(--danger-bg); border: 1px solid var(--danger); color: #ffd7d7; padding: 16px; border-radius: 14px; width: 100%; text-align: center; font-size: 15px; font-weight: 600; }
+  .reticle { position: absolute; left: 12%; right: 12%; top: 30%; bottom: 30%; border: 3px solid rgba(77,208,167,.85); border-radius: 18px; box-shadow: 0 0 0 2000px rgba(0,0,0,.28); pointer-events: none; }
+  .reticle::before, .reticle::after { content:""; position:absolute; left:0; right:0; height:0; }
+  .scan-line { position: absolute; left: 14%; right: 14%; top: 50%; height: 3px; background: var(--accent); box-shadow: 0 0 14px var(--accent); animation: scan 2s ease-in-out infinite; pointer-events:none; }
+  @keyframes scan { 0%,100% { top: 32%; } 50% { top: 68%; } }
+  .cam-status { color: var(--text); font-size: 15px; font-weight: 700; text-align: center; min-height: 22px; padding: 8px 14px; background: var(--panel); border: 1px solid var(--border); border-radius: 12px; width: 100%; max-width: 500px; }
+  .cam-status.err { background: var(--danger-bg); border-color: var(--danger); color: #ffd7d7; }
+  .cam-status.ok { background: rgba(77,208,167,.15); border-color: var(--accent); color: var(--accent); }
+  .cam-error { background: var(--danger-bg); border: 1px solid var(--danger); color: #ffd7d7; padding: 16px; border-radius: 14px; width: 100%; max-width:500px; text-align: center; font-size: 15px; font-weight: 600; }
   .cam-ctrls { display: flex; gap: 10px; width: 100%; max-width: 500px; }
   .cam-ctrls button { flex: 1; }
-  .file-drop { border: 2px dashed var(--border); border-radius: 14px; padding: 22px; text-align: center; width: 100%; color: var(--muted); }
+  .file-drop { border: 2px dashed var(--border); border-radius: 14px; padding: 22px; text-align: center; width: 100%; max-width:500px; color: var(--muted); }
   .file-drop input { display: none; }
   .file-btn { background: var(--panel-2); border: 1px solid var(--border); color: var(--text); padding: 14px 20px; min-height: 50px; font-weight: 700; margin-top: 10px; border-radius: 12px; }
   .confirm-box { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 18px; width: 100%; max-width: 500px; }
@@ -297,8 +301,10 @@
   .conf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .conf-grid .field { margin-bottom: 0; }
   .conf-full { grid-column: 1 / -1; }
-  .manual-barcode { display: flex; gap: 10px; width: 100%; max-width: 500px; }
+  .manual-barcode { display: flex; gap: 10px; width: 100%; max-width: 500px; align-items:center; }
   .manual-barcode input { flex: 1; }
+  .manual-wrap { width:100%; max-width:500px; }
+  .manual-wrap .ml { font-size:12px; color:var(--muted); font-weight:700; margin-bottom:6px; text-transform:uppercase; letter-spacing:.4px; }
   .line-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-items: center; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 10px; margin-bottom: 10px; }
   .line-row .ln-name { grid-column: 1 / -1; }
   .line-del { background: rgba(224,92,92,.15); color: var(--danger); height: 48px; border-radius: 10px; font-size: 16px; grid-column: 1 / -1; }
@@ -312,7 +318,7 @@
   "@context": "urn:goose.ai:schema",
   "@type": "GooseApp",
   "name": "fridge-hub",
-  "description": "Phone-first kitchen command center: storage locations (Fridge/Freezer/Pantry), scanning, expiry tracking, shopping & Home Assistant.",
+  "description": "Phone-first kitchen command center with reliable cross-platform barcode scanning, Fridge/Freezer/Pantry storage, shopping list & Home Assistant.",
   "width": 400,
   "height": 840,
   "resizable": true,
@@ -322,49 +328,45 @@
 }
   </script>
   <script type="application/x-goose-prd">
-Kitchen Hub — Phone-First Kitchen Command Center (v3: Notes removed, prominent Storage locations)
+Kitchen Hub — Phone-First Kitchen Command Center (v4: Reliable cross-platform barcode scanner)
 
 OVERVIEW:
-A mobile-first, single-file HTML app for phones in PORTRAIT. Organized as a horizontal SWIPEABLE PAGER (CSS scroll-snap), one feature per full-screen page, with page-dot indicators and a fixed bottom tab bar. Dark mode, large legible text, min 48px tap targets, no horizontal page scrolling. All data persists in localStorage; works offline except Open Food Facts barcode lookups, optional ZXing CDN fallback, and optional weather. A subtle "v3" build label appears in footers (Home and Smart pages).
+A mobile-first, single-file HTML app for phones in PORTRAIT. Horizontal SWIPEABLE PAGER (CSS scroll-snap), one feature per full-screen page, with page-dot indicators and a fixed bottom tab bar. Dark mode, large legible text, min 48px tap targets, no horizontal page scrolling. Data persists in localStorage; works offline except Open Food Facts barcode lookups, ZXing CDN fallback, and optional weather. A "v4" build label appears in Home and Smart footers.
 
 PWA / ADD TO HOME SCREEN:
-Installable/home-screen friendly. Includes inline web app manifest (data URI), apple-mobile-web-app-capable, apple-mobile-web-app-status-bar-style (black-translucent), theme-color, viewport with viewport-fit=cover, apple-touch-icon and favicon as inline SVG (🧊 fridge icon). Launches full-screen when added to the home screen.
+Installable/home-screen friendly. Inline web app manifest (data URI), apple-mobile-web-app-capable, black-translucent status bar, theme-color, viewport-fit=cover, apple-touch-icon and favicon as inline SVG (🧊). Launches full-screen when added to home screen.
 
 NAVIGATION (4 pages):
-- Horizontal scroll-snapping pager; each page width:100vw, vertical scroll inside.
-- Page-dot indicators reflect/update while swiping.
-- Fixed bottom nav (4 tabs): 🏠 Home · 🗃️ Storage · 🛒 Shop · 🏠 Smart (HA). Tapping snaps to a page; active tab highlighted; swipe, dots, and nav stay in sync.
-- NOTE: The Notes / family message board feature has been removed entirely (no page, no tab, no Home reference). Recipes may be added later but are not present now.
+Horizontal scroll-snapping pager; each page 100vw with vertical scroll inside. Page-dot indicators update on swipe. Fixed bottom nav: 🏠 Home · 🗃️ Storage · 🛒 Shop · 🏠 Smart. Tapping snaps to a page; swipe/dots/nav stay in sync. No Notes feature.
 
-STORAGE LOCATIONS (core feature — made unmistakable in v3):
-- Three locations: 🧊 FRIDGE, ❄️ FREEZER, 🗄️ PANTRY. Every inventory item is tagged with a location.
-- Storage page layout (top to bottom): page title "🗃️ Storage" → LARGE HIGH-CONTRAST SEGMENTED TOGGLE (three big side-by-side buttons: 🧊 Fridge | ❄️ Freezer | 🗄️ Pantry, ≥76px tall, full-width, rounded, active segment filled bright accent + lifted shadow, inactive muted, each showing a live count) → ACTIVE LOCATION HEADER card ("🧊 Fridge — 4 items · 1 expiring soon") → Scan/Add buttons → filters → item list.
-- Tapping a segment instantly filters the inventory to ONLY that location's items and updates all counts and the header. Each location maintains its own separate list. Selected location persists in localStorage.
-- Each item has a "↔ Move" action to move it to another location.
-- Adding items (manual, camera scan, or shopping "bought it") defaults to the currently selected location, with an in-form location picker. Per-location default expiry suggestions: Fridge +7d, Freezer +90d, Pantry +180d (auto-updates when location changes in the form).
+STORAGE LOCATIONS:
+Three locations: 🧊 FRIDGE, ❄️ FREEZER, 🗄️ PANTRY. Every item is tagged with a location. Large high-contrast segmented toggle (≥76px tall, live counts), active-location header, per-location item lists. Selected location persists. Each item has ↔ Move. Adds default to current location with in-form picker. Per-location default expiry: Fridge +7d, Freezer +90d, Pantry +180d.
 
 PAGES:
-1. HOME/OVERVIEW (landing) — big live clock (HH:MM, updates every second) + full date; optional tiny one-line weather readout (city saved on Home); prominent HOME ASSISTANT quick tile (one tap to open HA); combined stat summary (total items · expiring · to-buy); top "Expiring soon" list across ALL locations, each labeled with its location emoji; compact secondary kitchen TIMER (MM:SS, presets 1/3/5/10/15/30 + custom, Start/Pause/Reset, flashing + Web Audio beep on zero); small city input for weather; subtle "Kitchen Hub · v3" footer.
-2. STORAGE — prominent location segmented toggle + active-location header + inventory for the selected location; prominent "📷 Scan Items" + smaller "➕ Add" fallback; category filter/sort (default soonest-expiring); expiry badges (❌ expired, ⚠️ ≤3d, 🔔 ≤7d, ✅ fresh); item cards with name/qty/category/expiry/optional thumbnail; edit/delete (confirm); "↔ Move" and "🛒 Need more".
-3. SHOPPING — add input (Enter adds), checkable items (strike-through, move to bottom), delete, "Clear checked", checked items get "✓🧊 add to storage" (opens add form), remaining count.
-4. HOME ASSISTANT (first-class) — HA URL saved to localStorage, big Open-in-new-tab button, iframe embed (some setups block embedding), placeholder when unset; "Kitchen Hub · v3" footer. Also reachable via the Home quick tile.
+1. HOME — live clock + date; optional one-line weather; prominent Home Assistant quick tile; combined stat summary; top expiring-soon list across all locations with location emoji; compact kitchen timer (presets + custom, flashing + Web Audio beep); weather city input; "Kitchen Hub · v4" footer.
+2. STORAGE — segmented toggle + active-location header + inventory; "📷 Scan Items" + "➕ Add Item Manually"; category filter/sort; expiry badges; item cards with edit/delete/move/need-more.
+3. SHOPPING — add input (Enter adds), checkable items, delete, clear checked, "✓🧊 add to storage", remaining count.
+4. HOME ASSISTANT — HA URL saved, open-in-new-tab button, iframe embed, placeholder when unset; "Kitchen Hub · v4" footer.
 
-WEATHER (de-emphasized):
-No dedicated weather page. Optional minimal one-line current temp on the Home clock card via Open-Meteo geocode + current forecast; city saved to localStorage; hidden when unset/offline; refresh on load + every 30min.
+BARCODE SCANNER (rebuilt, reliable & cross-platform — v4 focus):
+- ENGINE SELECTION: First try native BarcodeDetector ONLY if it exists AND constructs successfully (wrapped in try/catch; skipped cleanly on iOS Safari). Otherwise load ZXing browser library.
+- ZXing LOADING: Dynamically inject <script> for `https://unpkg.com/@zxing/browser@latest` and WAIT for onload (with onerror handler). On failure, automatically retry jsdelivr mirror `https://cdn.jsdelivr.net/npm/@zxing/browser@latest`, then @zxing/library UMD builds as further fallbacks.
+- CONTINUOUS DECODE: Uses BrowserMultiFormatReader.decodeFromConstraints against the live rear-camera stream (facingMode environment), firing a callback on decode. Native path runs a real detect loop every 500ms against the playing video. No interval calls to an uninitialized detector.
+- ON-SCREEN STATUS (always visible): status line transitions through "📷 Starting camera…" → "🔍 Point the camera at a barcode" → "Scanning…" → "✅ Found: <code / product name>". If the library fails to load: RED message "Scanner couldn't load — enter the barcode number manually below" and manual field revealed. If camera fails/denied: clear message + file-upload fallback.
+- VISUAL RETICLE: rounded rectangle overlay + animated scan line in the center to aim.
+- MANUAL FALLBACK: an "Enter barcode manually" input + Go button is ALWAYS visible in the scanner. The "➕ Add Item Manually" form is also always available on Storage.
+- PRODUCT LOOKUP: once a barcode is obtained (scanned or typed) shows "Looking up product…", queries Open Food Facts. On success prefills product_name/brand and auto-guesses category. On not-found shows "Product not in database — type the item name". User confirms quantity, category, expiry (default from current location).
+- ADD TARGET: item added to the CURRENTLY SELECTED storage location (with an in-form override picker). After adding, scanning resumes for the next item; "Scan another" restarts the flow.
+- CAMERA CLEANUP (critical for iPhone): closing the scanner (button, overlay, Esc, tab hidden) stops all media tracks AND calls reader.reset()/controls.stop() so the camera light turns off. Photo mode reuses the same camera lifecycle.
 
-CAMERA-BASED ITEM ENTRY (featured):
-- Full-screen camera modal via getUserMedia (environment). Shows target location in the title.
-- Modes: (A) Scan Barcode, (B) Snap Photo/Receipt. Capture, Switch Camera, Close.
-- FALLBACK: on failure/denial → friendly error + file input (capture=environment); manual "➕ Add" always available.
-- (A) Barcode: prefer native BarcodeDetector, fall back to ZXing (unpkg CDN), else manual number input. Lookup via Open Food Facts. Confirm form pre-filled with name/category/qty + location picker (defaults to current) + REQUIRED expiry (per-location default). Short beep on detect; "Scan another".
-- (B) Photo/Receipt: capture/upload, thumbnail, location picker, repeatable multi-line entry (name/qty/category/expiry, category auto-guess); "Add all" (each requires expiry); photo attached to first item.
-- Every added item requires an expiry date.
+PHOTO MODE:
+Capture or upload a photo/receipt, multi-line entry (name/qty/category/expiry with auto category guess), location picker, "Add all" (each requires expiry), photo attached to first item.
 
 DATA PERSISTENCE & MIGRATION:
-Inventory (with location + thumbnails), shopping list, HA URL, weather city, selected location in localStorage. Notes storage keys are no longer read or written. Gracefully migrates prior v1/v2 inventory: items without a location default to Fridge. Seeds sample items across ALL three locations on first run (Fridge: Milk, Eggs, Lettuce, Leftover pasta; Freezer: Frozen peas, Ice cream; Pantry: Pasta, Rice, Canned beans) plus shopping items, so location separation is immediately visible.
+Inventory (with location + thumbnails), shopping list, HA URL, weather city, selected location in localStorage. Migrates prior v1/v2 inventory (no location → Fridge). Seeds sample items across all three locations on first run plus shopping items.
 
 POLISH:
-Clean, calm, modern dark UI; generous spacing; rounded cards; smooth transitions; satisfying tap feedback; one clear focus per page. Mobile-friendly full/near-full-screen modals, toasts, empty states, Esc/overlay closes modals (camera → move → item order). Single self-contained HTML with inline CSS/JS. Subtle version label ("v3") for deployment verification.
+Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full/near-full-screen modals; toasts; empty states; Esc/overlay closes modals (camera → move → item). Single self-contained HTML with inline CSS/JS. "v4" version label for deploy verification.
   </script>
 </head>
 <body>
@@ -420,7 +422,7 @@ Clean, calm, modern dark UI; generous spacing; rounded cards; smooth transitions
         </div>
       </div>
 
-      <div class="app-footer">Kitchen Hub · v3</div>
+      <div class="app-footer">Kitchen Hub · v4</div>
     </section>
 
     <!-- PAGE 2: STORAGE -->
@@ -484,7 +486,7 @@ Clean, calm, modern dark UI; generous spacing; rounded cards; smooth transitions
         <div class="ha-frame-wrap" id="haFrameWrap"></div>
         <div class="ha-note">Some setups block embedding. If blank, use "Open".</div>
       </div>
-      <div class="app-footer">Kitchen Hub · v3</div>
+      <div class="app-footer">Kitchen Hub · v4</div>
     </section>
 
   </div>
@@ -549,9 +551,10 @@ Clean, calm, modern dark UI; generous spacing; rounded cards; smooth transitions
       <div class="cam-stage" id="camStage">
         <video id="camVideo" autoplay muted playsinline></video>
         <canvas id="camCanvas"></canvas>
+        <div class="reticle" id="reticle"></div>
         <div class="scan-line" id="scanLine"></div>
       </div>
-      <div class="cam-hint" id="camHint">Point the rear camera at a barcode.</div>
+      <div class="cam-status" id="camStatus">📷 Starting camera…</div>
       <div class="cam-error" id="camError" style="display:none;"></div>
       <div class="file-drop" id="fileDrop" style="display:none;">
         📁 Camera unavailable — take or upload a photo
@@ -559,12 +562,15 @@ Clean, calm, modern dark UI; generous spacing; rounded cards; smooth transitions
         <input type="file" id="fileInput" accept="image/*" capture="environment">
       </div>
       <div class="cam-ctrls" id="camCtrls">
-        <button class="btn-primary" id="camCapture">📸 Capture</button>
-        <button class="btn-ghost" id="camSwitch">🔄 Switch</button>
+        <button class="btn-primary" id="camCapture" style="display:none;">📸 Capture</button>
+        <button class="btn-ghost" id="camSwitch">🔄 Switch camera</button>
       </div>
-      <div class="manual-barcode" id="manualBarcodeWrap" style="display:none;">
-        <input type="text" id="manualBarcode" placeholder="Type barcode number…" inputmode="numeric">
-        <button class="btn-ghost" id="manualBarcodeBtn" style="flex-shrink:0;">Look up</button>
+      <div class="manual-wrap" id="manualBarcodeWrap">
+        <div class="ml">Enter barcode manually</div>
+        <div class="manual-barcode">
+          <input type="text" id="manualBarcode" placeholder="8–13 digit barcode…" inputmode="numeric">
+          <button class="btn-ghost" id="manualBarcodeBtn" style="flex-shrink:0;">Go</button>
+        </div>
       </div>
       <div id="camResult" style="width:100%; max-width:500px;"></div>
     </div>
@@ -616,7 +622,6 @@ Clean, calm, modern dark UI; generous spacing; rounded cards; smooth transitions
   }
 
   function migrate(){
-    // migrate old v1 inventory (no location) if present and v3 not seeded
     if(!load(LS.seeded,false)){
       const old=load(OLD_INV,null) || load("kitchenhub_inventory_v2",null);
       if(old && old.length){
@@ -634,15 +639,12 @@ Clean, calm, modern dark UI; generous spacing; rounded cards; smooth transitions
   function seed(){
     if(load(LS.seeded,false)) return;
     inventory=[
-      // FRIDGE
       { id:uid(), name:"Milk", qty:1, cat:"Dairy", exp:isoOffset(2), loc:"Fridge" },
       { id:uid(), name:"Eggs", qty:12, cat:"Dairy", exp:isoOffset(9), loc:"Fridge" },
       { id:uid(), name:"Lettuce", qty:1, cat:"Produce", exp:isoOffset(1), loc:"Fridge" },
       { id:uid(), name:"Leftover pasta", qty:1, cat:"Leftovers", exp:isoOffset(-1), loc:"Fridge" },
-      // FREEZER
       { id:uid(), name:"Frozen peas", qty:1, cat:"Frozen", exp:isoOffset(120), loc:"Freezer" },
       { id:uid(), name:"Ice cream", qty:1, cat:"Frozen", exp:isoOffset(60), loc:"Freezer" },
-      // PANTRY
       { id:uid(), name:"Pasta", qty:2, cat:"Dry goods", exp:isoOffset(300), loc:"Pantry" },
       { id:uid(), name:"Rice", qty:1, cat:"Dry goods", exp:isoOffset(200), loc:"Pantry" },
       { id:uid(), name:"Canned beans", qty:3, cat:"Dry goods", exp:isoOffset(180), loc:"Pantry" }
@@ -870,7 +872,7 @@ Clean, calm, modern dark UI; generous spacing; rounded cards; smooth transitions
     else { el.style.display="none"; }
   }
 
-  // ---------- weather (minimal, home only) ----------
+  // ---------- weather ----------
   const WX_CODES = {0:["☀️","Clear"],1:["🌤️","Mainly clear"],2:["⛅","Partly cloudy"],3:["☁️","Overcast"],45:["🌫️","Fog"],48:["🌫️","Rime fog"],51:["🌦️","Light drizzle"],53:["🌦️","Drizzle"],55:["🌦️","Dense drizzle"],56:["🌧️","Freezing drizzle"],57:["🌧️","Freezing drizzle"],61:["🌧️","Light rain"],63:["🌧️","Rain"],65:["🌧️","Heavy rain"],66:["🌧️","Freezing rain"],67:["🌧️","Freezing rain"],71:["❄️","Light snow"],73:["❄️","Snow"],75:["❄️","Heavy snow"],77:["❄️","Snow grains"],80:["🌦️","Showers"],81:["🌦️","Showers"],82:["🌦️","Violent showers"],85:["🌨️","Snow showers"],86:["🌨️","Snow showers"],95:["⛈️","Thunderstorm"],96:["⛈️","Thunderstorm"],99:["⛈️","Thunderstorm"]};
   function wxInfo(code){ return WX_CODES[code]||["🌡️","Unknown"]; }
   async function fetchWeather(){
@@ -885,7 +887,7 @@ Clean, calm, modern dark UI; generous spacing; rounded cards; smooth transitions
       const unit=(wx.current_units&&wx.current_units.temperature_2m)||"°C";
       lastWx={icon:info[0],temp:Math.round(cur.temperature_2m),unit:unit,cond:info[1],place:g.name};
       renderMiniWx();
-    } catch(e){ /* offline: keep silent */ }
+    } catch(e){}
   }
   function saveCity(){ const c=$("wxCity").value.trim(); save(LS.city,c); toast(c?"City saved":"City cleared"); fetchWeather(); }
 
@@ -934,100 +936,282 @@ Clean, calm, modern dark UI; generous spacing; rounded cards; smooth transitions
     });
   }
   function catOptions(sel){ return Object.keys(CATS).map(c=>'<option value="'+c+'"'+(c===sel?' selected':'')+'>'+CATS[c]+' '+c+'</option>').join(''); }
+  function locOptions(sel){ return Object.keys(LOCS).map(l=>'<option value="'+l+'"'+(l===sel?' selected':'')+'>'+LOCS[l]+' '+l+'</option>').join(''); }
 
-  // ================= CAMERA / SCAN =================
+  // ================= CAMERA / SCAN (rebuilt v4) =================
   let camStream=null, camFacing="environment", camMode="barcode";
-  let scanTimer=null, barcodeDetector=null, zxingReader=null, zxingLoading=false, lastBarcode=null;
+  let barcodeDetector=null;           // native
+  let nativeTimer=null;
+  let zxingReader=null, zxingControls=null; // ZXing
+  let zxingLibPromise=null;
+  let scanActive=false, lastBarcode=null, busyLookup=false;
 
-  function openCam(){ $("camOverlay").classList.add("show"); $("camLocLabel").textContent=LOCS[currentLoc]+" "+currentLoc; setMode("barcode"); startCamera(); }
-  function closeCam(){ $("camOverlay").classList.remove("show"); stopScan(); stopCamera(); $("camResult").innerHTML=""; lastBarcode=null; }
-  function stopCamera(){ if(camStream){ camStream.getTracks().forEach(t=>t.stop()); camStream=null; } }
-  async function startCamera(){
-    stopScan(); stopCamera();
-    $("camError").style.display="none"; $("fileDrop").style.display="none";
-    $("camStage").style.display=""; $("camCtrls").style.display="flex";
-    const video=$("camVideo");
-    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){ camFail("Camera API not available."); return; }
-    try {
-      camStream=await navigator.mediaDevices.getUserMedia({ video:{ facingMode:camFacing }, audio:false });
-      video.srcObject=camStream; await video.play().catch(()=>{});
-      if(camMode==="barcode") startBarcodeScan();
-    } catch(e){
-      let msg="Couldn't access the camera.";
-      if(e && e.name==="NotAllowedError") msg="Camera permission denied. Allow access or use photo upload below.";
-      else if(e && e.name==="NotFoundError") msg="No camera found on this device.";
-      camFail(msg);
-    }
+  function setStatus(msg, kind){
+    const el=$("camStatus");
+    el.textContent=msg;
+    el.className="cam-status"+(kind?" "+kind:"");
+    el.style.display="block";
   }
-  function camFail(msg){
+
+  function openCam(){
+    $("camOverlay").classList.add("show");
+    $("camLocLabel").textContent=LOCS[currentLoc]+" "+currentLoc;
+    $("camResult").innerHTML="";
+    lastBarcode=null; busyLookup=false;
+    setMode("barcode");
+  }
+
+  function closeCam(){
+    $("camOverlay").classList.remove("show");
+    stopScan();
     stopCamera();
-    $("camError").textContent="⚠️ "+msg; $("camError").style.display="block";
-    $("camStage").style.display="none"; $("camCtrls").style.display="none";
-    $("fileDrop").style.display="block";
-    if(camMode==="barcode") $("manualBarcodeWrap").style.display="flex";
+    $("camResult").innerHTML="";
+    lastBarcode=null; busyLookup=false;
   }
-  function switchCamera(){ camFacing = camFacing==="environment" ? "user" : "environment"; startCamera(); }
+
+  function stopCamera(){
+    if(camStream){ camStream.getTracks().forEach(t=>{ try{ t.stop(); }catch(e){} }); camStream=null; }
+    const v=$("camVideo"); if(v){ try{ v.pause(); }catch(e){} v.srcObject=null; }
+  }
+
+  function stopScan(){
+    scanActive=false;
+    if(nativeTimer){ clearInterval(nativeTimer); nativeTimer=null; }
+    if(zxingControls){ try{ zxingControls.stop(); }catch(e){} zxingControls=null; }
+    if(zxingReader){ try{ zxingReader.reset(); }catch(e){} }
+  }
+
+  // ---- ZXing loader with unpkg -> jsdelivr fallback ----
+  function loadZXingLib(){
+    if(window.ZXingBrowser || window.ZXing) return Promise.resolve();
+    if(zxingLibPromise) return zxingLibPromise;
+    const urls=[
+      "https://unpkg.com/@zxing/browser@latest",
+      "https://cdn.jsdelivr.net/npm/@zxing/browser@latest",
+      "https://unpkg.com/@zxing/library@latest/umd/index.min.js",
+      "https://cdn.jsdelivr.net/npm/@zxing/library@latest/umd/index.min.js"
+    ];
+    zxingLibPromise=new Promise((resolve,reject)=>{
+      let i=0;
+      function tryNext(){
+        if(i>=urls.length){ reject(new Error("all CDNs failed")); return; }
+        const url=urls[i++];
+        const s=document.createElement("script");
+        s.src=url; s.async=true;
+        s.onload=()=>{ if(window.ZXingBrowser || window.ZXing) resolve(); else tryNext(); };
+        s.onerror=()=>{ tryNext(); };
+        document.head.appendChild(s);
+      }
+      tryNext();
+    });
+    return zxingLibPromise;
+  }
+
+  function getReaderClass(){
+    if(window.ZXingBrowser && window.ZXingBrowser.BrowserMultiFormatReader) return window.ZXingBrowser.BrowserMultiFormatReader;
+    if(window.ZXing && window.ZXing.BrowserMultiFormatReader) return window.ZXing.BrowserMultiFormatReader;
+    return null;
+  }
 
   function setMode(mode){
     camMode=mode;
     $("modeBarcode").classList.toggle("active", mode==="barcode");
     $("modePhoto").classList.toggle("active", mode==="photo");
-    $("camResult").innerHTML=""; lastBarcode=null; stopScan();
+    $("camResult").innerHTML=""; lastBarcode=null; busyLookup=false;
+    stopScan();
+
     if(mode==="barcode"){
       $("scanLine").style.display="block";
-      $("camHint").textContent="Point the rear camera at a barcode.";
+      $("reticle").style.display="block";
       $("camCapture").style.display="none";
-      $("manualBarcodeWrap").style.display = camStream ? "none" : "flex";
-      if(camStream) startBarcodeScan(); else $("manualBarcodeWrap").style.display="flex";
+      $("manualBarcodeWrap").style.display="block";
+      startBarcodeFlow();
     } else {
       $("scanLine").style.display="none";
-      $("camHint").textContent="Tap Capture to snap the shelf/receipt.";
-      $("camCapture").style.display=""; $("manualBarcodeWrap").style.display="none";
+      $("reticle").style.display="none";
+      $("camCapture").style.display="";
+      $("manualBarcodeWrap").style.display="none";
+      startPhotoCamera();
     }
   }
 
-  async function startBarcodeScan(){
-    stopScan();
-    if("BarcodeDetector" in window){
-      try { if(!barcodeDetector) barcodeDetector=new window.BarcodeDetector({ formats:["ean_13","ean_8","upc_a","upc_e","code_128"] }); scanTimer=setInterval(detectNative,700); return; } catch(e){}
+  // ---- Barcode flow: camera + engine ----
+  async function startBarcodeFlow(){
+    setStatus("📷 Starting camera…");
+    $("camError").style.display="none";
+    $("fileDrop").style.display="none";
+    $("camStage").style.display="";
+
+    if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+      camFail("Camera API not available on this device/browser.");
+      return;
     }
-    loadZXing();
+
+    // Try native BarcodeDetector ONLY if it exists and constructs.
+    let nativeOK=false;
+    if("BarcodeDetector" in window){
+      try {
+        barcodeDetector=new window.BarcodeDetector({ formats:["ean_13","ean_8","upc_a","upc_e","code_128","code_39","codabar","itf"] });
+        nativeOK=true;
+      } catch(e){ nativeOK=false; barcodeDetector=null; }
+    }
+
+    if(nativeOK){
+      const ok=await startPlainCamera();
+      if(!ok) return;
+      setStatus("🔍 Point the camera at a barcode");
+      scanActive=true;
+      nativeTimer=setInterval(runNativeDetect,500);
+      return;
+    }
+
+    // Fallback: ZXing
+    setStatus("⏳ Loading scanner…");
+    try {
+      await loadZXingLib();
+    } catch(e){
+      // engine failed to load — camera preview + manual entry
+      await startPlainCamera();
+      setStatus("Scanner couldn't load — enter the barcode number manually below", "err");
+      $("manualBarcodeWrap").style.display="block";
+      setTimeout(()=>$("manualBarcode").focus(),100);
+      return;
+    }
+    startZXing();
   }
-  async function detectNative(){
+
+  // Get a plain camera stream into the video element (used by native path & photo mode)
+  async function startPlainCamera(){
+    stopCamera();
+    const video=$("camVideo");
+    try {
+      camStream=await navigator.mediaDevices.getUserMedia({
+        video:{ facingMode: { ideal: camFacing } }, audio:false
+      });
+      video.srcObject=camStream;
+      await video.play().catch(()=>{});
+      return true;
+    } catch(e){
+      let msg="Couldn't access the camera.";
+      if(e && e.name==="NotAllowedError") msg="Camera permission denied. Allow access or upload a photo below.";
+      else if(e && e.name==="NotFoundError") msg="No camera found on this device.";
+      camFail(msg);
+      return false;
+    }
+  }
+
+  async function runNativeDetect(){
+    if(!scanActive || busyLookup) return;
     const video=$("camVideo"); if(!video || video.readyState<2) return;
-    try { const codes=await barcodeDetector.detect(video); if(codes && codes.length) onBarcode(codes[0].rawValue); } catch(e){}
+    try {
+      const codes=await barcodeDetector.detect(video);
+      if(codes && codes.length && codes[0].rawValue){
+        setStatus("Scanning…");
+        onBarcode(codes[0].rawValue);
+      }
+    } catch(e){}
   }
-  function loadZXing(){
-    if(window.ZXing){ startZXing(); return; }
-    if(zxingLoading) return; zxingLoading=true;
-    $("camHint").textContent="Loading barcode engine…";
-    const s=document.createElement("script"); s.src="https://unpkg.com/@zxing/library@latest/umd/index.min.js";
-    s.onload=()=>{ zxingLoading=false; if(window.ZXing) startZXing(); else zxingFail(); };
-    s.onerror=()=>{ zxingLoading=false; zxingFail(); };
-    document.head.appendChild(s);
+
+  async function startZXing(){
+    const RC=getReaderClass();
+    if(!RC){
+      await startPlainCamera();
+      setStatus("Scanner couldn't load — enter the barcode number manually below", "err");
+      $("manualBarcodeWrap").style.display="block";
+      return;
+    }
+    try {
+      zxingReader=new RC();
+      const video=$("camVideo");
+      scanActive=true;
+      setStatus("📷 Starting camera…");
+      // decodeFromConstraints uses continuous scanning against the live stream
+      const constraints={ video:{ facingMode:{ ideal: camFacing } }, audio:false };
+      zxingControls=await zxingReader.decodeFromConstraints(constraints, video, (result, err, controls)=>{
+        if(!scanActive) return;
+        if(result){
+          const text = result.getText ? result.getText() : (result.text || String(result));
+          if(text){ setStatus("Scanning…"); onBarcode(text); }
+        }
+        // err (NotFoundException) is normal between frames — ignore
+      });
+      // capture the stream ZXing created so we can stop it on close
+      if(video.srcObject) camStream=video.srcObject;
+      setStatus("🔍 Point the camera at a barcode");
+    } catch(e){
+      let msg="Couldn't start the scanner.";
+      if(e && e.name==="NotAllowedError") msg="Camera permission denied. Allow access or upload a photo below.";
+      else if(e && e.name==="NotFoundError") msg="No camera found on this device.";
+      // fall back to camera preview + manual
+      camFail(msg);
+      $("manualBarcodeWrap").style.display="block";
+    }
   }
-  function zxingFail(){ $("camHint").textContent="Auto detection unsupported. Type the barcode below."; $("manualBarcodeWrap").style.display="flex"; }
-  function startZXing(){
-    try { if(!zxingReader) zxingReader=new window.ZXing.BrowserMultiFormatReader(); $("camHint").textContent="Point at a barcode…"; zxingReader.decodeFromVideoElement($("camVideo"),(result,err)=>{ if(result) onBarcode(result.getText()); }); } catch(e){ zxingFail(); }
+
+  async function startPhotoCamera(){
+    setStatus("📷 Starting camera…");
+    $("camError").style.display="none";
+    $("fileDrop").style.display="none";
+    $("camStage").style.display="";
+    if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+      camFail("Camera API not available."); return;
+    }
+    const ok=await startPlainCamera();
+    if(ok) setStatus("📸 Tap Capture to snap the shelf/receipt");
   }
-  function stopScan(){ if(scanTimer){ clearInterval(scanTimer); scanTimer=null; } if(zxingReader){ try{ zxingReader.reset(); }catch(e){} } }
+
+  function camFail(msg){
+    stopScan(); stopCamera();
+    setStatus(msg, "err");
+    $("camStage").style.display="none";
+    $("camCtrls").querySelector("#camCapture").style.display="none";
+    $("fileDrop").style.display="block";
+    if(camMode==="barcode") $("manualBarcodeWrap").style.display="block";
+  }
+
+  function switchCamera(){
+    camFacing = camFacing==="environment" ? "user" : "environment";
+    setMode(camMode);
+  }
+
   async function onBarcode(code){
-    if(!code || code===lastBarcode) return;
-    lastBarcode=code; stopScan(); beepShort();
-    $("camHint").textContent="Barcode "+code+" — looking up…";
+    code=String(code).trim();
+    if(!code || busyLookup) return;
+    if(code===lastBarcode) return;
+    lastBarcode=code;
+    busyLookup=true;
+    stopScan();
+    beepShort();
+    setStatus("✅ Found: "+code+" — Looking up product…", "ok");
+
     let product=null;
     try {
       const r=await fetch("https://world.openfoodfacts.org/api/v0/product/"+encodeURIComponent(code)+".json").then(x=>x.json());
-      if(r && r.status===1 && r.product){ product={ name:r.product.product_name||r.product.generic_name||"", brand:(r.product.brands||"").split(",")[0]||"", img:r.product.image_front_small_url||r.product.image_url||"" }; }
+      if(r && r.status===1 && r.product){
+        product={
+          name:r.product.product_name||r.product.generic_name||"",
+          brand:(r.product.brands||"").split(",")[0]||"",
+          img:r.product.image_front_small_url||r.product.image_url||""
+        };
+      }
     } catch(e){}
     showBarcodeConfirm(code, product);
+    busyLookup=false;
   }
-  function manualLookup(){ const v=$("manualBarcode").value.trim(); if(!v){ toast("Enter a barcode"); return; } lastBarcode=null; onBarcode(v); }
 
-  function locOptions(sel){ return Object.keys(LOCS).map(l=>'<option value="'+l+'"'+(l===sel?' selected':'')+'>'+LOCS[l]+' '+l+'</option>').join(''); }
+  function manualLookup(){
+    const v=$("manualBarcode").value.trim();
+    if(!v){ toast("Enter a barcode"); $("manualBarcode").focus(); return; }
+    lastBarcode=null; busyLookup=false;
+    onBarcode(v);
+    $("manualBarcode").value="";
+  }
 
   function showBarcodeConfirm(code, product){
     const found = product && product.name;
+    if(found) setStatus("✅ Found: "+product.name, "ok");
+    else setStatus("Product not in database — type the item name below", "err");
+
     const name = found ? product.name : "";
     const brand = found ? product.brand : "";
     const img = found ? product.img : "";
@@ -1049,20 +1233,23 @@ Clean, calm, modern dark UI; generous spacing; rounded cards; smooth transitions
         '</div>'+
         '<div class="modal-actions">'+
           '<button class="btn-ghost" id="bcAgain">↺ Scan another</button>'+
-          '<button class="btn-primary" id="bcAdd">➕ Add</button>'+
+          '<button class="btn-primary" id="bcAdd">➕ Add to '+esc(currentLoc)+'</button>'+
         '</div>'+
       '</div>';
     if(!found) setTimeout(()=>$("bcName").focus(),50);
-    $("bcLoc").onchange=function(){ $("bcExp").value=isoOffset(LOC_DEFAULT_EXP[this.value]||7); };
+    $("bcLoc").onchange=function(){ $("bcExp").value=isoOffset(LOC_DEFAULT_EXP[this.value]||7); $("bcAdd").textContent="➕ Add to "+this.value; };
     $("bcAdd").onclick=()=>{
       const nm=$("bcName").value.trim(); if(!nm){ toast("Enter a name"); $("bcName").focus(); return; }
       const exp=$("bcExp").value; if(!exp){ toast("Please set an expiry date"); $("bcExp").focus(); return; }
       const loc=$("bcLoc").value;
       addItem({ name:nm, qty:Math.max(1,parseInt($("bcQty").value)||1), cat:$("bcCat").value, exp, loc, img: img||"" });
-      toast(LOCS[loc]+" Added "+nm); box.innerHTML=""; lastBarcode=null;
-      if(camStream) startBarcodeScan(); else $("manualBarcodeWrap").style.display="flex";
+      if(loc!==currentLoc) setLocation(loc);
+      toast(LOCS[loc]+" Added "+nm);
+      box.innerHTML=""; lastBarcode=null; busyLookup=false;
+      // resume scanning for the next item
+      startBarcodeFlow();
     };
-    $("bcAgain").onclick=()=>{ box.innerHTML=""; lastBarcode=null; if(camStream) startBarcodeScan(); };
+    $("bcAgain").onclick=()=>{ box.innerHTML=""; lastBarcode=null; busyLookup=false; startBarcodeFlow(); };
   }
 
   function beepShort(){
@@ -1147,7 +1334,6 @@ Clean, calm, modern dark UI; generous spacing; rounded cards; smooth transitions
     initPager();
     tickClock(); setInterval(tickClock,1000);
 
-    // location toggle
     [...$("locToggle").children].forEach(b=>{ b.onclick=()=>setLocation(b.dataset.loc); });
     setLocation(currentLoc);
 
@@ -1163,7 +1349,6 @@ Clean, calm, modern dark UI; generous spacing; rounded cards; smooth transitions
     $("filterCat").onchange=renderInventory;
     $("sortBy").onchange=renderInventory;
 
-    // move modal
     [...$("mvLocPick").children].forEach(b=>{ b.onclick=()=>doMove(b.dataset.loc); });
     $("moveCancel").onclick=closeMove;
     $("moveModal").onclick=e=>{ if(e.target===$("moveModal")) closeMove(); };
@@ -1182,20 +1367,17 @@ Clean, calm, modern dark UI; generous spacing; rounded cards; smooth transitions
     $("shopInput").addEventListener("keydown",e=>{ if(e.key==="Enter") addShop(); });
     $("clearCheckedBtn").onclick=clearChecked;
 
-    // weather (home)
     $("wxSave").onclick=saveCity;
     $("wxCity").addEventListener("keydown",e=>{ if(e.key==="Enter") saveCity(); });
     $("wxCity").value=load(LS.city,"");
     fetchWeather(); setInterval(fetchWeather, 30*60*1000);
 
-    // timer
     buildPresets(); renderTimer();
     $("timerStart").onclick=toggleTimer;
     $("timerReset").onclick=resetTimer;
     $("timerSet").onclick=setCustom;
     $("timerCustom").addEventListener("keydown",e=>{ if(e.key==="Enter") setCustom(); });
 
-    // HA
     $("haQuickTile").onclick=openHA;
     $("haSaveBtn").onclick=saveHA;
     $("haOpenBtn").onclick=openHA;
@@ -1208,6 +1390,9 @@ Clean, calm, modern dark UI; generous spacing; rounded cards; smooth transitions
         else closeModal();
       }
     });
+
+    // Safety: ensure camera released if page hidden
+    document.addEventListener("visibilitychange",()=>{ if(document.hidden && $("camOverlay").classList.contains("show")){ stopScan(); stopCamera(); } });
   }
   document.addEventListener("DOMContentLoaded", init);
 })();
