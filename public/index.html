@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -412,9 +412,6 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
         <div class="wx-mini" id="wxMini" style="display:none;"></div>
       </div>
 
-      <button class="ha-tile" id="haQuickTile">
-        <span class="big">🏠</span><span>Home Assistant</span>
-      </button>
       <div class="ha-home-grid" id="homeHAGrid"></div>
 
       <div class="stat-row">
@@ -531,17 +528,6 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
         </div>
         <div class="ha-controls-grid" id="haControls"></div>
         <button class="btn-ghost" id="haAddBtn" style="width:100%;margin-top:12px;">➕ Add control</button>
-      </div>
-
-      <div class="card">
-        <details>
-          <summary style="cursor:pointer;font-weight:700;">CORS setup (only if Test connection fails)</summary>
-          <p style="font-size:13px;color:var(--muted);margin-top:8px;">Add this to Home Assistant's <code>configuration.yaml</code> and restart HA:</p>
-          <pre style="font-size:12px;overflow-x:auto;background:var(--panel-2);padding:10px;border-radius:8px;">http:
-  cors_allowed_origins:
-    - https://fridge-hub-phi.vercel.app</pre>
-          <p style="font-size:13px;color:var(--muted);">A browser CORS error means this entry is missing. Find entity IDs in Home Assistant: <b>Settings → Devices &amp; services → Entities</b>.</p>
-        </details>
       </div>
       <div class="app-footer">Kitchen Hub · v6</div>
     </section>
@@ -994,7 +980,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     try {
       audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
       const ctx=audioCtx; let start=ctx.currentTime;
-      for(let i=0;i<4;i++){ const osc=ctx.createOscillator(), gain=ctx.createGain(); osc.type="sine"; osc.frequency.value= i%2===0?880:1046; gain.gain.setValueAtTime(0.0001,start); gain.gain.exponentialRampToValueAtTime(0.4,start+0.02); gain.gain.exponentialRampToValueAtTime(0.0001,start+0.32); osc.connect(gain); gain.connect(ctx.destination); osc.start(start); osc.stop(start+0.34); start+=0.4; }
+      for(let i=0;i<12;i++){ const osc=ctx.createOscillator(), gain=ctx.createGain(); osc.type="sine"; osc.frequency.value= i%2===0?880:1046; gain.gain.setValueAtTime(0.0001,start); gain.gain.exponentialRampToValueAtTime(0.6,start+0.02); gain.gain.exponentialRampToValueAtTime(0.0001,start+0.35); osc.connect(gain); gain.connect(ctx.destination); osc.start(start); osc.stop(start+0.37); start+=0.42; }
     } catch(e){}
   }
   function toggleTimer(){ if(timerRunning) pauseTimer(); else startTimer(); }
