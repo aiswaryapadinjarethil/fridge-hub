@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -439,7 +439,14 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
             <button class="btn-ghost" id="timerReset">Reset</button>
           </div>
         </div>
-        <div class="htimer-presets" id="timerPresets"></div>
+        <div class="htimer-presets" id="timerPresets">
+          <button class="preset-btn" onclick="setTimer(60)">1m</button>
+          <button class="preset-btn" onclick="setTimer(180)">3m</button>
+          <button class="preset-btn" onclick="setTimer(300)">5m</button>
+          <button class="preset-btn" onclick="setTimer(600)">10m</button>
+          <button class="preset-btn" onclick="setTimer(900)">15m</button>
+          <button class="preset-btn" onclick="setTimer(1800)">30m</button>
+        </div>
         <div class="timer-custom">
           <input type="number" id="timerCustom" min="1" max="180" placeholder="custom minutes">
           <button class="btn-ghost" id="timerSet" style="flex-shrink:0;">Set</button>
