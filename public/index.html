@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Fridge Hub</title>
+<style>
+  :root {
+    --bg: #0e1116;
+    --panel: #171b22;
+    --panel-2: #1f242d;
+    --card: #232a34;
+    --card-hover: #2a323d;
+    --text: #e8edf3;
+    --muted: #8b95a3;
+    --accent: #4dd0a7;
+    --accent-2: #3aa889;
+    --border: #2d353f;
+    --warn: #e8a33d;
+    --warn-bg: #3a2f18;
+    --week: #e0cf4d;
+    --week-bg: #38341a;
+    --fresh: #4dd0a7;
+    --danger: #e05c5c;
+    --danger-bg: #3a1f1f;
+    --shadow: 0 4px 18px rgba(0,0,0,.35);
+    --radius: 18px;
+    --nav-h: 64px;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-user-select: none; user-select: none;
+    overflow: hidden;
+  }
+
+  /* PAGER */
+  .pager {
+    display: flex;
+    flex-direction: row;
+    width: 100vw;
+    height: calc(100% - var(--nav-h));
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .pager::-webkit-scrollbar { display: none; }
+  .page {
+    flex: 0 0 100vw;
+    width: 100vw;
+    height: 100%;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    display: flex; flex-direction: column;
+    padding: 14px 16px 22px;
+  }
+  .page::-webkit-scrollbar { width: 6px; }
+  .page::-webkit-scrollbar-thumb { background: #333d49; border-radius: 8px; }
+
+  .page-head {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 14px; flex-shrink: 0;
+  }
+  .page-title { font-size: 24px; font-weight: 800; display: flex; align-items: center; gap: 9px; }
+  .page-sub { font-size: 13px; color: var(--muted); font-weight: 600; margin-top: 2px; }
+
+  /* DOTS */
+  .dots {
+    position: fixed; top: 8px; left: 0; right: 0; z-index: 40;
+    display: flex; justify-content: center; gap: 7px; pointer-events: none;
+  }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,.22); transition: all .2s; }
+  .dot.active { background: var(--accent); width: 22px; border-radius: 4px; }
+
+  /* BOTTOM NAV */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0; height: var(--nav-h);
+    background: rgba(20,24,31,.96); backdrop-filter: blur(10px);
+    border-top: 1px solid var(--border);
+    display: flex; z-index: 45;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .nav-btn {
+    flex: 1; background: none; border: none; color: var(--muted);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 3px; cursor: pointer; font-family: inherit; padding: 6px 2px;
+    transition: color .15s; min-height: 48px;
+  }
+  .nav-btn .ic { font-size: 21px; line-height: 1; }
+  .nav-btn .lb { font-size: 10px; font-weight: 700; letter-spacing: .2px; }
+  .nav-btn.active { color: var(--accent); }
+  .nav-btn.active .ic { transform: scale(1.1); }
+
+  /* BUTTONS */
+  button {
+    font-family: inherit; cursor: pointer; border: none; color: var(--text);
+    border-radius: 12px; transition: transform .1s, background .15s, opacity .15s;
+    font-size: 16px;
+  }
+  button:active { transform: scale(.95); }
+  .btn-primary {
+    background: var(--accent); color: #08130f; font-weight: 700;
+    padding: 13px 18px; min-height: 50px; font-size: 16px;
+  }
+  .btn-primary:hover { background: var(--accent-2); }
+  .btn-ghost {
+    background: var(--panel-2); color: var(--text);
+    padding: 12px 16px; min-height: 50px; border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { background: var(--card-hover); }
+  .btn-scan {
+    background: linear-gradient(135deg, #4dd0a7, #35c0d4);
+    color: #06120f; font-weight: 800; padding: 15px 20px; min-height: 58px;
+    font-size: 18px; box-shadow: 0 4px 16px rgba(77,208,167,.35);
+    display: flex; align-items: center; justify-content: center; gap: 9px; width: 100%;
+  }
+  .btn-scan:hover { filter: brightness(1.06); }
+
+  select, input[type="text"], input[type="number"], input[type="date"], input[type="url"] {
+    font-family: inherit; font-size: 16px; color: var(--text);
+    background: var(--panel-2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 13px 14px; min-height: 50px;
+    outline: none; width: 100%;
+  }
+  select:focus, input:focus { border-color: var(--accent); }
+  select { cursor: pointer; }
+
+  .card {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow);
+  }
+  .card + .card { margin-top: 14px; }
+
+  /* HOME PAGE */
+  .clock-big { font-size: 68px; font-weight: 800; line-height: 1; letter-spacing: 1px; font-variant-numeric: tabular-nums; text-align: center; }
+  .date-big { font-size: 16px; color: var(--muted); text-align: center; margin-top: 6px; font-weight: 600; }
+  .home-brand { text-align: center; font-size: 15px; font-weight: 800; color: var(--accent); letter-spacing: .5px; margin-bottom: 10px; }
+  .stat-row { display: flex; gap: 10px; margin: 4px 0; }
+  .stat {
+    flex: 1; background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+    padding: 12px 8px; text-align: center;
+  }
+  .stat .n { font-size: 26px; font-weight: 800; line-height: 1; }
+  .stat .l { font-size: 11px; color: var(--muted); font-weight: 700; margin-top: 5px; text-transform: uppercase; letter-spacing: .3px; }
+  .stat.warn .n { color: var(--warn); }
+  .stat.buy .n { color: var(--accent); }
+  .home-sec-title { font-size: 14px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin: 4px 0 10px; }
+  .home-exp-item {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 16px; font-weight: 600;
+  }
+  .home-exp-item:last-child { border-bottom: none; }
+  .home-exp-badge { font-size: 13px; font-weight: 700; padding: 3px 9px; border-radius: 8px; white-space: nowrap; }
+  .home-exp-badge.past { background: var(--danger); color: #3a1010; }
+  .home-exp-badge.soon { background: var(--warn); color: #2a1e08; }
+  .home-exp-badge.week { background: var(--week); color: #2a2508; }
+  .home-wx { display: flex; align-items: center; gap: 12px; }
+  .home-wx .em { font-size: 40px; }
+  .home-wx .t { font-size: 30px; font-weight: 800; }
+  .home-wx .c { font-size: 14px; color: var(--muted); font-weight: 600; }
+  .home-note { font-size: 15px; font-weight: 600; color: #ffe08a; white-space: pre-wrap; word-break: break-word; }
+
+  /* INVENTORY */
+  .inv-actions { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
+  .inv-filters { display: flex; gap: 8px; margin-bottom: 12px; }
+  .inv-filters select { font-size: 14px; padding: 10px; min-height: 46px; }
+  .exp-strip { background: var(--panel-2); border: 1px solid var(--border); border-radius: 14px; padding: 12px 14px; margin-bottom: 14px; }
+  .exp-strip-title { font-size: 13px; font-weight: 700; color: var(--warn); display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .exp-strip-title.allfresh { color: var(--fresh); }
+  .exp-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .exp-chip {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600;
+    padding: 8px 12px; border-radius: 20px; background: var(--card); border: 1px solid var(--border); cursor: pointer;
+  }
+  .exp-chip.past { border-color: var(--danger); color: var(--danger); background: var(--danger-bg); }
+  .exp-chip.soon { border-color: var(--warn); color: var(--warn); background: var(--warn-bg); }
+  .exp-chip.week { border-color: var(--week); color: var(--week); background: var(--week-bg); }
+  .exp-chip .d { opacity: .8; font-weight: 700; }
+
+  .item-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 8px;
+    margin-bottom: 12px;
+  }
+  .item-card.exp-soon { border-color: var(--warn); background: var(--warn-bg); }
+  .item-card.exp-past { border-color: var(--danger); background: var(--danger-bg); }
+  .item-card.exp-week { border-color: var(--week); }
+  .item-card.exp-fresh { border-left: 4px solid var(--fresh); }
+  .item-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+  .item-name { font-size: 18px; font-weight: 700; line-height: 1.2; word-break: break-word; }
+  .item-qty { font-size: 14px; color: var(--muted); font-weight: 600; }
+  .item-thumb { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; flex-shrink: 0; border: 1px solid var(--border); }
+  .cat-tag { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; font-weight: 600; padding: 5px 10px; border-radius: 20px; align-self: flex-start; }
+  .badge { font-size: 12px; font-weight: 700; padding: 4px 9px; border-radius: 8px; align-self: flex-start; }
+  .badge.soon { background: var(--warn); color: #2a1e08; }
+  .badge.week { background: var(--week); color: #2a2508; }
+  .badge.past { background: var(--danger); color: #3a1010; }
+  .badge.fresh { background: rgba(77,208,167,.2); color: var(--fresh); }
+  .expiry-text { font-size: 13px; color: var(--muted); }
+  .item-actions { display: flex; gap: 8px; margin-top: 4px; }
+  .icon-btn {
+    background: rgba(255,255,255,.06); width: 48px; height: 48px;
+    display: flex; align-items: center; justify-content: center; font-size: 19px;
+    border-radius: 11px; flex-shrink: 0;
+  }
+  .icon-btn:hover { background: rgba(255,255,255,.14); }
+  .icon-btn.cart { flex: 1; gap: 6px; font-size: 15px; font-weight: 600; background: rgba(77,208,167,.14); color: var(--accent); }
+
+  /* SHOPPING */
+  .shop-add { display: flex; gap: 10px; margin-bottom: 14px; }
+  .shop-add input { flex: 1; }
+  .shop-add button { flex-shrink: 0; }
+  .shop-item {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 10px 12px; margin-bottom: 10px; transition: opacity .2s;
+  }
+  .shop-item.done { opacity: .55; }
+  .shop-item.done .shop-name { text-decoration: line-through; color: var(--muted); }
+  .check {
+    width: 48px; height: 48px; border-radius: 10px; border: 2px solid var(--muted);
+    display: flex; align-items: center; justify-content: center; font-size: 20px;
+    flex-shrink: 0; background: transparent; cursor: pointer; color: var(--accent);
+  }
+  .shop-item.done .check { border-color: var(--accent); background: rgba(77,208,167,.15); }
+  .shop-name { flex: 1; font-size: 17px; font-weight: 600; word-break: break-word; }
+  .shop-actions { display: flex; gap: 6px; }
+
+  /* WEATHER */
+  .wx-main { display: flex; align-items: center; gap: 16px; }
+  .wx-icon { font-size: 60px; line-height: 1; }
+  .wx-temp { font-size: 48px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+  .wx-cond { font-size: 16px; font-weight: 600; margin-top: 4px; }
+  .wx-day { font-size: 13px; color: var(--muted); }
+  .wx-hilo { display: flex; gap: 18px; font-size: 15px; color: var(--muted); font-weight: 600; margin-top: 12px; }
+  .wx-hilo b { color: var(--text); }
+  .wx-row { display: flex; gap: 10px; margin-top: 14px; }
+  .wx-row input { flex: 1; }
+  .wx-placeholder { text-align: center; color: var(--muted); padding: 16px 0; }
+  .wx-placeholder .em { font-size: 44px; display: block; margin-bottom: 8px; }
+
+  /* TIMER */
+  .timer-body { display: flex; flex-direction: column; gap: 14px; align-items: center; }
+  .timer-display { font-size: 62px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: 2px; line-height: 1; }
+  .timer-display.done { animation: flash .6s steps(1) infinite; color: var(--danger); }
+  @keyframes flash { 50% { opacity: .2; } }
+  .timer-presets { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+  .preset-btn { background: var(--panel-2); border: 1px solid var(--border); color: var(--text); padding: 12px 14px; min-height: 48px; min-width: 56px; font-weight: 600; font-size: 15px; }
+  .timer-custom { display: flex; gap: 8px; align-items: center; width: 100%; }
+  .timer-custom input { flex: 1; }
+  .timer-custom button { flex-shrink: 0; }
+  .timer-ctrls { display: flex; gap: 10px; width: 100%; }
+  .timer-ctrls button { flex: 1; }
+  .timer-msg { font-size: 16px; font-weight: 700; color: var(--danger); min-height: 20px; }
+
+  /* NOTES */
+  .notes-add { display: flex; gap: 10px; margin-bottom: 14px; }
+  .notes-add input { flex: 1; }
+  .notes-add button { flex-shrink: 0; }
+  .notes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .note {
+    border-radius: 12px; padding: 12px; color: #2a2410; position: relative;
+    min-height: 100px; display: flex; flex-direction: column;
+    box-shadow: 0 3px 10px rgba(0,0,0,.3); transform: rotate(-1deg);
+  }
+  .note:nth-child(3n) { transform: rotate(1.2deg); }
+  .note:nth-child(2n) { transform: rotate(.6deg); }
+  .note-text { font-size: 15px; font-weight: 600; word-break: break-word; flex: 1; white-space: pre-wrap; }
+  .note-time { font-size: 11px; opacity: .7; margin-top: 8px; font-weight: 600; }
+  .note-del { position: absolute; top: 5px; right: 5px; width: 28px; height: 28px; background: rgba(0,0,0,.12); border-radius: 8px; font-size: 15px; display: flex; align-items: center; justify-content: center; color: #2a2410; }
+
+  /* HA */
+  .ha-row { display: flex; gap: 10px; }
+  .ha-row input { flex: 1; }
+  .ha-frame-wrap { height: 340px; border-radius: 14px; overflow: hidden; border: 1px solid var(--border); position: relative; background: var(--panel-2); margin-top: 14px; }
+  .ha-frame-wrap iframe { width: 100%; height: 100%; border: none; display: block; }
+  .ha-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; color: var(--muted); padding: 20px; gap: 8px; }
+  .ha-note { font-size: 12px; color: var(--muted); text-align: center; margin-top: 10px; }
+
+  .empty { text-align: center; color: var(--muted); padding: 34px 20px; font-size: 16px; }
+  .empty .em { font-size: 42px; display: block; margin-bottom: 10px; }
+  .summary-warn { color: var(--warn); }
+  .summary-danger { color: var(--danger); }
+
+  /* MODALS */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,.7);
+    display: none; align-items: flex-end; justify-content: center; z-index: 100;
+    backdrop-filter: blur(3px);
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 22px 22px 0 0; padding: 22px 20px calc(22px + env(safe-area-inset-bottom));
+    width: 100%; max-width: 500px; box-shadow: 0 -10px 40px rgba(0,0,0,.6);
+    animation: slideUp .22s ease; max-height: 92vh; overflow-y: auto;
+  }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .modal h2 { margin: 0 0 18px; font-size: 22px; }
+  .field { margin-bottom: 14px; display: flex; flex-direction: column; gap: 6px; }
+  .field label { font-size: 14px; color: var(--muted); font-weight: 600; }
+  .modal-actions { display: flex; gap: 12px; margin-top: 20px; }
+  .modal-actions button { flex: 1; }
+
+  /* CAMERA */
+  .cam-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.96); display: none; flex-direction: column; z-index: 150; }
+  .cam-overlay.show { display: flex; }
+  .cam-topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: calc(12px + env(safe-area-inset-top)) 14px 10px; gap: 8px; flex-shrink: 0; border-bottom: 1px solid #222;
+  }
+  .cam-title { font-size: 17px; font-weight: 800; display: flex; align-items: center; gap: 6px; }
+  .cam-topbar .btn-ghost { padding: 8px 12px; min-height: 40px; font-size: 14px; }
+  .mode-toggle { display: flex; background: var(--panel-2); border-radius: 12px; padding: 4px; gap: 4px; margin: 10px 14px 0; }
+  .mode-toggle button { flex: 1; background: transparent; color: var(--muted); padding: 11px 8px; min-height: 46px; font-weight: 700; border-radius: 9px; font-size: 14px; }
+  .mode-toggle button.active { background: var(--accent); color: #06120f; }
+  .cam-body { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .cam-stage { position: relative; width: 100%; max-width: 500px; aspect-ratio: 3/4; background: #000; border-radius: 16px; overflow: hidden; border: 1px solid #333; }
+  .cam-stage video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .cam-stage canvas { display: none; }
+  .scan-line { position: absolute; left: 8%; right: 8%; top: 50%; height: 3px; background: var(--accent); box-shadow: 0 0 14px var(--accent); animation: scan 2s ease-in-out infinite; }
+  @keyframes scan { 0%,100% { top: 25%; } 50% { top: 75%; } }
+  .cam-hint { color: var(--muted); font-size: 14px; text-align: center; }
+  .cam-error { background: var(--danger-bg); border: 1px solid var(--danger); color: #ffd7d7; padding: 16px; border-radius: 14px; width: 100%; text-align: center; font-size: 15px; font-weight: 600; }
+  .cam-ctrls { display: flex; gap: 10px; width: 100%; max-width: 500px; }
+  .cam-ctrls button { flex: 1; }
+  .file-drop { border: 2px dashed var(--border); border-radius: 14px; padding: 22px; text-align: center; width: 100%; color: var(--muted); }
+  .file-drop input { display: none; }
+  .file-btn { background: var(--panel-2); border: 1px solid var(--border); color: var(--text); padding: 14px 20px; min-height: 50px; font-weight: 700; margin-top: 10px; border-radius: 12px; }
+  .confirm-box { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 18px; width: 100%; max-width: 500px; }
+  .confirm-head { display: flex; gap: 14px; align-items: center; margin-bottom: 16px; }
+  .confirm-head img { width: 64px; height: 64px; border-radius: 12px; object-fit: cover; border: 1px solid var(--border); }
+  .confirm-head .ph { width: 64px; height: 64px; border-radius: 12px; background: var(--panel-2); display: flex; align-items: center; justify-content: center; font-size: 30px; flex-shrink: 0; }
+  .confirm-head .cn { font-size: 17px; font-weight: 800; }
+  .confirm-head .cb { font-size: 13px; color: var(--muted); }
+  .conf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .conf-grid .field { margin-bottom: 0; }
+  .conf-full { grid-column: 1 / -1; }
+  .manual-barcode { display: flex; gap: 10px; width: 100%; max-width: 500px; }
+  .manual-barcode input { flex: 1; }
+  .line-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-items: center; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 10px; margin-bottom: 10px; }
+  .line-row .ln-name { grid-column: 1 / -1; }
+  .line-del { background: rgba(224,92,92,.15); color: var(--danger); height: 48px; border-radius: 10px; font-size: 16px; grid-column: 1 / -1; }
+  .receipt-thumb { max-width: 120px; max-height: 120px; border-radius: 12px; border: 1px solid var(--border); }
+
+  .toast {
+    position: fixed; bottom: calc(var(--nav-h) + 16px); left: 50%; transform: translateX(-50%) translateY(120px);
+    background: var(--accent); color: #08130f; font-weight: 700;
+    padding: 13px 20px; border-radius: 14px; z-index: 200;
+    box-shadow: 0 8px 24px rgba(0,0,0,.4); transition: transform .3s ease; font-size: 15px;
+    max-width: 90vw; text-align: center;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+  <script type="application/ld+json">
+{
+  "@context": "urn:goose.ai:schema",
+  "@type": "GooseApp",
+  "name": "fridge-hub",
+  "description": "Phone-first Fridge Hub: swipeable full-screen pages for fridge inventory, camera scanning, shopping, weather/timer, notes & Home Assistant.",
+  "width": 390,
+  "height": 760,
+  "resizable": true,
+  "mcpServers": [
+    "apps"
+  ]
+}
+  </script>
+  <script type="application/x-goose-prd">
+Fridge Hub — Phone-First Kitchen Command Center
+
+OVERVIEW:
+A mobile-first, single-file HTML app designed for small/older phones held in PORTRAIT. Organized as a horizontal SWIPEABLE PAGER (CSS scroll-snap), one feature per full-screen page, with page-dot indicators and a fixed bottom tab bar. Dark mode by default, large legible text, min 48px tap targets, no horizontal page scrolling. All data persists in localStorage; works offline except weather API, Open Food Facts lookups, and optional ZXing CDN fallback.
+
+NAVIGATION:
+- Horizontal scroll-snapping pager: each page is width:100vw, height:100%, scroll-snap-align:start. Pages scroll vertically inside themselves; pager scrolls horizontally.
+- Page-dot indicators reflect current page and update while swiping.
+- Fixed bottom nav bar with icon + tiny label per page; tapping a tab scroll-snaps to that page; active tab highlighted. Swipe position, dots, and nav stay in sync.
+
+PAGES (in order):
+1. HOME/OVERVIEW — big live clock (HH:MM, updates every second) + full date; mini count summary (items · expiring soon · to-buy); top 3-4 "Expiring soon" items; current weather in one line; latest family note. Default landing page.
+2. FRIDGE — inventory with prominent "📷 Scan Items" + smaller "➕ Add" fallback, category filter/sort (default soonest-expiring), expiry badges (❌ expired, ⚠️ ≤3d, 🔔 ≤7d, ✅ fresh), item cards with name/qty/category/expiry/optional thumbnail, edit/delete (confirm), "🛒 Need more" to shopping list. Vertically scrollable.
+3. SHOPPING — add input (Enter adds), checkable items (strike-through, move to bottom), delete, "Clear checked", checked items get "✓🧊 add to fridge", remaining count.
+4. WEATHER & TIMER — stacked sections. Weather: city saved to localStorage, Open-Meteo geocode + forecast, weather_code→emoji/text, temp/condition/high-low, refresh on load/every 30min/manual, placeholder when unset/offline. Timer: large MM:SS countdown, presets (1,3,5,10,15,30)+custom, Start/Pause/Reset, on zero flashing + Web Audio beep + "Time's up!".
+5. NOTES — family sticky-note board, rotating pastel colors, text + time, add/delete, persisted.
+6. HOME ASSISTANT — HA URL saved to localStorage, Open in new tab, iframe embed (note some setups block embedding), placeholder when unset.
+
+CAMERA-BASED ITEM ENTRY (featured):
+- Full-screen camera modal via getUserMedia({video:{facingMode:'environment'}}) with live preview, sized for small screens.
+- Two modes: (A) Scan Barcode, (B) Snap Photo/Receipt. Capture, Switch Camera, Close buttons.
+- FALLBACK: if getUserMedia fails/denied/no camera → friendly error + <input type=file accept=image/* capture=environment>; manual "➕ Add" always available.
+- (A) Barcode: prefer native BarcodeDetector, fall back to ZXing (unpkg CDN), else manual number input. Lookup via Open Food Facts (product_name, brands, image). Confirm form pre-filled with name/auto-guessed category/qty + REQUIRED expiry (default +7d), "Add to Fridge". Short beep on detect; "Scan another".
+- (B) Photo/Receipt: capture frame to canvas or file upload, thumbnail, repeatable multi-line entry (name/qty/category/expiry, category auto-guess). "Add all to Fridge" (each requires expiry); photo attached to first item.
+- Every added item requires an expiry date.
+
+DATA PERSISTENCE:
+Inventory (incl. thumbnails), shopping list, HA URL, weather city, notes in localStorage. Seeds sample fridge items, shopping items, welcome note on first run.
+
+POLISH:
+Mobile-friendly full/near-full-screen modals, toasts, empty states, Esc/overlay closes modals (Esc closes camera modal first). Single self-contained HTML with inline CSS/JS.
+  </script>
+</head>
+<body>
+  <div class="dots" id="dots"></div>
+
+  <div class="pager" id="pager">
+
+    <!-- PAGE 1: HOME -->
+    <section class="page" data-page="home">
+      <div class="home-brand">🧊 FRIDGE HUB</div>
+      <div class="card" style="text-align:center;">
+        <div class="clock-big" id="clock">--:--</div>
+        <div class="date-big" id="date">—</div>
+      </div>
+      <div class="stat-row" style="margin-top:14px;">
+        <div class="stat"><div class="n" id="homeItems">0</div><div class="l">Items</div></div>
+        <div class="stat warn"><div class="n" id="homeExp">0</div><div class="l">Expiring</div></div>
+        <div class="stat buy"><div class="n" id="homeBuy">0</div><div class="l">To buy</div></div>
+      </div>
+      <div class="card" style="margin-top:14px;">
+        <div class="home-sec-title">⏳ Expiring soon</div>
+        <div id="homeExpList"></div>
+      </div>
+      <div class="card">
+        <div class="home-sec-title">🌤️ Weather</div>
+        <div id="homeWx"><div class="page-sub">Set your city on the Weather tab.</div></div>
+      </div>
+      <div class="card">
+        <div class="home-sec-title">📝 Latest note</div>
+        <div id="homeNote" class="home-note">No notes yet.</div>
+      </div>
+    </section>
+
+    <!-- PAGE 2: FRIDGE -->
+    <section class="page" data-page="fridge">
+      <div class="page-head">
+        <div><div class="page-title">🧊 Fridge</div><div class="page-sub" id="invSummary">0 items</div></div>
+      </div>
+      <div class="inv-actions">
+        <button class="btn-scan" id="scanBtn">📷 Scan Items</button>
+        <button class="btn-ghost" id="addItemBtn">➕ Add Item Manually</button>
+      </div>
+      <div class="inv-filters">
+        <select id="filterCat"><option value="all">All categories</option></select>
+        <select id="sortBy">
+          <option value="expiry">Expiring soonest</option>
+          <option value="name">Name</option>
+          <option value="category">Category</option>
+        </select>
+      </div>
+      <div class="exp-strip" id="expStrip">
+        <div class="exp-strip-title" id="expStripTitle">⏳ Expiring Soon</div>
+        <div class="exp-chips" id="expChips"></div>
+      </div>
+      <div id="invGrid"></div>
+      <div class="empty" id="invEmpty" style="display:none;"><span class="em">🫙</span>Your fridge is empty — tap 📷 Scan Items!</div>
+    </section>
+
+    <!-- PAGE 3: SHOPPING -->
+    <section class="page" data-page="shop">
+      <div class="page-head">
+        <div><div class="page-title">🛒 Shopping</div><div class="page-sub" id="shopSummary">0 to buy</div></div>
+      </div>
+      <div class="shop-add">
+        <input type="text" id="shopInput" placeholder="Add an item to buy…" autocomplete="off">
+        <button class="btn-primary" id="shopAddBtn">Add</button>
+      </div>
+      <button class="btn-ghost" id="clearCheckedBtn" style="width:100%;margin-bottom:14px;">🧹 Clear checked</button>
+      <div id="shopList"></div>
+      <div class="empty" id="shopEmpty" style="display:none;"><span class="em">📝</span>Nothing to buy — all stocked up!</div>
+    </section>
+
+    <!-- PAGE 4: WEATHER & TIMER -->
+    <section class="page" data-page="wxtimer">
+      <div class="page-head"><div class="page-title">🌤️ Weather</div></div>
+      <div class="card">
+        <div id="wxContent"><div class="wx-placeholder"><span class="em">🌤️</span>Set your city to see weather</div></div>
+        <div class="wx-row">
+          <input type="text" id="wxCity" placeholder="Your city (e.g. London)" autocomplete="off">
+          <button class="btn-ghost" id="wxSave" style="flex-shrink:0;">Save</button>
+        </div>
+        <button class="btn-ghost" id="wxRefresh" style="width:100%;margin-top:10px;">🔄 Refresh</button>
+      </div>
+
+      <div class="page-head" style="margin-top:22px;"><div class="page-title">⏲️ Timer</div></div>
+      <div class="card">
+        <div class="timer-body">
+          <div class="timer-display" id="timerDisplay">00:00</div>
+          <div class="timer-msg" id="timerMsg"></div>
+          <div class="timer-presets" id="timerPresets"></div>
+          <div class="timer-custom">
+            <input type="number" id="timerCustom" min="1" max="180" placeholder="minutes">
+            <button class="btn-ghost" id="timerSet">Set</button>
+          </div>
+          <div class="timer-ctrls">
+            <button class="btn-primary" id="timerStart">Start</button>
+            <button class="btn-ghost" id="timerReset">Reset</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 5: NOTES -->
+    <section class="page" data-page="notes">
+      <div class="page-head">
+        <div><div class="page-title">📝 Notes</div><div class="page-sub" id="notesSummary">0 notes</div></div>
+      </div>
+      <div class="notes-add">
+        <input type="text" id="noteInput" placeholder="Leave a note…" autocomplete="off">
+        <button class="btn-primary" id="noteAddBtn">Post</button>
+      </div>
+      <div class="notes-grid" id="notesGrid"></div>
+      <div class="empty" id="notesEmpty" style="display:none;"><span class="em">🗒️</span>No notes yet — post the first one!</div>
+    </section>
+
+    <!-- PAGE 6: HOME ASSISTANT -->
+    <section class="page" data-page="ha">
+      <div class="page-head"><div class="page-title">🏠 Home Assistant</div></div>
+      <div class="card">
+        <div class="ha-row">
+          <input type="url" id="haUrl" placeholder="http://homeassistant.local:8123">
+          <button class="btn-ghost" id="haSaveBtn" style="flex-shrink:0;">Save</button>
+        </div>
+        <button class="btn-primary" id="haOpenBtn" style="width:100%;margin-top:10px;">↗ Open in new tab</button>
+        <div class="ha-frame-wrap" id="haFrameWrap"></div>
+        <div class="ha-note">Some setups block embedding. If blank, use "Open".</div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav" id="bottomNav">
+    <button class="nav-btn active" data-idx="0"><span class="ic">🏠</span><span class="lb">Home</span></button>
+    <button class="nav-btn" data-idx="1"><span class="ic">🧊</span><span class="lb">Fridge</span></button>
+    <button class="nav-btn" data-idx="2"><span class="ic">🛒</span><span class="lb">Shop</span></button>
+    <button class="nav-btn" data-idx="3"><span class="ic">🌤️</span><span class="lb">Weather</span></button>
+    <button class="nav-btn" data-idx="4"><span class="ic">📝</span><span class="lb">Notes</span></button>
+    <button class="nav-btn" data-idx="5"><span class="ic">🏠</span><span class="lb">Smart</span></button>
+  </nav>
+
+  <!-- ITEM MODAL -->
+  <div class="modal-overlay" id="itemModal">
+    <div class="modal">
+      <h2 id="modalTitle">Add Item</h2>
+      <div class="field"><label for="fName">Name</label><input type="text" id="fName" placeholder="e.g. Milk" autocomplete="off"></div>
+      <div class="field"><label for="fQty">Quantity</label><input type="number" id="fQty" min="1" value="1"></div>
+      <div class="field"><label for="fCat">Category</label><select id="fCat"></select></div>
+      <div class="field"><label for="fExp">Expiry date</label><input type="date" id="fExp"></div>
+      <div class="modal-actions">
+        <button class="btn-ghost" id="modalCancel">Cancel</button>
+        <button class="btn-primary" id="modalSave">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAMERA MODAL -->
+  <div class="cam-overlay" id="camOverlay">
+    <div class="cam-topbar">
+      <div class="cam-title">📷 Scan</div>
+      <button class="btn-ghost" id="camClose">✕ Close</button>
+    </div>
+    <div class="mode-toggle">
+      <button id="modeBarcode" class="active">🏷️ Barcode</button>
+      <button id="modePhoto">🧾 Photo</button>
+    </div>
+    <div class="cam-body" id="camBody">
+      <div class="cam-stage" id="camStage">
+        <video id="camVideo" autoplay muted playsinline></video>
+        <canvas id="camCanvas"></canvas>
+        <div class="scan-line" id="scanLine"></div>
+      </div>
+      <div class="cam-hint" id="camHint">Point the rear camera at a barcode.</div>
+      <div class="cam-error" id="camError" style="display:none;"></div>
+      <div class="file-drop" id="fileDrop" style="display:none;">
+        📁 Camera unavailable — take or upload a photo
+        <div><button class="file-btn" id="fileBtn">📷 Choose / Take Photo</button></div>
+        <input type="file" id="fileInput" accept="image/*" capture="environment">
+      </div>
+      <div class="cam-ctrls" id="camCtrls">
+        <button class="btn-primary" id="camCapture">📸 Capture</button>
+        <button class="btn-ghost" id="camSwitch">🔄 Switch</button>
+      </div>
+      <div class="manual-barcode" id="manualBarcodeWrap" style="display:none;">
+        <input type="text" id="manualBarcode" placeholder="Type barcode number…" inputmode="numeric">
+        <button class="btn-ghost" id="manualBarcodeBtn" style="flex-shrink:0;">Look up</button>
+      </div>
+      <div id="camResult" style="width:100%; max-width:500px;"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  const CATS = { "Dairy":"🥛","Produce":"🥬","Meat":"🍖","Drinks":"🧃","Leftovers":"🍱","Condiments":"🧂","Frozen":"🧊","Other":"📦" };
+  const CAT_COLORS = { "Dairy":"#5b8def","Produce":"#4dd0a7","Meat":"#e07a7a","Drinks":"#e8a33d","Leftovers":"#c07ae0","Condiments":"#d4b45a","Frozen":"#5ec7e0","Other":"#8b95a3" };
+  const NOTE_COLORS = ["#ffe08a","#a8e6cf","#ffb3ba","#bae1ff","#d5b3ff","#ffd6a5"];
+
+  const LS = { inv:"fridgehub_inventory_v1", shop:"fridgehub_shopping_v1", ha:"fridgehub_ha_url_v1", seeded:"fridgehub_seeded_v1", city:"fridgehub_city_v1", notes:"fridgehub_notes_v1" };
+
+  let inventory=[], shopping=[], notes=[], editingId=null;
+
+  const $ = id => document.getElementById(id);
+  const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+  function load(key,def){ try{ const v=localStorage.getItem(key); return v?JSON.parse(v):def; }catch(e){ return def; } }
+  function save(key,val){ try{ localStorage.setItem(key,JSON.stringify(val)); }catch(e){} }
+  function toast(msg){ const t=$("toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove("show"),2200); }
+  function esc(s){ return String(s).replace(/[&<>"']/g,c=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c])); }
+  function hexA(hex,a){ const n=parseInt(hex.slice(1),16); return "rgba("+((n>>16)&255)+","+((n>>8)&255)+","+(n&255)+","+a+")"; }
+  function todayStr(){ const d=new Date(); d.setHours(0,0,0,0); return d; }
+  function parseDate(s){ if(!s) return null; const d=new Date(s+"T00:00:00"); return isNaN(d)?null:d; }
+  function daysUntil(s){ const d=parseDate(s); if(!d) return null; return Math.round((d-todayStr())/86400000); }
+  function fmtExpiry(s){ const d=parseDate(s); if(!d) return ""; return d.toLocaleDateString(undefined,{month:"short",day:"numeric"}); }
+  function isoOffset(days){ const d=new Date(); d.setDate(d.getDate()+days); return d.toISOString().slice(0,10); }
+
+  function guessCategory(name){
+    const n=(name||"").toLowerCase();
+    if(/milk|cheese|yog|yoghurt|yogurt|butter|cream|egg/.test(n)) return "Dairy";
+    if(/apple|banana|lettuce|tomato|onion|carrot|spinach|pepper|fruit|veg|salad|berry|grape|orange|lemon/.test(n)) return "Produce";
+    if(/chicken|beef|pork|bacon|ham|sausage|steak|fish|salmon|turkey|meat/.test(n)) return "Meat";
+    if(/juice|soda|cola|water|drink|beer|wine|tea|coffee|smoothie/.test(n)) return "Drinks";
+    if(/leftover|pasta|rice|soup|curry/.test(n)) return "Leftovers";
+    if(/sauce|ketchup|mayo|mustard|dressing|jam|honey|oil|vinegar|condiment/.test(n)) return "Condiments";
+    if(/frozen|ice cream|pizza/.test(n)) return "Frozen";
+    return "Other";
+  }
+
+  function seed(){
+    if(load(LS.seeded,false)) return;
+    inventory=[
+      { id:uid(), name:"Milk", qty:1, cat:"Dairy", exp:isoOffset(2) },
+      { id:uid(), name:"Eggs", qty:12, cat:"Dairy", exp:isoOffset(9) },
+      { id:uid(), name:"Lettuce", qty:1, cat:"Produce", exp:isoOffset(1) },
+      { id:uid(), name:"Leftover pasta", qty:1, cat:"Leftovers", exp:isoOffset(-1) },
+      { id:uid(), name:"Orange juice", qty:1, cat:"Drinks", exp:isoOffset(5) },
+      { id:uid(), name:"Yogurt", qty:4, cat:"Dairy", exp:isoOffset(6) }
+    ];
+    shopping=[ { id:uid(), name:"Bananas", done:false }, { id:uid(), name:"Bread", done:false }, { id:uid(), name:"Coffee", done:false } ];
+    notes=[ { id:uid(), text:"Welcome to Fridge Hub! 👋 Swipe between pages.", t:Date.now() } ];
+    save(LS.inv,inventory); save(LS.shop,shopping); save(LS.notes,notes); save(LS.seeded,true);
+  }
+
+  function tickClock(){
+    const now=new Date();
+    $("clock").textContent = String(now.getHours()).padStart(2,"0")+":"+String(now.getMinutes()).padStart(2,"0");
+    $("date").textContent = now.toLocaleDateString(undefined,{ weekday:"long", month:"long", day:"numeric" });
+  }
+
+  function expState(exp){
+    const d=daysUntil(exp);
+    if(d===null) return {cls:"", key:"none", d:null};
+    if(d<0) return {cls:"exp-past", key:"past", d};
+    if(d<=3) return {cls:"exp-soon", key:"soon", d};
+    if(d<=7) return {cls:"exp-week", key:"week", d};
+    return {cls:"exp-fresh", key:"fresh", d};
+  }
+
+  // ---------- PAGER ----------
+  let currentPage=0;
+  const PAGES=6;
+  function updateActive(idx){
+    currentPage=idx;
+    [...$("dots").children].forEach((d,i)=>d.classList.toggle("active",i===idx));
+    [...$("bottomNav").children].forEach((b,i)=>b.classList.toggle("active",i===idx));
+  }
+  function goToPage(idx){
+    const pager=$("pager");
+    pager.scrollTo({ left: idx*window.innerWidth, behavior:"smooth" });
+    updateActive(idx);
+  }
+  function initPager(){
+    const dots=$("dots");
+    for(let i=0;i<PAGES;i++){ const d=document.createElement("div"); d.className="dot"+(i===0?" active":""); dots.appendChild(d); }
+    [...$("bottomNav").children].forEach(b=>{ b.onclick=()=>goToPage(parseInt(b.dataset.idx)); });
+    const pager=$("pager");
+    let scrollTimer=null;
+    pager.addEventListener("scroll",()=>{
+      if(scrollTimer) return;
+      scrollTimer=requestAnimationFrame(()=>{
+        scrollTimer=null;
+        const idx=Math.round(pager.scrollLeft/window.innerWidth);
+        if(idx!==currentPage) updateActive(idx);
+      });
+    });
+    window.addEventListener("resize",()=>{ pager.scrollLeft=currentPage*window.innerWidth; });
+  }
+
+  // ---------- inventory ----------
+  function renderInventory(){
+    const grid=$("invGrid"), filter=$("filterCat").value, sortBy=$("sortBy").value;
+    let list=inventory.slice();
+    if(filter!=="all") list=list.filter(i=>i.cat===filter);
+    list.sort((a,b)=>{
+      if(sortBy==="name") return a.name.localeCompare(b.name);
+      if(sortBy==="category") return a.cat.localeCompare(b.cat)||a.name.localeCompare(b.name);
+      const da=a.exp?parseDate(a.exp).getTime():Infinity, db=b.exp?parseDate(b.exp).getTime():Infinity; return da-db;
+    });
+    grid.innerHTML="";
+    $("invEmpty").style.display = list.length ? "none" : "block";
+
+    let soon=0,past=0,week=0;
+    inventory.forEach(i=>{ const s=expState(i.exp); if(s.key==="past")past++; else if(s.key==="soon")soon++; else if(s.key==="week")week++; });
+
+    list.forEach(item=>{
+      const s=expState(item.exp); let badge="";
+      if(s.key==="past") badge='<span class="badge past">❌ Expired</span>';
+      else if(s.key==="soon") badge='<span class="badge soon">⚠️ Expiring soon</span>';
+      else if(s.key==="week") badge='<span class="badge week">🔔 Use this week</span>';
+      else if(s.key==="fresh") badge='<span class="badge fresh">✅ Fresh</span>';
+      const color=CAT_COLORS[item.cat]||"#8b95a3";
+      const card=document.createElement("div");
+      card.className="item-card "+s.cls;
+      const thumb=item.img?'<img class="item-thumb" src="'+esc(item.img)+'" alt="">':'';
+      card.innerHTML=
+        '<div class="item-top"><div style="display:flex;gap:10px;align-items:flex-start;">'+thumb+
+        '<div><div class="item-name">'+esc(item.name)+'</div>'+
+        '<div class="item-qty">Qty: '+item.qty+'</div></div></div>'+
+        '<div style="display:flex;gap:6px;">'+
+          '<button class="icon-btn" data-act="edit">✏️</button>'+
+          '<button class="icon-btn" data-act="del">🗑️</button></div></div>'+
+        '<span class="cat-tag" style="background:'+hexA(color,.16)+';color:'+color+';">'+(CATS[item.cat]||"📦")+' '+esc(item.cat)+'</span>'+
+        (item.exp?'<span class="expiry-text">📅 Expires '+fmtExpiry(item.exp)+(s.d!==null&&s.d>=0?' ('+s.d+'d)':'')+'</span>':'<span class="expiry-text">📅 No expiry set</span>')+
+        badge+
+        '<div class="item-actions"><button class="icon-btn cart" data-act="cart">🛒 Need more</button></div>';
+      card.querySelector('[data-act="edit"]').onclick=()=>openModal(item.id);
+      card.querySelector('[data-act="del"]').onclick=()=>deleteItem(item.id);
+      card.querySelector('[data-act="cart"]').onclick=()=>needMore(item.id);
+      grid.appendChild(card);
+    });
+
+    let sum=inventory.length+" item"+(inventory.length===1?"":"s");
+    const extras=[];
+    if(soon) extras.push('<span class="summary-warn">'+soon+' expiring soon</span>');
+    if(past) extras.push('<span class="summary-danger">'+past+' expired</span>');
+    $("invSummary").innerHTML=sum+(extras.length?' · '+extras.join(" · "):"");
+
+    renderExpStrip();
+    renderHome();
+  }
+
+  function renderExpStrip(){
+    const chips=$("expChips"), title=$("expStripTitle");
+    chips.innerHTML="";
+    const urgent=inventory.map(i=>({i, s:expState(i.exp)})).filter(x=>x.s.key==="past"||x.s.key==="soon"||x.s.key==="week").sort((a,b)=>parseDate(a.i.exp)-parseDate(b.i.exp));
+    if(!urgent.length){
+      title.textContent="✅ All fresh 🎉"; title.classList.add("allfresh");
+      chips.innerHTML='<span style="color:var(--muted);font-size:13px;">Nothing expiring soon.</span>';
+      return;
+    }
+    title.textContent="⏳ Expiring Soon"; title.classList.remove("allfresh");
+    urgent.forEach(x=>{
+      const c=document.createElement("span"); c.className="exp-chip "+x.s.key;
+      let lbl;
+      if(x.s.key==="past") lbl="❌ "+Math.abs(x.s.d)+"d ago";
+      else if(x.s.d===0) lbl="⚠️ today";
+      else lbl=(x.s.key==="soon"?"⚠️ ":"🔔 ")+x.s.d+"d";
+      c.innerHTML=esc(x.i.name)+' <span class="d">'+lbl+'</span>';
+      c.onclick=()=>openModal(x.i.id);
+      chips.appendChild(c);
+    });
+  }
+
+  function deleteItem(id){
+    const item=inventory.find(i=>i.id===id); if(!item) return;
+    if(confirm('Delete "'+item.name+'" from the fridge?')){ inventory=inventory.filter(i=>i.id!==id); save(LS.inv,inventory); renderInventory(); toast("Removed "+item.name); }
+  }
+  function needMore(id){
+    const item=inventory.find(i=>i.id===id); if(!item) return;
+    if(!shopping.some(s=>s.name.toLowerCase()===item.name.toLowerCase()&&!s.done)){ shopping.push({id:uid(),name:item.name,done:false}); save(LS.shop,shopping); renderShopping(); }
+    if(confirm('Added "'+item.name+'" to shopping list.\nRemove it from the fridge too?')){ inventory=inventory.filter(i=>i.id!==id); save(LS.inv,inventory); renderInventory(); }
+    toast("🛒 "+item.name+" added to list");
+  }
+  function addItem(obj){ inventory.push(Object.assign({id:uid(),qty:1,cat:"Other",exp:""},obj)); save(LS.inv,inventory); renderInventory(); }
+
+  // ---------- item modal ----------
+  function openModal(id, prefillName){
+    editingId=id||null;
+    $("modalTitle").textContent=id?"Edit Item":"Add Item";
+    if(id){ const it=inventory.find(i=>i.id===id); $("fName").value=it.name; $("fQty").value=it.qty; $("fCat").value=it.cat; $("fExp").value=it.exp||""; }
+    else { $("fName").value=prefillName||""; $("fQty").value=1; $("fCat").value=prefillName?guessCategory(prefillName):"Other"; $("fExp").value=isoOffset(7); }
+    $("itemModal").classList.add("show"); setTimeout(()=>$("fName").focus(),50);
+  }
+  function closeModal(){ $("itemModal").classList.remove("show"); editingId=null; }
+  function saveModal(){
+    const name=$("fName").value.trim(); if(!name){ toast("Enter a name"); $("fName").focus(); return; }
+    const qty=Math.max(1,parseInt($("fQty").value)||1), cat=$("fCat").value, exp=$("fExp").value||"";
+    if(editingId){ const it=inventory.find(i=>i.id===editingId); Object.assign(it,{name,qty,cat,exp}); toast("Updated "+name); }
+    else { inventory.push({id:uid(),name,qty,cat,exp}); toast("Added "+name); }
+    save(LS.inv,inventory); renderInventory(); closeModal();
+  }
+
+  // ---------- shopping ----------
+  function renderShopping(){
+    const wrap=$("shopList"); wrap.innerHTML="";
+    const sorted=shopping.slice().sort((a,b)=>(a.done?1:0)-(b.done?1:0));
+    $("shopEmpty").style.display=shopping.length?"none":"block";
+    sorted.forEach(item=>{
+      const row=document.createElement("div"); row.className="shop-item"+(item.done?" done":"");
+      row.innerHTML='<button class="check">'+(item.done?"✓":"")+'</button>'+
+        '<span class="shop-name">'+esc(item.name)+'</span>'+
+        '<div class="shop-actions">'+
+        (item.done?'<button class="icon-btn" data-act="tofridge" style="color:var(--accent);">✓🧊</button>':'')+
+        '<button class="icon-btn" data-act="del">🗑️</button></div>';
+      row.querySelector(".check").onclick=()=>{ item.done=!item.done; save(LS.shop,shopping); renderShopping(); };
+      row.querySelector('[data-act="del"]').onclick=()=>{ shopping=shopping.filter(s=>s.id!==item.id); save(LS.shop,shopping); renderShopping(); };
+      const tf=row.querySelector('[data-act="tofridge"]');
+      if(tf) tf.onclick=()=>{ shopping=shopping.filter(s=>s.id!==item.id); save(LS.shop,shopping); renderShopping(); openModal(null,item.name); };
+      wrap.appendChild(row);
+    });
+    const rem=shopping.filter(s=>!s.done).length;
+    $("shopSummary").textContent=rem+" to buy"+(shopping.length-rem?" · "+(shopping.length-rem)+" done":"");
+    renderHome();
+  }
+  function addShop(){ const inp=$("shopInput"), name=inp.value.trim(); if(!name) return; shopping.push({id:uid(),name,done:false}); save(LS.shop,shopping); inp.value=""; renderShopping(); inp.focus(); }
+  function clearChecked(){ if(!shopping.some(s=>s.done)){ toast("Nothing checked"); return; } shopping=shopping.filter(s=>!s.done); save(LS.shop,shopping); renderShopping(); toast("Cleared checked items"); }
+
+  // ---------- notes ----------
+  function renderNotes(){
+    const grid=$("notesGrid"); grid.innerHTML="";
+    $("notesEmpty").style.display=notes.length?"none":"block";
+    notes.slice().reverse().forEach((n,idx)=>{
+      const color=NOTE_COLORS[idx%NOTE_COLORS.length];
+      const el=document.createElement("div"); el.className="note"; el.style.background=color;
+      const time=new Date(n.t).toLocaleString(undefined,{month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"});
+      el.innerHTML='<button class="note-del">✕</button><div class="note-text">'+esc(n.text)+'</div><div class="note-time">'+time+'</div>';
+      el.querySelector(".note-del").onclick=()=>{ notes=notes.filter(x=>x.id!==n.id); save(LS.notes,notes); renderNotes(); };
+      grid.appendChild(el);
+    });
+    $("notesSummary").textContent=notes.length+" note"+(notes.length===1?"":"s");
+    renderHome();
+  }
+  function addNote(){ const inp=$("noteInput"), text=inp.value.trim(); if(!text) return; notes.push({id:uid(),text,t:Date.now()}); save(LS.notes,notes); inp.value=""; renderNotes(); inp.focus(); }
+
+  // ---------- HOME ----------
+  let lastWx=null;
+  function renderHome(){
+    let soon=0,past=0;
+    inventory.forEach(i=>{ const s=expState(i.exp); if(s.key==="past")past++; else if(s.key==="soon"||s.key==="week")soon++; });
+    $("homeItems").textContent=inventory.length;
+    $("homeExp").textContent=soon+past;
+    $("homeBuy").textContent=shopping.filter(s=>!s.done).length;
+
+    const urgent=inventory.map(i=>({i,s:expState(i.exp)})).filter(x=>x.s.key==="past"||x.s.key==="soon"||x.s.key==="week").sort((a,b)=>parseDate(a.i.exp)-parseDate(b.i.exp)).slice(0,4);
+    const list=$("homeExpList");
+    if(!urgent.length){ list.innerHTML='<div class="page-sub">All fresh 🎉</div>'; }
+    else {
+      list.innerHTML=urgent.map(x=>{
+        let lbl,cls=x.s.key;
+        if(x.s.key==="past") lbl="❌ "+Math.abs(x.s.d)+"d ago";
+        else if(x.s.d===0) lbl="⚠️ today";
+        else lbl=(x.s.key==="soon"?"⚠️ ":"🔔 ")+x.s.d+"d";
+        return '<div class="home-exp-item"><span>'+esc(x.i.name)+'</span><span class="home-exp-badge '+cls+'">'+lbl+'</span></div>';
+      }).join("");
+    }
+    if(notes.length){ const n=notes[notes.length-1]; $("homeNote").textContent=n.text; }
+    else $("homeNote").textContent="No notes yet.";
+    renderHomeWx();
+  }
+  function renderHomeWx(){
+    const el=$("homeWx");
+    if(lastWx){ el.innerHTML='<div class="home-wx"><span class="em">'+lastWx.icon+'</span><div><div class="t">'+lastWx.temp+lastWx.unit+'</div><div class="c">'+esc(lastWx.cond)+' · '+esc(lastWx.place)+'</div></div></div>'; }
+    else { const city=load(LS.city,""); el.innerHTML='<div class="page-sub">'+(city?"Loading weather…":"Set your city on the Weather tab.")+'</div>'; }
+  }
+
+  // ---------- weather ----------
+  const WX_CODES = {0:["☀️","Clear sky"],1:["🌤️","Mainly clear"],2:["⛅","Partly cloudy"],3:["☁️","Overcast"],45:["🌫️","Fog"],48:["🌫️","Rime fog"],51:["🌦️","Light drizzle"],53:["🌦️","Drizzle"],55:["🌦️","Dense drizzle"],56:["🌧️","Freezing drizzle"],57:["🌧️","Freezing drizzle"],61:["🌧️","Light rain"],63:["🌧️","Rain"],65:["🌧️","Heavy rain"],66:["🌧️","Freezing rain"],67:["🌧️","Freezing rain"],71:["❄️","Light snow"],73:["❄️","Snow"],75:["❄️","Heavy snow"],77:["❄️","Snow grains"],80:["🌦️","Light showers"],81:["🌦️","Showers"],82:["🌦️","Violent showers"],85:["🌨️","Snow showers"],86:["🌨️","Snow showers"],95:["⛈️","Thunderstorm"],96:["⛈️","Thunderstorm w/ hail"],99:["⛈️","Thunderstorm w/ hail"]};
+  function wxInfo(code){ return WX_CODES[code]||["🌡️","Unknown"]; }
+  function wxPlaceholder(msg){ $("wxContent").innerHTML='<div class="wx-placeholder"><span class="em">🌤️</span>'+esc(msg)+'</div>'; }
+
+  async function fetchWeather(){
+    const city=load(LS.city,"");
+    if(!city){ wxPlaceholder("Set your city to see weather"); lastWx=null; renderHomeWx(); return; }
+    $("wxContent").innerHTML='<div class="wx-placeholder"><span class="em">⏳</span>Loading weather…</div>';
+    try {
+      const geo=await fetch("https://geocoding-api.open-meteo.com/v1/search?name="+encodeURIComponent(city)+"&count=1").then(r=>r.json());
+      if(!geo.results||!geo.results.length){ wxPlaceholder('Couldn\u2019t find "'+city+'".'); lastWx=null; renderHomeWx(); return; }
+      const g=geo.results[0];
+      const wx=await fetch("https://api.open-meteo.com/v1/forecast?latitude="+g.latitude+"&longitude="+g.longitude+"&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=auto").then(r=>r.json());
+      const cur=wx.current, code=cur.weather_code, info=wxInfo(code);
+      const hi=Math.round(wx.daily.temperature_2m_max[0]), lo=Math.round(wx.daily.temperature_2m_min[0]);
+      const temp=Math.round(cur.temperature_2m);
+      const unit=(wx.current_units&&wx.current_units.temperature_2m)||"°C";
+      $("wxContent").innerHTML=
+        '<div class="wx-main"><div class="wx-icon">'+info[0]+'</div>'+
+        '<div><div class="wx-temp">'+temp+unit+'</div>'+
+        '<div class="wx-cond">'+esc(info[1])+'</div>'+
+        '<div class="wx-day">'+esc(g.name)+(g.country?", "+esc(g.country):"")+' · Today</div></div></div>'+
+        '<div class="wx-hilo"><span>High <b>'+hi+unit+'</b></span><span>Low <b>'+lo+unit+'</b></span></div>';
+      lastWx={icon:info[0],temp:temp,unit:unit,cond:info[1],place:g.name};
+      renderHomeWx();
+    } catch(e){ wxPlaceholder("No internet — can't load weather."); lastWx=null; renderHomeWx(); }
+  }
+  function saveCity(){ const c=$("wxCity").value.trim(); save(LS.city,c); toast(c?"City saved":"City cleared"); fetchWeather(); }
+
+  // ---------- timer ----------
+  let timerTotal=0, timerRemaining=0, timerInterval=null, timerRunning=false, audioCtx=null;
+  function fmtTimer(sec){ const m=Math.floor(sec/60), s=sec%60; return String(m).padStart(2,"0")+":"+String(s).padStart(2,"0"); }
+  function renderTimer(){ $("timerDisplay").textContent=fmtTimer(timerRemaining); }
+  function setTimer(sec){ stopTimerFlash(); pauseTimer(); timerTotal=sec; timerRemaining=sec; $("timerMsg").textContent=""; renderTimer(); }
+  function startTimer(){
+    if(timerRemaining<=0){ toast("Set a time first"); return; }
+    if(timerRunning) return;
+    stopTimerFlash(); timerRunning=true; $("timerStart").textContent="Pause";
+    timerInterval=setInterval(()=>{ timerRemaining--; renderTimer(); if(timerRemaining<=0){ timerDone(); } },1000);
+  }
+  function pauseTimer(){ if(timerInterval){ clearInterval(timerInterval); timerInterval=null; } timerRunning=false; $("timerStart").textContent="Start"; }
+  function resetTimer(){ pauseTimer(); stopTimerFlash(); timerRemaining=timerTotal; $("timerMsg").textContent=""; renderTimer(); }
+  function stopTimerFlash(){ $("timerDisplay").classList.remove("done"); }
+  function timerDone(){ pauseTimer(); timerRemaining=0; renderTimer(); $("timerDisplay").classList.add("done"); $("timerMsg").textContent="⏰ Time's up!"; beepAlarm(); toast("⏰ Time's up!"); }
+  function beepAlarm(){
+    try {
+      audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
+      const ctx=audioCtx; let start=ctx.currentTime;
+      for(let i=0;i<4;i++){ const osc=ctx.createOscillator(), gain=ctx.createGain(); osc.type="sine"; osc.frequency.value= i%2===0?880:1046; gain.gain.setValueAtTime(0.0001,start); gain.gain.exponentialRampToValueAtTime(0.4,start+0.02); gain.gain.exponentialRampToValueAtTime(0.0001,start+0.32); osc.connect(gain); gain.connect(ctx.destination); osc.start(start); osc.stop(start+0.34); start+=0.4; }
+    } catch(e){}
+  }
+  function toggleTimer(){ if(timerRunning) pauseTimer(); else startTimer(); }
+  function buildPresets(){ const wrap=$("timerPresets"); [1,3,5,10,15,30].forEach(m=>{ const b=document.createElement("button"); b.className="preset-btn"; b.textContent=m+"m"; b.onclick=()=>setTimer(m*60); wrap.appendChild(b); }); }
+  function setCustom(){ const v=parseInt($("timerCustom").value); if(!v||v<1){ toast("Enter minutes"); return; } setTimer(Math.min(v,180)*60); $("timerCustom").value=""; }
+
+  // ---------- HA ----------
+  function renderHA(){
+    const url=load(LS.ha,""); $("haUrl").value=url||"";
+    const wrap=$("haFrameWrap");
+    if(url){ wrap.innerHTML='<iframe src="'+esc(url)+'" referrerpolicy="no-referrer"></iframe>'; }
+    else { wrap.innerHTML='<div class="ha-placeholder"><span style="font-size:38px;">🏠</span><div style="font-size:16px;font-weight:600;">Connect your smart home</div><div style="font-size:13px;">Paste your HA URL and tap Save.</div></div>'; }
+  }
+  function saveHA(){ let url=$("haUrl").value.trim(); if(url&&!/^https?:\/\//i.test(url)) url="http://"+url; save(LS.ha,url); renderHA(); toast(url?"Home Assistant saved":"URL cleared"); }
+  function openHA(){ const url=load(LS.ha,""); if(!url){ toast("Add your HA URL first"); $("haUrl").focus(); return; } window.open(url,"_blank","noopener"); }
+
+  function populateCats(){
+    const fc=$("fCat"), flt=$("filterCat");
+    Object.keys(CATS).forEach(c=>{
+      const o1=document.createElement("option"); o1.value=c; o1.textContent=CATS[c]+" "+c; fc.appendChild(o1);
+      const o2=document.createElement("option"); o2.value=c; o2.textContent=CATS[c]+" "+c; flt.appendChild(o2);
+    });
+  }
+  function catOptions(sel){ return Object.keys(CATS).map(c=>'<option value="'+c+'"'+(c===sel?' selected':'')+'>'+CATS[c]+' '+c+'</option>').join(''); }
+
+  // ================= CAMERA / SCAN =================
+  let camStream=null, camFacing="environment", camMode="barcode";
+  let scanTimer=null, barcodeDetector=null, zxingReader=null, zxingLoading=false, lastBarcode=null;
+
+  function openCam(){ $("camOverlay").classList.add("show"); setMode("barcode"); startCamera(); }
+  function closeCam(){ $("camOverlay").classList.remove("show"); stopScan(); stopCamera(); $("camResult").innerHTML=""; lastBarcode=null; }
+  function stopCamera(){ if(camStream){ camStream.getTracks().forEach(t=>t.stop()); camStream=null; } }
+  async function startCamera(){
+    stopScan(); stopCamera();
+    $("camError").style.display="none"; $("fileDrop").style.display="none";
+    $("camStage").style.display=""; $("camCtrls").style.display="flex";
+    const video=$("camVideo");
+    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){ camFail("Camera API not available."); return; }
+    try {
+      camStream=await navigator.mediaDevices.getUserMedia({ video:{ facingMode:camFacing }, audio:false });
+      video.srcObject=camStream; await video.play().catch(()=>{});
+      if(camMode==="barcode") startBarcodeScan();
+    } catch(e){
+      let msg="Couldn't access the camera.";
+      if(e && e.name==="NotAllowedError") msg="Camera permission denied. Allow access or use photo upload below.";
+      else if(e && e.name==="NotFoundError") msg="No camera found on this device.";
+      camFail(msg);
+    }
+  }
+  function camFail(msg){
+    stopCamera();
+    $("camError").textContent="⚠️ "+msg; $("camError").style.display="block";
+    $("camStage").style.display="none"; $("camCtrls").style.display="none";
+    $("fileDrop").style.display="block";
+    if(camMode==="barcode") $("manualBarcodeWrap").style.display="flex";
+  }
+  function switchCamera(){ camFacing = camFacing==="environment" ? "user" : "environment"; startCamera(); }
+
+  function setMode(mode){
+    camMode=mode;
+    $("modeBarcode").classList.toggle("active", mode==="barcode");
+    $("modePhoto").classList.toggle("active", mode==="photo");
+    $("camResult").innerHTML=""; lastBarcode=null; stopScan();
+    if(mode==="barcode"){
+      $("scanLine").style.display="block";
+      $("camHint").textContent="Point the rear camera at a barcode.";
+      $("camCapture").style.display="none";
+      $("manualBarcodeWrap").style.display = camStream ? "none" : "flex";
+      if(camStream) startBarcodeScan(); else $("manualBarcodeWrap").style.display="flex";
+    } else {
+      $("scanLine").style.display="none";
+      $("camHint").textContent="Tap Capture to snap the shelf/receipt.";
+      $("camCapture").style.display=""; $("manualBarcodeWrap").style.display="none";
+    }
+  }
+
+  async function startBarcodeScan(){
+    stopScan();
+    if("BarcodeDetector" in window){
+      try { if(!barcodeDetector) barcodeDetector=new window.BarcodeDetector({ formats:["ean_13","ean_8","upc_a","upc_e","code_128"] }); scanTimer=setInterval(detectNative,700); return; } catch(e){}
+    }
+    loadZXing();
+  }
+  async function detectNative(){
+    const video=$("camVideo"); if(!video || video.readyState<2) return;
+    try { const codes=await barcodeDetector.detect(video); if(codes && codes.length) onBarcode(codes[0].rawValue); } catch(e){}
+  }
+  function loadZXing(){
+    if(window.ZXing){ startZXing(); return; }
+    if(zxingLoading) return; zxingLoading=true;
+    $("camHint").textContent="Loading barcode engine…";
+    const s=document.createElement("script"); s.src="https://unpkg.com/@zxing/library@latest/umd/index.min.js";
+    s.onload=()=>{ zxingLoading=false; if(window.ZXing) startZXing(); else zxingFail(); };
+    s.onerror=()=>{ zxingLoading=false; zxingFail(); };
+    document.head.appendChild(s);
+  }
+  function zxingFail(){ $("camHint").textContent="Auto detection unsupported. Type the barcode below."; $("manualBarcodeWrap").style.display="flex"; }
+  function startZXing(){
+    try { if(!zxingReader) zxingReader=new window.ZXing.BrowserMultiFormatReader(); $("camHint").textContent="Point at a barcode…"; zxingReader.decodeFromVideoElement($("camVideo"),(result,err)=>{ if(result) onBarcode(result.getText()); }); } catch(e){ zxingFail(); }
+  }
+  function stopScan(){ if(scanTimer){ clearInterval(scanTimer); scanTimer=null; } if(zxingReader){ try{ zxingReader.reset(); }catch(e){} } }
+  async function onBarcode(code){
+    if(!code || code===lastBarcode) return;
+    lastBarcode=code; stopScan(); beepShort();
+    $("camHint").textContent="Barcode "+code+" — looking up…";
+    let product=null;
+    try {
+      const r=await fetch("https://world.openfoodfacts.org/api/v0/product/"+encodeURIComponent(code)+".json").then(x=>x.json());
+      if(r && r.status===1 && r.product){ product={ name:r.product.product_name||r.product.generic_name||"", brand:(r.product.brands||"").split(",")[0]||"", img:r.product.image_front_small_url||r.product.image_url||"" }; }
+    } catch(e){}
+    showBarcodeConfirm(code, product);
+  }
+  function manualLookup(){ const v=$("manualBarcode").value.trim(); if(!v){ toast("Enter a barcode"); return; } lastBarcode=null; onBarcode(v); }
+
+  function showBarcodeConfirm(code, product){
+    const found = product && product.name;
+    const name = found ? product.name : "";
+    const brand = found ? product.brand : "";
+    const img = found ? product.img : "";
+    const guessed = guessCategory(name);
+    const box=$("camResult");
+    box.innerHTML=
+      '<div class="confirm-box">'+
+        '<div class="confirm-head">'+
+          (img?'<img src="'+esc(img)+'" alt="">':'<div class="ph">'+(CATS[guessed]||'📦')+'</div>')+
+          '<div><div class="cn">'+(found?esc(name):'Product not found')+'</div>'+
+          '<div class="cb">'+(brand?esc(brand)+' · ':'')+'Barcode '+esc(code)+(found?'':' — type the name')+'</div></div>'+
+        '</div>'+
+        '<div class="conf-grid">'+
+          '<div class="field conf-full"><label>Name</label><input type="text" id="bcName" value="'+esc(name)+'" placeholder="Product name"></div>'+
+          '<div class="field"><label>Quantity</label><input type="number" id="bcQty" min="1" value="1"></div>'+
+          '<div class="field"><label>Category</label><select id="bcCat">'+catOptions(guessed)+'</select></div>'+
+          '<div class="field conf-full"><label>Expiry date (required)</label><input type="date" id="bcExp" value="'+isoOffset(7)+'"></div>'+
+        '</div>'+
+        '<div class="modal-actions">'+
+          '<button class="btn-ghost" id="bcAgain">↺ Scan another</button>'+
+          '<button class="btn-primary" id="bcAdd">🧊 Add to Fridge</button>'+
+        '</div>'+
+      '</div>';
+    if(!found) setTimeout(()=>$("bcName").focus(),50);
+    $("bcAdd").onclick=()=>{
+      const nm=$("bcName").value.trim(); if(!nm){ toast("Enter a name"); $("bcName").focus(); return; }
+      const exp=$("bcExp").value; if(!exp){ toast("Please set an expiry date"); $("bcExp").focus(); return; }
+      addItem({ name:nm, qty:Math.max(1,parseInt($("bcQty").value)||1), cat:$("bcCat").value, exp, img: img||"" });
+      toast("🧊 Added "+nm); box.innerHTML=""; lastBarcode=null;
+      if(camStream) startBarcodeScan(); else $("manualBarcodeWrap").style.display="flex";
+    };
+    $("bcAgain").onclick=()=>{ box.innerHTML=""; lastBarcode=null; if(camStream) startBarcodeScan(); };
+  }
+
+  function beepShort(){
+    try {
+      audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
+      const ctx=audioCtx, osc=ctx.createOscillator(), g=ctx.createGain();
+      osc.type="square"; osc.frequency.value=1200;
+      g.gain.setValueAtTime(0.0001,ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.25,ctx.currentTime+0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001,ctx.currentTime+0.14);
+      osc.connect(g); g.connect(ctx.destination); osc.start(); osc.stop(ctx.currentTime+0.15);
+    } catch(e){}
+  }
+
+  function capturePhoto(){
+    const video=$("camVideo"); if(!video || video.readyState<2){ toast("Camera not ready"); return; }
+    const c=$("camCanvas"); c.width=video.videoWidth||640; c.height=video.videoHeight||480;
+    c.getContext("2d").drawImage(video,0,0,c.width,c.height);
+    showPhotoForm(c.toDataURL("image/jpeg",0.6));
+  }
+  function handleFile(file){ if(!file) return; const reader=new FileReader(); reader.onload=e=>showPhotoForm(e.target.result); reader.readAsDataURL(file); }
+  function showPhotoForm(imgData){
+    const box=$("camResult");
+    box.innerHTML=
+      '<div class="confirm-box">'+
+        '<div style="display:flex;gap:14px;align-items:center;margin-bottom:14px;">'+
+          '<img class="receipt-thumb" src="'+imgData+'" alt="captured">'+
+          '<div><div style="font-weight:800;font-size:17px;">Add items from photo</div>'+
+          '<div style="color:var(--muted);font-size:13px;">Type each item. Set an expiry.</div></div>'+
+        '</div>'+
+        '<div id="lineRows"></div>'+
+        '<button class="btn-ghost" id="addLine" style="width:100%;">＋ Add another line</button>'+
+        '<div class="modal-actions">'+
+          '<button class="btn-ghost" id="phCancel">Cancel</button>'+
+          '<button class="btn-primary" id="phAddAll">🧊 Add all</button>'+
+        '</div>'+
+      '</div>';
+    addLineRow();
+    $("addLine").onclick=addLineRow;
+    $("phCancel").onclick=()=>{ box.innerHTML=""; };
+    $("phAddAll").onclick=()=>addAllLines(imgData);
+    box.scrollIntoView({behavior:"smooth"});
+  }
+  function addLineRow(){
+    const wrap=$("lineRows");
+    const row=document.createElement("div"); row.className="line-row";
+    row.innerHTML=
+      '<input type="text" class="ln-name" placeholder="Item name">'+
+      '<input type="number" class="ln-qty" min="1" value="1" title="Qty">'+
+      '<select class="ln-cat">'+catOptions("Other")+'</select>'+
+      '<input type="date" class="ln-exp" value="'+isoOffset(7)+'">'+
+      '<button class="line-del">✕ Remove line</button>';
+    row.querySelector(".line-del").onclick=()=>{ if($("lineRows").children.length>1) row.remove(); else row.querySelector(".ln-name").value=""; };
+    row.querySelector(".ln-name").addEventListener("input",function(){ this.closest(".line-row").querySelector(".ln-cat").value=guessCategory(this.value); });
+    wrap.appendChild(row);
+  }
+  function addAllLines(imgData){
+    const rows=[...document.querySelectorAll("#lineRows .line-row")];
+    let added=0, missingExp=false, first=true;
+    rows.forEach(r=>{
+      const name=r.querySelector(".ln-name").value.trim(); if(!name) return;
+      const exp=r.querySelector(".ln-exp").value; if(!exp){ missingExp=true; return; }
+      addItem({ name, qty:Math.max(1,parseInt(r.querySelector(".ln-qty").value)||1), cat:r.querySelector(".ln-cat").value, exp, img: first?imgData:"" });
+      first=false; added++;
+    });
+    if(missingExp){ toast("Set an expiry for every item"); return; }
+    if(!added){ toast("Enter at least one item"); return; }
+    toast("🧊 Added "+added+" item"+(added===1?"":"s")); $("camResult").innerHTML="";
+  }
+
+  // ---------- init ----------
+  function init(){
+    populateCats(); seed();
+    inventory=load(LS.inv,[]); shopping=load(LS.shop,[]); notes=load(LS.notes,[]);
+
+    initPager();
+    tickClock(); setInterval(tickClock,1000);
+    renderInventory(); renderShopping(); renderNotes(); renderHA(); renderHome();
+
+    $("addItemBtn").onclick=()=>openModal(null);
+    $("scanBtn").onclick=openCam;
+    $("modalCancel").onclick=closeModal;
+    $("modalSave").onclick=saveModal;
+    $("itemModal").onclick=e=>{ if(e.target===$("itemModal")) closeModal(); };
+    $("fName").addEventListener("keydown",e=>{ if(e.key==="Enter") saveModal(); });
+    $("filterCat").onchange=renderInventory;
+    $("sortBy").onchange=renderInventory;
+
+    $("camClose").onclick=closeCam;
+    $("modeBarcode").onclick=()=>setMode("barcode");
+    $("modePhoto").onclick=()=>setMode("photo");
+    $("camSwitch").onclick=switchCamera;
+    $("camCapture").onclick=capturePhoto;
+    $("fileBtn").onclick=()=>$("fileInput").click();
+    $("fileInput").onchange=e=>handleFile(e.target.files[0]);
+    $("manualBarcodeBtn").onclick=manualLookup;
+    $("manualBarcode").addEventListener("keydown",e=>{ if(e.key==="Enter") manualLookup(); });
+
+    $("shopAddBtn").onclick=addShop;
+    $("shopInput").addEventListener("keydown",e=>{ if(e.key==="Enter") addShop(); });
+    $("clearCheckedBtn").onclick=clearChecked;
+
+    $("noteAddBtn").onclick=addNote;
+    $("noteInput").addEventListener("keydown",e=>{ if(e.key==="Enter") addNote(); });
+
+    $("wxSave").onclick=saveCity;
+    $("wxRefresh").onclick=fetchWeather;
+    $("wxCity").addEventListener("keydown",e=>{ if(e.key==="Enter") saveCity(); });
+    $("wxCity").value=load(LS.city,"");
+    fetchWeather(); setInterval(fetchWeather, 30*60*1000);
+
+    buildPresets(); renderTimer();
+    $("timerStart").onclick=toggleTimer;
+    $("timerReset").onclick=resetTimer;
+    $("timerSet").onclick=setCustom;
+    $("timerCustom").addEventListener("keydown",e=>{ if(e.key==="Enter") setCustom(); });
+
+    $("haSaveBtn").onclick=saveHA;
+    $("haOpenBtn").onclick=openHA;
+    $("haUrl").addEventListener("keydown",e=>{ if(e.key==="Enter") saveHA(); });
+
+    document.addEventListener("keydown",e=>{
+      if(e.key==="Escape"){ if($("camOverlay").classList.contains("show")) closeCam(); else closeModal(); }
+    });
+  }
+  document.addEventListener("DOMContentLoaded", init);
+})();
+</script>
+</body>
+</html>
