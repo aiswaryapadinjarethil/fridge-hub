@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -1615,18 +1615,13 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     $("shopInput").addEventListener("keydown",e=>{ if(e.key==="Enter") addShop(); });
     $("clearCheckedBtn").onclick=clearChecked;
 
-    $("wxSave").onclick=saveCity;
-    $("wxCity").addEventListener("keydown",e=>{ if(e.key==="Enter") saveCity(); });
-    $("wxCity").value=load(LS.city,"");
     fetchWeather(); setInterval(fetchWeather, 30*60*1000);
 
-    buildPresets(); renderTimer();
+    renderTimer();
     $("timerStart").onclick=toggleTimer;
     $("timerReset").onclick=resetTimer;
     $("timerSet").onclick=setCustom;
     $("timerCustom").addEventListener("keydown",e=>{ if(e.key==="Enter") setCustom(); });
-
-    $("haQuickTile").onclick=()=>goToPage(3);
     $("haSaveBtn").onclick=saveHA;
     $("haTestBtn").onclick=testHA;
     $("haRefreshBtn").onclick=refreshHAStates;
