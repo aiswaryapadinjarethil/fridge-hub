@@ -1,21 +1,328 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Kitchen Hub v6</title>
-<meta name="theme-color" content="#0d1117"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Kitchen Hub"><meta name="mobile-web-app-capable" content="yes">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Crect width='180' height='180' rx='40' fill='%230d1117'/%3E%3Ctext x='90' y='125' text-anchor='middle' font-size='100'%3E%F0%9F%A7%8A%3C/text%3E%3C/svg%3E"><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='64' height='64' rx='14' fill='%230d1117'/%3E%3Ctext x='32' y='46' text-anchor='middle' font-size='38'%3E%F0%9F%A7%8A%3C/text%3E%3C/svg%3E">
-<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Kitchen%20Hub%22%2C%22short_name%22%3A%22Kitchen%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230d1117%22%2C%22theme_color%22%3A%22%230d1117%22%7D">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kitchen Hub</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Kitchen Hub">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0e1116">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Crect width='180' height='180' rx='40' fill='%230e1116'/%3E%3Ctext x='90' y='128' font-size='104' text-anchor='middle'%3E%F0%9F%A7%8A%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='64' height='64' rx='14' fill='%230e1116'/%3E%3Ctext x='32' y='46' font-size='38' text-anchor='middle'%3E%F0%9F%A7%8A%3C/text%3E%3C/svg%3E">
+<link rel="manifest" href='data:application/manifest+json,{"name":"Kitchen Hub","short_name":"Kitchen","start_url":".","display":"standalone","background_color":"%230e1116","theme_color":"%230e1116","icons":[{"src":"data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27192%27 height=%27192%27%3E%3Crect width=%27192%27 height=%27192%27 rx=%2742%27 fill=%27%230e1116%27/%3E%3Ctext x=%2796%27 y=%27138%27 font-size=%27112%27 text-anchor=%27middle%27%3E%F0%9F%A7%8A%3C/text%3E%3C/svg%3E","sizes":"192x192","type":"image/svg+xml"}]}'>
 <style>
-:root{--bg:#0d1117;--panel:#171d25;--panel2:#222a35;--card:#202833;--text:#edf3f7;--muted:#93a0ae;--line:#34404e;--green:#58d3a8;--blue:#83a8ff;--red:#ef7272;--amber:#f1b653;--nav:68px;--r:17px}*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font:16px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}button,input,select{font:inherit}button{border:0;cursor:pointer;border-radius:12px;min-height:48px;color:var(--text)}button:active{transform:scale(.97)}input,select{width:100%;min-height:48px;border-radius:11px;border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:11px 12px;outline:none}input:focus,select:focus{border-color:var(--green);box-shadow:0 0 0 3px #58d3a822}.pager{display:flex;width:100vw;height:calc(100% - var(--nav));overflow:auto hidden;scroll-snap-type:x mandatory;scrollbar-width:none}.pager::-webkit-scrollbar{display:none}.page{flex:0 0 100vw;width:100vw;overflow-y:auto;scroll-snap-align:start;padding:17px 15px 30px;-webkit-overflow-scrolling:touch}.title{font-size:25px;font-weight:850;margin:4px 0}.sub,.hint{color:var(--muted);font-size:13px;font-weight:600}.dots{position:fixed;top:7px;z-index:5;left:0;right:0;display:flex;justify-content:center;gap:6px;pointer-events:none}.dot{height:7px;width:7px;border-radius:9px;background:#ffffff33}.dot.on{width:21px;background:var(--green)}.nav{position:fixed;z-index:10;bottom:0;left:0;right:0;height:var(--nav);padding-bottom:env(safe-area-inset-bottom);display:flex;background:#141a22f5;backdrop-filter:blur(14px);border-top:1px solid var(--line)}.nav button{flex:1;background:none;color:var(--muted);min-height:48px;font-size:10px;font-weight:750;display:flex;gap:3px;flex-direction:column;justify-content:center;align-items:center}.nav .ico{font-size:21px}.nav button.on{color:var(--green)}.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:15px;margin-top:13px;box-shadow:0 5px 18px #0003}.btn{padding:10px 14px;font-weight:800;background:var(--panel2);border:1px solid var(--line)}.primary{background:var(--green);color:#092018;border:0}.blue{background:var(--blue);color:#0c1835;border:0}.danger{background:#ef727222;color:#ffcaca;border:1px solid #ef727277}.wide{width:100%}.clock{text-align:center;font-size:60px;font-weight:850;font-variant-numeric:tabular-nums}.date{text-align:center;color:var(--muted);font-weight:650}.stats{display:flex;gap:9px;margin-top:13px}.stat{flex:1;background:var(--card);border:1px solid var(--line);border-radius:13px;text-align:center;padding:10px}.stat b{font-size:25px}.stat small{display:block;color:var(--muted);font-weight:700;text-transform:uppercase;font-size:10px;margin-top:4px}.section{font-size:13px;letter-spacing:.5px;text-transform:uppercase;font-weight:850;color:var(--muted);margin-bottom:10px}.expRow{display:flex;gap:8px;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line);font-weight:650}.expRow:last-child{border:0}.badge{display:inline-block;font-size:12px;font-weight:800;border-radius:99px;padding:4px 8px;background:#ffffff12;color:var(--muted);white-space:nowrap}.badge.good{background:#58d3a822;color:var(--green)}.badge.warn{background:#f1b65322;color:var(--amber)}.badge.bad{background:#ef727222;color:#ff9b9b}.haQuick{margin-top:13px}.quickGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.quick{min-height:116px;padding:10px 6px;background:var(--card);border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;text-align:center;overflow:hidden}.quick .em{font-size:27px}.quick .qn{font-size:12px;line-height:1.15;font-weight:800;word-break:break-word}.quick.busy{opacity:.6}.timer{display:flex;gap:12px;align-items:center}.timer b{font-size:38px;min-width:125px;text-align:center;font-variant-numeric:tabular-nums}.timerControls{display:grid;gap:7px;flex:1}.preset{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}.preset button{min-height:42px;padding:6px 12px;background:var(--panel2);border:1px solid var(--line)}.locs{display:flex;gap:7px;padding:6px;border:1px solid var(--line);background:var(--panel2);border-radius:18px;margin:12px 0}.locs button{flex:1;min-height:72px;background:none;color:var(--muted);font-size:12px;font-weight:850}.locs button.on{background:var(--green);color:#092018;border-radius:13px}.locs .le{font-size:25px;display:block}.locationHead{font-size:20px;font-weight:850;margin:13px 0 8px}.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}.filters{display:flex;gap:8px;margin:12px 0}.filters select{min-height:44px;font-size:14px}.item{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:13px;margin:10px 0}.item.soon{border-color:var(--amber)}.item.expired{border-color:var(--red);background:#401f25}.itemTop{display:flex;gap:9px;justify-content:space-between}.itemName{font-size:18px;font-weight:800}.meta{font-size:13px;color:var(--muted);margin-top:3px}.itemBtns{display:flex;gap:7px;margin-top:10px}.itemBtns button{flex:1;min-height:43px;font-size:14px}.addLine{display:flex;gap:9px}.addLine input{flex:1}.shop{display:flex;gap:9px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:8px;margin:9px 0}.shop.done{opacity:.53}.shop.done .shopName{text-decoration:line-through}.check{width:47px;flex:0 0 47px;background:none;border:2px solid var(--muted);font-size:20px}.shop.done .check{border-color:var(--green);color:var(--green)}.shopName{flex:1;font-weight:750;word-break:break-word}.empty{text-align:center;color:var(--muted);padding:30px 12px}.empty b{font-size:38px;display:block}.settings{scroll-margin-top:12px}.field{margin:11px 0}.field label{display:block;font-size:13px;color:var(--muted);font-weight:750;margin-bottom:5px}.tokenRow{display:flex;gap:7px}.tokenRow input{min-width:0}.statusBox{margin-top:10px;padding:10px 12px;border-radius:11px;font-size:13px;font-weight:700;background:#ffffff0b;border:1px solid var(--line);white-space:pre-wrap}.statusBox.ok{color:var(--green);border-color:#58d3a866;background:#58d3a811}.statusBox.err{color:#ffaaaa;border-color:#ef727277;background:#ef727211}.help summary{cursor:pointer;font-weight:800}.help pre{white-space:pre-wrap;overflow:auto;background:#0d1117;border-radius:10px;padding:11px;font-size:12px;color:#d3e3ff;user-select:text}.controlHead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:17px}.controlGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}.control{position:relative;min-height:166px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:13px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:7px;text-align:left;overflow:hidden}.control .ce{font-size:31px}.control .cn{font-weight:850;font-size:16px;line-height:1.15;word-break:break-word}.control .ceid{font-size:11px;color:var(--muted);word-break:break-all}.control .editRow{display:flex;gap:5px;width:100%;margin-top:3px}.control .editRow button{min-height:39px;flex:1;font-size:13px;background:#ffffff10}.control.busy{opacity:.62}.footer{text-align:center;color:var(--muted);font-size:11px;margin:20px 0 4px}.modalBg{position:fixed;z-index:30;inset:0;background:#000b;display:none;align-items:flex-end}.modalBg.show{display:flex}.modal{width:100%;max-width:560px;margin:auto;background:var(--panel);border:1px solid var(--line);border-radius:21px 21px 0 0;padding:20px 16px calc(20px + env(safe-area-inset-bottom));max-height:92vh;overflow:auto}.modal h2{margin:0 0 10px}.modalActions{display:flex;gap:9px;margin-top:17px}.modalActions button{flex:1}.cam{position:fixed;z-index:40;inset:0;display:none;flex-direction:column;background:#050607}.cam.show{display:flex}.camTop{padding:calc(10px + env(safe-area-inset-top)) 12px 10px;display:flex;justify-content:space-between;align-items:center}.camBody{padding:11px;overflow:auto;display:flex;flex-direction:column;align-items:center;gap:11px}.stage{position:relative;width:100%;max-width:520px;aspect-ratio:3/4;background:#000;border-radius:16px;overflow:hidden}.stage video{width:100%;height:100%;object-fit:cover}.ret{position:absolute;left:11%;right:11%;top:31%;bottom:31%;border:3px solid var(--green);border-radius:17px;box-shadow:0 0 0 999px #0004}.scan{position:absolute;left:13%;right:13%;height:3px;background:var(--green);top:50%;box-shadow:0 0 12px var(--green);animation:scan 1.8s infinite}@keyframes scan{50%{top:67%}}.camStatus{max-width:520px;width:100%;padding:10px;border-radius:11px;background:var(--panel);font-weight:750;text-align:center}.camManual{max-width:520px;width:100%}.toast{position:fixed;z-index:70;bottom:calc(var(--nav) + 13px);left:50%;transform:translate(-50%,120px);transition:.25s;background:var(--green);color:#092018;font-weight:850;border-radius:12px;padding:12px 15px;max-width:90vw;text-align:center}.toast.show{transform:translate(-50%,0)}@media(min-width:650px){.page{padding-left:max(24px,calc((100vw - 620px)/2));padding-right:max(24px,calc((100vw - 620px)/2))}.controlGrid{grid-template-columns:repeat(3,1fr)}}
-</style>  <script type="application/ld+json">
+  :root {
+    --bg: #0e1116;
+    --panel: #171b22;
+    --panel-2: #1f242d;
+    --card: #232a34;
+    --card-hover: #2a323d;
+    --text: #e8edf3;
+    --muted: #8b95a3;
+    --accent: #4dd0a7;
+    --accent-2: #3aa889;
+    --ha: #7aa2ff;
+    --border: #2d353f;
+    --warn: #e8a33d;
+    --warn-bg: #3a2f18;
+    --week: #e0cf4d;
+    --week-bg: #38341a;
+    --fresh: #4dd0a7;
+    --danger: #e05c5c;
+    --danger-bg: #3a1f1f;
+    --shadow: 0 4px 18px rgba(0,0,0,.35);
+    --radius: 18px;
+    --nav-h: 66px;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-user-select: none; user-select: none;
+    overflow: hidden;
+  }
+
+  .pager {
+    display: flex; flex-direction: row;
+    width: 100vw; height: calc(100% - var(--nav-h));
+    overflow-x: auto; overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch; scrollbar-width: none;
+  }
+  .pager::-webkit-scrollbar { display: none; }
+  .page {
+    flex: 0 0 100vw; width: 100vw; height: 100%;
+    scroll-snap-align: start; scroll-snap-stop: always;
+    overflow-y: auto; overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    display: flex; flex-direction: column;
+    padding: 16px 16px 26px;
+  }
+  .page::-webkit-scrollbar { width: 6px; }
+  .page::-webkit-scrollbar-thumb { background: #333d49; border-radius: 8px; }
+
+  .page-head { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-shrink: 0; }
+  .page-title { font-size: 26px; font-weight: 800; display: flex; align-items: center; gap: 9px; }
+  .page-sub { font-size: 13px; color: var(--muted); font-weight: 600; margin-top: 2px; }
+
+  .dots {
+    position: fixed; top: calc(6px + env(safe-area-inset-top)); left: 0; right: 0; z-index: 40;
+    display: flex; justify-content: center; gap: 7px; pointer-events: none;
+  }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,.22); transition: all .25s; }
+  .dot.active { background: var(--accent); width: 22px; border-radius: 4px; }
+
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0; height: var(--nav-h);
+    background: rgba(20,24,31,.97); backdrop-filter: blur(14px);
+    border-top: 1px solid var(--border);
+    display: flex; z-index: 45; padding-bottom: env(safe-area-inset-bottom);
+  }
+  .nav-btn {
+    flex: 1; background: none; border: none; color: var(--muted);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 3px; cursor: pointer; font-family: inherit; padding: 6px 2px;
+    transition: color .18s; min-height: 48px;
+  }
+  .nav-btn .ic { font-size: 22px; line-height: 1; transition: transform .18s; }
+  .nav-btn .lb { font-size: 10px; font-weight: 700; letter-spacing: .2px; }
+  .nav-btn.active { color: var(--accent); }
+  .nav-btn.active .ic { transform: scale(1.18) translateY(-1px); }
+  .nav-btn.ha-nav.active { color: var(--ha); }
+
+  button {
+    font-family: inherit; cursor: pointer; border: none; color: var(--text);
+    border-radius: 12px; transition: transform .1s, background .15s, opacity .15s, filter .15s;
+    font-size: 16px;
+  }
+  button:active { transform: scale(.95); }
+  .btn-primary { background: var(--accent); color: #08130f; font-weight: 700; padding: 13px 18px; min-height: 50px; font-size: 16px; }
+  .btn-primary:hover { background: var(--accent-2); }
+  .btn-ghost { background: var(--panel-2); color: var(--text); padding: 12px 16px; min-height: 50px; border: 1px solid var(--border); }
+  .btn-ghost:hover { background: var(--card-hover); }
+  .btn-scan {
+    background: linear-gradient(135deg, #4dd0a7, #35c0d4);
+    color: #06120f; font-weight: 800; padding: 15px 20px; min-height: 58px;
+    font-size: 18px; box-shadow: 0 4px 16px rgba(77,208,167,.35);
+    display: flex; align-items: center; justify-content: center; gap: 9px; width: 100%;
+  }
+  .btn-scan:hover { filter: brightness(1.06); }
+
+  select, input[type="text"], input[type="number"], input[type="date"], input[type="url"] {
+    font-family: inherit; font-size: 16px; color: var(--text);
+    background: var(--panel-2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 13px 14px; min-height: 50px; outline: none; width: 100%;
+  }
+  select:focus, input:focus { border-color: var(--accent); }
+  select { cursor: pointer; }
+
+  .card { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); }
+  .card + .card { margin-top: 14px; }
+
+  /* HOME */
+  .home-brand { text-align: center; font-size: 15px; font-weight: 800; color: var(--accent); letter-spacing: .5px; margin-bottom: 10px; }
+  .clock-big { font-size: 66px; font-weight: 800; line-height: 1; letter-spacing: 1px; font-variant-numeric: tabular-nums; text-align: center; }
+  .date-big { font-size: 16px; color: var(--muted); text-align: center; margin-top: 6px; font-weight: 600; }
+  .wx-mini { text-align: center; margin-top: 10px; font-size: 14px; color: var(--muted); font-weight: 600; }
+  .wx-mini .em { font-size: 17px; }
+  .stat-row { display: flex; gap: 10px; margin: 14px 0 0; }
+  .stat { flex: 1; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 12px 8px; text-align: center; }
+  .stat .n { font-size: 26px; font-weight: 800; line-height: 1; }
+  .stat .l { font-size: 11px; color: var(--muted); font-weight: 700; margin-top: 5px; text-transform: uppercase; letter-spacing: .3px; }
+  .stat.warn .n { color: var(--warn); }
+  .stat.buy .n { color: var(--accent); }
+  .home-sec-title { font-size: 14px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin: 4px 0 10px; }
+  .home-exp-item { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 16px; font-weight: 600; }
+  .home-exp-item:last-child { border-bottom: none; }
+  .home-exp-item .loc { font-size: 15px; }
+  .home-exp-badge { font-size: 13px; font-weight: 700; padding: 3px 9px; border-radius: 8px; white-space: nowrap; }
+  .home-exp-badge.past { background: var(--danger); color: #3a1010; }
+  .home-exp-badge.soon { background: var(--warn); color: #2a1e08; }
+  .home-exp-badge.week { background: var(--week); color: #2a2508; }
+
+  .ha-tile {
+    width: 100%; background: linear-gradient(135deg, #7aa2ff, #5a7fe0);
+    color: #08122e; font-weight: 800; padding: 20px; min-height: 74px; font-size: 19px;
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    box-shadow: 0 4px 18px rgba(122,162,255,.32); border-radius: var(--radius); margin-top: 14px;
+  }
+  .ha-tile:hover { filter: brightness(1.05); }
+  .ha-tile .big { font-size: 26px; }
+
+  /* Home timer compact */
+  .htimer { display: flex; align-items: center; gap: 12px; }
+  .htimer .disp { font-size: 40px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: 1px; line-height: 1; min-width: 128px; text-align: center; }
+  .htimer .disp.done { animation: flash .6s steps(1) infinite; color: var(--danger); }
+  @keyframes flash { 50% { opacity: .2; } }
+  .htimer .ctrls { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .htimer .ctrls button { min-height: 44px; padding: 8px 12px; font-size: 15px; }
+  .htimer-presets { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 12px; }
+  .preset-btn { background: var(--panel-2); border: 1px solid var(--border); color: var(--text); padding: 10px 12px; min-height: 44px; min-width: 50px; font-weight: 600; font-size: 14px; }
+  .preset-btn.on { background: var(--accent); color: #06120f; border-color: var(--accent); }
+  .timer-custom { display: flex; gap: 8px; align-items: center; margin-top: 10px; }
+  .timer-custom input { flex: 1; }
+  .timer-msg { font-size: 14px; font-weight: 700; color: var(--danger); min-height: 18px; margin-top: 8px; }
+
+  .app-footer { text-align: center; color: var(--muted); font-size: 11px; font-weight: 600; margin-top: 18px; opacity: .6; letter-spacing: .5px; }
+
+  /* SEGMENTED LOCATION TOGGLE — big, high-contrast */
+  .loc-toggle {
+    display: flex; gap: 8px; background: var(--panel-2); padding: 7px;
+    border-radius: 20px; margin-bottom: 14px; border: 2px solid var(--border);
+    box-shadow: inset 0 1px 4px rgba(0,0,0,.3);
+  }
+  .loc-btn {
+    flex: 1; background: transparent; color: var(--muted); border: none;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 5px; padding: 12px 4px; min-height: 76px; border-radius: 15px;
+    font-weight: 800; transition: all .2s;
+  }
+  .loc-btn .em { font-size: 30px; line-height: 1; }
+  .loc-btn .nm { font-size: 14px; letter-spacing: .3px; }
+  .loc-btn .ct { font-size: 11px; opacity: .75; font-weight: 700; }
+  .loc-btn.active { background: var(--accent); color: #06120f; box-shadow: 0 4px 16px rgba(77,208,167,.45); transform: translateY(-1px); }
+  .loc-btn.active .ct { opacity: .85; }
+
+  .loc-header {
+    display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;
+    background: var(--panel); border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    border-radius: 14px; padding: 12px 14px; margin-bottom: 14px;
+  }
+  .loc-header .lh-name { font-size: 20px; font-weight: 800; }
+  .loc-header .lh-meta { font-size: 13px; color: var(--muted); font-weight: 600; }
+
+  .inv-actions { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
+  .inv-filters { display: flex; gap: 8px; margin-bottom: 14px; }
+  .inv-filters select { font-size: 14px; padding: 10px; min-height: 46px; }
+
+  .item-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px;
+  }
+  .item-card.exp-soon { border-color: var(--warn); background: var(--warn-bg); }
+  .item-card.exp-past { border-color: var(--danger); background: var(--danger-bg); }
+  .item-card.exp-week { border-color: var(--week); }
+  .item-card.exp-fresh { border-left: 4px solid var(--fresh); }
+  .item-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+  .item-name { font-size: 18px; font-weight: 700; line-height: 1.2; word-break: break-word; }
+  .item-qty { font-size: 14px; color: var(--muted); font-weight: 600; }
+  .item-thumb { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; flex-shrink: 0; border: 1px solid var(--border); }
+  .tag-row { display: flex; gap: 6px; flex-wrap: wrap; }
+  .cat-tag { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; font-weight: 600; padding: 5px 10px; border-radius: 20px; align-self: flex-start; }
+  .badge { font-size: 12px; font-weight: 700; padding: 4px 9px; border-radius: 8px; align-self: flex-start; }
+  .badge.soon { background: var(--warn); color: #2a1e08; }
+  .badge.week { background: var(--week); color: #2a2508; }
+  .badge.past { background: var(--danger); color: #3a1010; }
+  .badge.fresh { background: rgba(77,208,167,.2); color: var(--fresh); }
+  .expiry-text { font-size: 13px; color: var(--muted); }
+  .item-actions { display: flex; gap: 8px; margin-top: 4px; }
+  .icon-btn { background: rgba(255,255,255,.06); width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; font-size: 19px; border-radius: 11px; flex-shrink: 0; }
+  .icon-btn:hover { background: rgba(255,255,255,.14); }
+  .icon-btn.cart { flex: 1; gap: 6px; font-size: 15px; font-weight: 600; background: rgba(77,208,167,.14); color: var(--accent); }
+  .icon-btn.move { flex: 1; gap: 6px; font-size: 15px; font-weight: 600; background: rgba(122,162,255,.14); color: var(--ha); }
+
+  /* SHOPPING */
+  .shop-add { display: flex; gap: 10px; margin-bottom: 14px; }
+  .shop-add input { flex: 1; }
+  .shop-add button { flex-shrink: 0; }
+  .shop-item { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 10px 12px; margin-bottom: 10px; transition: opacity .2s; }
+  .shop-item.done { opacity: .55; }
+  .shop-item.done .shop-name { text-decoration: line-through; color: var(--muted); }
+  .check { width: 48px; height: 48px; border-radius: 10px; border: 2px solid var(--muted); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; background: transparent; cursor: pointer; color: var(--accent); }
+  .shop-item.done .check { border-color: var(--accent); background: rgba(77,208,167,.15); }
+  .shop-name { flex: 1; font-size: 17px; font-weight: 600; word-break: break-word; }
+  .shop-actions { display: flex; gap: 6px; }
+
+  /* HA PAGE */
+  .ha-row { display: flex; gap: 10px; }
+  .ha-row input { flex: 1; }
+  .ha-frame-wrap { height: 360px; border-radius: 14px; overflow: hidden; border: 1px solid var(--border); position: relative; background: var(--panel-2); margin-top: 14px; }
+  .ha-frame-wrap iframe { width: 100%; height: 100%; border: none; display: block; }
+  .ha-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; color: var(--muted); padding: 20px; gap: 8px; }
+  .ha-note { font-size: 12px; color: var(--muted); text-align: center; margin-top: 10px; }
+  .btn-ha { background: var(--ha); color: #08122e; font-weight: 800; }
+
+  .empty { text-align: center; color: var(--muted); padding: 34px 20px; font-size: 16px; }
+  .empty .em { font-size: 42px; display: block; margin-bottom: 10px; }
+  .summary-warn { color: var(--warn); }
+  .summary-danger { color: var(--danger); }
+
+  /* MODALS */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.7); display: none; align-items: flex-end; justify-content: center; z-index: 100; backdrop-filter: blur(3px); }
+  .modal-overlay.show { display: flex; }
+  .modal { background: var(--panel); border: 1px solid var(--border); border-radius: 22px 22px 0 0; padding: 22px 20px calc(22px + env(safe-area-inset-bottom)); width: 100%; max-width: 500px; box-shadow: 0 -10px 40px rgba(0,0,0,.6); animation: slideUp .22s ease; max-height: 92vh; overflow-y: auto; }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .modal h2 { margin: 0 0 18px; font-size: 22px; }
+  .field { margin-bottom: 14px; display: flex; flex-direction: column; gap: 6px; }
+  .field label { font-size: 14px; color: var(--muted); font-weight: 600; }
+  .modal-actions { display: flex; gap: 12px; margin-top: 20px; }
+  .modal-actions button { flex: 1; }
+  .loc-pick { display: flex; gap: 8px; }
+  .loc-pick button { flex: 1; background: var(--panel-2); border: 1px solid var(--border); color: var(--muted); min-height: 52px; font-weight: 700; display: flex; flex-direction: column; gap: 2px; align-items: center; justify-content: center; font-size: 12px; }
+  .loc-pick button .em { font-size: 20px; }
+  .loc-pick button.on { background: var(--accent); color: #06120f; border-color: var(--accent); }
+
+  /* CAMERA */
+  .cam-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.96); display: none; flex-direction: column; z-index: 150; }
+  .cam-overlay.show { display: flex; }
+  .cam-topbar { display: flex; align-items: center; justify-content: space-between; padding: calc(12px + env(safe-area-inset-top)) 14px 10px; gap: 8px; flex-shrink: 0; border-bottom: 1px solid #222; }
+  .cam-title { font-size: 17px; font-weight: 800; display: flex; align-items: center; gap: 6px; }
+  .cam-topbar .btn-ghost { padding: 8px 12px; min-height: 40px; font-size: 14px; }
+  .mode-toggle { display: flex; background: var(--panel-2); border-radius: 12px; padding: 4px; gap: 4px; margin: 10px 14px 0; }
+  .mode-toggle button { flex: 1; background: transparent; color: var(--muted); padding: 11px 8px; min-height: 46px; font-weight: 700; border-radius: 9px; font-size: 14px; }
+  .mode-toggle button.active { background: var(--accent); color: #06120f; }
+  .cam-body { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .cam-stage { position: relative; width: 100%; max-width: 500px; aspect-ratio: 3/4; background: #000; border-radius: 16px; overflow: hidden; border: 1px solid #333; }
+  .cam-stage video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .cam-stage canvas { display: none; }
+  .reticle { position: absolute; left: 12%; right: 12%; top: 30%; bottom: 30%; border: 3px solid rgba(77,208,167,.85); border-radius: 18px; box-shadow: 0 0 0 2000px rgba(0,0,0,.28); pointer-events: none; }
+  .reticle::before, .reticle::after { content:""; position:absolute; left:0; right:0; height:0; }
+  .scan-line { position: absolute; left: 14%; right: 14%; top: 50%; height: 3px; background: var(--accent); box-shadow: 0 0 14px var(--accent); animation: scan 2s ease-in-out infinite; pointer-events:none; }
+  @keyframes scan { 0%,100% { top: 32%; } 50% { top: 68%; } }
+  .cam-status { color: var(--text); font-size: 15px; font-weight: 700; text-align: center; min-height: 22px; padding: 8px 14px; background: var(--panel); border: 1px solid var(--border); border-radius: 12px; width: 100%; max-width: 500px; }
+  .cam-status.err { background: var(--danger-bg); border-color: var(--danger); color: #ffd7d7; }
+  .cam-status.ok { background: rgba(77,208,167,.15); border-color: var(--accent); color: var(--accent); }
+  .cam-error { background: var(--danger-bg); border: 1px solid var(--danger); color: #ffd7d7; padding: 16px; border-radius: 14px; width: 100%; max-width:500px; text-align: center; font-size: 15px; font-weight: 600; }
+  .cam-ctrls { display: flex; gap: 10px; width: 100%; max-width: 500px; }
+  .cam-ctrls button { flex: 1; }
+  .file-drop { border: 2px dashed var(--border); border-radius: 14px; padding: 22px; text-align: center; width: 100%; max-width:500px; color: var(--muted); }
+  .file-drop input { display: none; }
+  .file-btn { background: var(--panel-2); border: 1px solid var(--border); color: var(--text); padding: 14px 20px; min-height: 50px; font-weight: 700; margin-top: 10px; border-radius: 12px; }
+  .confirm-box { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 18px; width: 100%; max-width: 500px; }
+  .confirm-head { display: flex; gap: 14px; align-items: center; margin-bottom: 16px; }
+  .confirm-head img { width: 64px; height: 64px; border-radius: 12px; object-fit: cover; border: 1px solid var(--border); }
+  .confirm-head .ph { width: 64px; height: 64px; border-radius: 12px; background: var(--panel-2); display: flex; align-items: center; justify-content: center; font-size: 30px; flex-shrink: 0; }
+  .confirm-head .cn { font-size: 17px; font-weight: 800; }
+  .confirm-head .cb { font-size: 13px; color: var(--muted); }
+  .conf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .conf-grid .field { margin-bottom: 0; }
+  .conf-full { grid-column: 1 / -1; }
+  .manual-barcode { display: flex; gap: 10px; width: 100%; max-width: 500px; align-items:center; }
+  .manual-barcode input { flex: 1; }
+  .manual-wrap { width:100%; max-width:500px; }
+  .manual-wrap .ml { font-size:12px; color:var(--muted); font-weight:700; margin-bottom:6px; text-transform:uppercase; letter-spacing:.4px; }
+  .line-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-items: center; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 10px; margin-bottom: 10px; }
+  .line-row .ln-name { grid-column: 1 / -1; }
+  .line-del { background: rgba(224,92,92,.15); color: var(--danger); height: 48px; border-radius: 10px; font-size: 16px; grid-column: 1 / -1; }
+  .receipt-thumb { max-width: 120px; max-height: 120px; border-radius: 12px; border: 1px solid var(--border); }
+
+  .toast { position: fixed; bottom: calc(var(--nav-h) + 16px); left: 50%; transform: translateX(-50%) translateY(120px); background: var(--accent); color: #08130f; font-weight: 700; padding: 13px 20px; border-radius: 14px; z-index: 200; box-shadow: 0 8px 24px rgba(0,0,0,.4); transition: transform .3s ease; font-size: 15px; max-width: 90vw; text-align: center; }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+  
+  
+  <script type="application/ld+json">
 {
   "@context": "urn:goose.ai:schema",
   "@type": "GooseApp",
   "name": "fridge-hub",
-  "description": "Kitchen Hub v6 adds direct Home Assistant REST quick controls with local token storage.",
-  "width": 430,
-  "height": 850,
+  "description": "Phone-first kitchen command center (v5): reliable barcode scanner using native detector on Android and a locally-served ZXing library on iPhone/Safari.",
+  "width": 400,
+  "height": 840,
   "resizable": true,
   "mcpServers": [
     "apps"
@@ -23,77 +330,1082 @@
 }
   </script>
   <script type="application/x-goose-prd">
-Kitchen Hub — Phone-First Kitchen Command Center (v6)
+Kitchen Hub — Phone-First Kitchen Command Center (v5: Local-file ZXing barcode scanner)
 
-OVERVIEW
-A mobile-first, dark, single-file kitchen dashboard with four horizontal scroll-snap pages: Home, Storage, Shopping, and Home Assistant. It persists data locally, works offline except optional weather, barcode product lookup, and direct Home Assistant REST calls. Home and Smart footers display “Kitchen Hub · v6”.
+OVERVIEW:
+A mobile-first, single-file HTML app for phones in PORTRAIT. Horizontal SWIPEABLE PAGER (CSS scroll-snap), one feature per full-screen page, with page-dot indicators and a fixed bottom tab bar. Dark mode, large legible text, min 48px tap targets, no horizontal page scrolling. Data persists in localStorage; works offline except Open Food Facts barcode lookups and optional weather. A "v5" build label appears in Home and Smart footers. The app is a single self-contained HTML file except for one sibling asset it loads locally: ./zxing-browser.min.js (the official @zxing/browser UMD build).
 
-CORE KITCHEN FEATURES
-- Fridge, Freezer, and Pantry inventory with persisted selected location, location-specific expiry defaults, categories, sorting, expiry alerts, move/edit/delete, and shopping-list handoff.
-- Seeded inventory and shopping examples; prior inventory records without a location migrate to Fridge.
-- Shopping list supports add, check, delete, clear checked, and add checked goods back into storage.
-- Home shows clock/date, optional weather city, inventory/shopping stats, expiring items, and a Web Audio kitchen timer.
-- Barcode scanner prefers native BarcodeDetector and falls back to the local sibling `zxing-browser.min.js`; it supports manual barcode lookup and releases camera resources when closed/hidden.
-- PWA-friendly metadata, inline icons/manifest, large touch targets, responsive portrait-oriented design, modals, toasts, and localStorage persistence.
+PWA / ADD TO HOME SCREEN:
+Installable/home-screen friendly. Inline web app manifest (data URI), apple-mobile-web-app-capable, black-translucent status bar, theme-color, viewport-fit=cover, apple-touch-icon and favicon as inline SVG (🧊). Launches full-screen when added to home screen.
 
-HOME ASSISTANT DIRECT REST INTEGRATION
-- The Smart page does not embed Home Assistant in an iframe. It provides a saved HA URL (default `https://ha.ashcasa.cc`) and a password-masked Long-Lived Access Token with show/hide control.
-- URL and token are stored only in localStorage on that device. The token is never placed in HTML, URLs, or external requests; it is sent only in Bearer headers to the configured HA URL.
-- Save/Test calls `GET {baseUrl}/api/`, with clear green success or detailed red HTTP/network/CORS error feedback. A help disclosure includes the required `cors_allowed_origins` YAML for `https://fridge-hub-phi.vercel.app`, restart guidance, and CORS diagnosis.
-- “Open full Home Assistant” opens the saved URL in a new tab.
+NAVIGATION (4 pages):
+Horizontal scroll-snapping pager; each page 100vw with vertical scroll inside. Page-dot indicators update on swipe. Fixed bottom nav: 🏠 Home · 🗃️ Storage · 🛒 Shop · 🏠 Smart. Tapping snaps to a page; swipe/dots/nav stay in sync. No Notes feature.
 
-QUICK CONTROLS
-- Users can add, edit, and delete persistent quick-control cards with name, emoji, entity ID, and Auto/Toggle/Turn on/Turn off action. The dialog directs users to HA Settings > Devices & services > Entities for entity IDs.
-- First run seeds editable examples: `scene.hej_hej`, `light.theatre`, and `light.bedroom`.
-- Tapping a card POSTs `{entity_id}` to `/api/services/{domain}/{service}`. Domain derives from the entity ID. Auto chooses `turn_on` for scenes/scripts, `toggle` for light/switch/fan/input_boolean, and `turn_on` otherwise.
-- Refresh and successful test/save fetch each card’s state from `/api/states/{entity_id}` and render an on/off/returned-state badge or a distinct unavailable badge.
-- The first three configured controls are mirrored as large compact Home-page controls. If disconnected, Home presents a concise connect prompt linking to Smart settings.
+STORAGE LOCATIONS:
+Three locations: 🧊 FRIDGE, ❄️ FREEZER, 🗄️ PANTRY. Every item is tagged with a location. Large high-contrast segmented toggle (≥76px tall, live counts), active-location header, per-location item lists. Selected location persists. Each item has ↔ Move. Adds default to current location with in-form picker. Per-location default expiry: Fridge +7d, Freezer +90d, Pantry +180d.
 
-DEPLOYMENT
-Ship `index.html` and the official `zxing-browser.min.js` UMD build in the same directory. REST calls are the only network dependency for HA controls.
+PAGES:
+1. HOME — live clock + date; optional one-line weather; prominent Home Assistant quick tile; combined stat summary; top expiring-soon list across all locations with location emoji; compact kitchen timer (presets + custom, flashing + Web Audio beep); weather city input; "Kitchen Hub · v5" footer.
+2. STORAGE — segmented toggle + active-location header + inventory; "📷 Scan Items" + "➕ Add Item Manually"; category filter/sort; expiry badges; item cards with edit/delete/move/need-more.
+3. SHOPPING — add input (Enter adds), checkable items, delete, clear checked, "✓🧊 add to storage", remaining count.
+4. HOME ASSISTANT — HA URL saved, open-in-new-tab button, iframe embed, placeholder when unset; "Kitchen Hub · v5" footer.
+
+BARCODE SCANNER (v5 — engine selection with LOCAL ZXing on iPhone):
+- ENGINE SELECTION:
+  1) ANDROID / CHROME (and any browser where a working BarcodeDetector can be constructed): use the native BarcodeDetector. It is constructed inside try/catch; if it exists and constructs, a real detect loop runs every 500ms against the playing rear-camera video. This path is unchanged and known-good.
+  2) iPHONE / SAFARI (or any environment where BarcodeDetector is missing/unavailable): dynamically load the ZXing library from the LOCAL relative path `zxing-browser.min.js` (served from the same origin as index.html — the official @zxing/browser UMD build). Wait for its onload, then use the global `window.ZXingBrowser.BrowserMultiFormatReader`.
+- NO EXTERNAL CDN: All previous unpkg/jsdelivr @zxing loading has been removed. ZXing is only loaded from the local sibling file.
+- CONTINUOUS DECODE (ZXing path): Prefer `reader.decodeFromConstraints(constraints, video, cb)`; fall back to `reader.decodeFromVideoDevice(null, video, cb)` if needed. The callback fires the existing product-lookup flow when a code decodes. NotFoundException between frames is ignored. The decode loop runs continuously until a code is found or the dialog is closed.
+- HIGH-RES CAMERA: Rear camera requested with facingMode 'environment', width ideal 1280, height ideal 720 for better iPhone decode quality (used by both the native/plain path and the ZXing path).
+- ON-SCREEN STATUS (always visible): "📷 Starting camera…" → "🔍 Point the camera at a barcode" → "Scanning…" → "✅ Found: <code / product name>". If the local library fails to load: RED "Scanner couldn't load — enter the barcode number manually below" and manual field revealed/focused. If camera fails/denied: clear message + file-upload fallback.
+- VISUAL RETICLE: rounded rectangle overlay + animated scan line in the center to aim.
+- MANUAL FALLBACK: an "Enter barcode manually" input + Go button is ALWAYS visible in the scanner. The "➕ Add Item Manually" form is also always available on Storage.
+- PRODUCT LOOKUP: once a barcode is obtained (scanned or typed) shows "Looking up product…", queries Open Food Facts. On success prefills product_name/brand and auto-guesses category. On not-found shows "Product not in database — type the item name". User confirms quantity, category, expiry (default from current location).
+- ADD TARGET: item added to the CURRENTLY SELECTED storage location (with an in-form override picker). After adding, scanning resumes for the next item; "Scan another" restarts the flow.
+- CAMERA CLEANUP (critical for iPhone): closing the scanner (button, overlay, Esc, tab hidden) stops all media tracks AND calls reader.reset()/controls.stop() so the camera light turns off. Photo mode reuses the same camera lifecycle.
+
+PHOTO MODE:
+Capture or upload a photo/receipt, multi-line entry (name/qty/category/expiry with auto category guess), location picker, "Add all" (each requires expiry), photo attached to first item.
+
+DATA PERSISTENCE & MIGRATION:
+Inventory (with location + thumbnails), shopping list, HA URL, weather city, selected location in localStorage. Migrates prior v1/v2 inventory (no location → Fridge). Seeds sample items across all three locations on first run plus shopping items.
+
+DEPLOYMENT NOTE:
+Ship `zxing-browser.min.js` (the official @zxing/browser UMD build) alongside index.html in the same directory so iPhone/Safari can load the scanner locally without any CDN dependency.
+
+POLISH:
+Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full/near-full-screen modals; toasts; empty states; Esc/overlay closes modals (camera → move → item). Single self-contained HTML with inline CSS/JS (plus the one local zxing-browser.min.js sibling). "v5" version label for deploy verification.
   </script>
 </head>
 <body>
-<div class="dots" id="dots"></div><main class="pager" id="pager">
-<section class="page"><div class="title" style="text-align:center">🧊 Kitchen Hub</div><div class="card"><div class="clock" id="clock">--:--</div><div class="date" id="date">—</div><div class="hint" id="weather" style="text-align:center;margin-top:8px"></div></div><button class="blue wide" id="openHaHome" style="margin-top:13px">🏠 Open Home Assistant</button><div class="stats"><div class="stat"><b id="statItems">0</b><small>items</small></div><div class="stat"><b id="statExp" style="color:var(--amber)">0</b><small>expiring</small></div><div class="stat"><b id="statShop" style="color:var(--green)">0</b><small>to buy</small></div></div><div class="card"><div class="section">⏳ Expiring soon</div><div id="expList"></div></div><div class="card haQuick"><div class="section">🏠 Quick Home Controls</div><div id="homeControls"></div></div><div class="card"><div class="section">⏲ Kitchen timer</div><div class="timer"><b id="timerDisplay">00:00</b><div class="timerControls"><button class="primary" id="timerGo">Start</button><button class="btn" id="timerReset">Reset</button></div></div><div class="preset" id="presets"></div></div><div class="card"><div class="addLine"><input id="city" placeholder="City for weather (optional)"><button class="btn" id="saveCity">Save</button></div></div><div class="footer">Kitchen Hub · v6</div></section>
-<section class="page"><div class="title">🗃️ Storage</div><div class="sub">Choose a location, then manage your inventory.</div><div class="locs" id="locs"></div><div class="locationHead" id="locTitle"></div><div class="sub" id="locSummary"></div><div class="actions" style="margin-top:13px"><button class="primary" id="scanBtn">📷 Scan items</button><button class="btn" id="addItem">➕ Add manually</button></div><div class="filters"><select id="catFilter"><option value="all">All categories</option></select><select id="sort"><option value="exp">Expiry soonest</option><option value="name">Name</option></select></div><div id="inventory"></div><div id="invEmpty" class="empty"><b>🫙</b>This location is empty.</div></section>
-<section class="page"><div class="title">🛒 Shopping</div><div class="sub" id="shopSummary">0 to buy</div><div class="addLine" style="margin-top:13px"><input id="shopInput" placeholder="Add an item to buy…"><button class="primary" id="shopAdd">Add</button></div><button class="btn wide" id="clearChecked" style="margin-top:12px">🧹 Clear checked</button><div id="shopping"></div><div id="shopEmpty" class="empty"><b>📝</b>Nothing to buy — all stocked up!</div></section>
-<section class="page"><div class="title">🏠 Home Assistant</div><div class="sub">Direct controls — no embedded dashboard.</div><div class="card settings" id="haSettings"><div class="section">Connection settings</div><div class="field"><label for="haUrl">Home Assistant URL</label><input id="haUrl" type="url" inputmode="url" placeholder="https://ha.ashcasa.cc"></div><div class="field"><label for="haToken">Long-Lived Access Token</label><div class="tokenRow"><input id="haToken" type="password" autocomplete="off" placeholder="Paste token"><button class="btn" id="tokenToggle" aria-label="Show or hide token">Show</button></div></div><div class="hint">Your token stays only on this device and is never sent anywhere except the configured Home Assistant URL.</div><div class="actions" style="margin-top:13px"><button class="primary" id="haSave">Save settings</button><button class="btn" id="haTest">Test connection</button></div><div id="haStatus" class="statusBox">Enter your token, then test the connection.</div><button class="blue wide" id="haOpen" style="margin-top:11px">↗ Open full Home Assistant</button></div><details class="card help"><summary>Setup help: allow direct connection</summary><p class="hint">For the app at https://fridge-hub-phi.vercel.app to call Home Assistant directly, Home Assistant must allow it in configuration.yaml:</p><pre>http:
-  cors_allowed_origins:
-    - https://fridge-hub-phi.vercel.app</pre><p class="hint">Restart HA after changing configuration. A CORS browser error means that entry is missing.</p></details><div class="controlHead"><div><div class="section" style="margin:0">Quick controls</div><div class="hint">Tap a card to run its action.</div></div><button class="primary" id="addControl">＋ Add control</button></div><div class="actions" style="margin-top:10px"><button class="btn" id="refreshStates">↻ Refresh states</button><button class="btn" id="openHaSettings">⚙ Settings</button></div><div class="controlGrid" id="controlGrid"></div><div class="footer">Kitchen Hub · v6</div></section>
-</main><nav class="nav" id="nav"><button data-page="0" class="on"><span class="ico">🏠</span>Home</button><button data-page="1"><span class="ico">🗃️</span>Storage</button><button data-page="2"><span class="ico">🛒</span>Shop</button><button data-page="3"><span class="ico">🏠</span>Smart</button></nav>
-<div class="modalBg" id="itemModal"><div class="modal"><h2 id="itemModalTitle">Add item</h2><div class="field"><label>Name</label><input id="iName" placeholder="e.g. Milk"></div><div class="field"><label>Quantity</label><input id="iQty" type="number" min="1" value="1"></div><div class="field"><label>Category</label><select id="iCat"></select></div><div class="field"><label>Location</label><select id="iLoc"></select></div><div class="field"><label>Expiry date</label><input id="iExp" type="date"></div><div class="modalActions"><button class="btn" data-close="itemModal">Cancel</button><button class="primary" id="saveItem">Save</button></div></div></div>
-<div class="modalBg" id="controlModal"><div class="modal"><h2 id="controlModalTitle">Add quick control</h2><div class="field"><label>Name / label</label><input id="cName" placeholder="e.g. Kitchen lights"></div><div class="field"><label>Emoji / icon</label><input id="cIcon" maxlength="8" placeholder="💡"></div><div class="field"><label>Entity ID</label><input id="cEntity" autocapitalize="none" autocomplete="off" placeholder="light.kitchen"></div><div class="hint">Find entity IDs in Home Assistant: Settings &gt; Devices &amp; services &gt; Entities.</div><div class="field"><label>Action</label><select id="cAction"><option value="auto">Auto</option><option value="toggle">Toggle</option><option value="turn_on">Turn on</option><option value="turn_off">Turn off</option></select></div><div class="modalActions"><button class="btn" data-close="controlModal">Cancel</button><button class="primary" id="saveControl">Save control</button></div></div></div>
-<div class="cam" id="camera"><div class="camTop"><b>📷 Scan barcode</b><button class="btn" id="camClose">✕ Close</button></div><div class="camBody"><div class="stage" id="stage"><video id="video" autoplay muted playsinline></video><div class="ret"></div><div class="scan"></div></div><div class="camStatus" id="camStatus">📷 Starting camera…</div><div class="camManual"><div class="field"><label>Enter barcode manually</label><div class="addLine"><input id="manualCode" inputmode="numeric" placeholder="8–13 digit barcode"><button class="btn" id="manualGo">Go</button></div></div><input id="photoFile" type="file" accept="image/*" capture="environment"><div id="scanResult"></div></div></div></div>
-<div id="toast" class="toast"></div>
+  <div class="dots" id="dots"></div>
+
+  <div class="pager" id="pager">
+
+    <!-- PAGE 1: HOME -->
+    <section class="page" data-page="home">
+      <div class="home-brand">🧊 KITCHEN HUB</div>
+      <div class="card" style="text-align:center;">
+        <div class="clock-big" id="clock">--:--</div>
+        <div class="date-big" id="date">—</div>
+        <div class="wx-mini" id="wxMini" style="display:none;"></div>
+      </div>
+
+      <button class="ha-tile" id="haQuickTile">
+        <span class="big">🏠</span><span>Open Home Assistant</span>
+      </button>
+
+      <div class="stat-row">
+        <div class="stat"><div class="n" id="homeItems">0</div><div class="l">Items</div></div>
+        <div class="stat warn"><div class="n" id="homeExp">0</div><div class="l">Expiring</div></div>
+        <div class="stat buy"><div class="n" id="homeBuy">0</div><div class="l">To buy</div></div>
+      </div>
+
+      <div class="card" style="margin-top:14px;">
+        <div class="home-sec-title">⏳ Expiring soon</div>
+        <div id="homeExpList"></div>
+      </div>
+
+      <div class="card">
+        <div class="home-sec-title">⏲️ Kitchen timer</div>
+        <div class="htimer">
+          <div class="disp" id="timerDisplay">00:00</div>
+          <div class="ctrls">
+            <button class="btn-primary" id="timerStart">Start</button>
+            <button class="btn-ghost" id="timerReset">Reset</button>
+          </div>
+        </div>
+        <div class="htimer-presets" id="timerPresets"></div>
+        <div class="timer-custom">
+          <input type="number" id="timerCustom" min="1" max="180" placeholder="custom minutes">
+          <button class="btn-ghost" id="timerSet" style="flex-shrink:0;">Set</button>
+        </div>
+        <div class="timer-msg" id="timerMsg"></div>
+      </div>
+
+      <div class="card" style="padding:12px 16px;">
+        <div style="display:flex;gap:10px;align-items:center;">
+          <input type="text" id="wxCity" placeholder="City for weather (optional)" autocomplete="off" style="min-height:44px;font-size:14px;">
+          <button class="btn-ghost" id="wxSave" style="flex-shrink:0;min-height:44px;padding:10px 14px;">Save</button>
+        </div>
+      </div>
+
+      <div class="app-footer">Kitchen Hub · v5</div>
+    </section>
+
+    <!-- PAGE 2: STORAGE -->
+    <section class="page" data-page="storage">
+      <div class="page-head">
+        <div><div class="page-title">🗃️ Storage</div><div class="page-sub">Tap a location below to switch</div></div>
+      </div>
+
+      <!-- BIG, HIGH-CONTRAST SEGMENTED TOGGLE -->
+      <div class="loc-toggle" id="locToggle">
+        <button class="loc-btn active" data-loc="Fridge"><span class="em">🧊</span><span class="nm">Fridge</span><span class="ct" data-count="Fridge">0</span></button>
+        <button class="loc-btn" data-loc="Freezer"><span class="em">❄️</span><span class="nm">Freezer</span><span class="ct" data-count="Freezer">0</span></button>
+        <button class="loc-btn" data-loc="Pantry"><span class="em">🗄️</span><span class="nm">Pantry</span><span class="ct" data-count="Pantry">0</span></button>
+      </div>
+
+      <!-- ACTIVE LOCATION HEADER -->
+      <div class="loc-header">
+        <span class="lh-name" id="storeTitle">🧊 Fridge</span>
+        <span class="lh-meta" id="invSummary">0 items</span>
+      </div>
+
+      <div class="inv-actions">
+        <button class="btn-scan" id="scanBtn">📷 Scan Items</button>
+        <button class="btn-ghost" id="addItemBtn">➕ Add Item Manually</button>
+      </div>
+      <div class="inv-filters">
+        <select id="filterCat"><option value="all">All categories</option></select>
+        <select id="sortBy">
+          <option value="expiry">Expiring soonest</option>
+          <option value="name">Name</option>
+          <option value="category">Category</option>
+        </select>
+      </div>
+      <div id="invGrid"></div>
+      <div class="empty" id="invEmpty" style="display:none;"><span class="em">🫙</span><span id="invEmptyMsg">This location is empty — tap 📷 Scan Items!</span></div>
+    </section>
+
+    <!-- PAGE 3: SHOPPING -->
+    <section class="page" data-page="shop">
+      <div class="page-head">
+        <div><div class="page-title">🛒 Shopping</div><div class="page-sub" id="shopSummary">0 to buy</div></div>
+      </div>
+      <div class="shop-add">
+        <input type="text" id="shopInput" placeholder="Add an item to buy…" autocomplete="off">
+        <button class="btn-primary" id="shopAddBtn">Add</button>
+      </div>
+      <button class="btn-ghost" id="clearCheckedBtn" style="width:100%;margin-bottom:14px;">🧹 Clear checked</button>
+      <div id="shopList"></div>
+      <div class="empty" id="shopEmpty" style="display:none;"><span class="em">📝</span>Nothing to buy — all stocked up!</div>
+    </section>
+
+    <!-- PAGE 4: HOME ASSISTANT -->
+    <section class="page" data-page="ha">
+      <div class="page-head"><div class="page-title">🏠 Home Assistant</div></div>
+      <div class="card">
+        <div class="ha-row">
+          <input type="url" id="haUrl" placeholder="http://homeassistant.local:8123">
+          <button class="btn-ghost" id="haSaveBtn" style="flex-shrink:0;">Save</button>
+        </div>
+        <button class="btn-primary btn-ha" id="haOpenBtn" style="width:100%;margin-top:10px;">↗ Open dashboard in new tab</button>
+        <div class="ha-frame-wrap" id="haFrameWrap"></div>
+        <div class="ha-note">Some setups block embedding. If blank, use "Open".</div>
+      </div>
+      <div class="app-footer">Kitchen Hub · v5</div>
+    </section>
+
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav" id="bottomNav">
+    <button class="nav-btn active" data-idx="0"><span class="ic">🏠</span><span class="lb">Home</span></button>
+    <button class="nav-btn" data-idx="1"><span class="ic">🗃️</span><span class="lb">Storage</span></button>
+    <button class="nav-btn" data-idx="2"><span class="ic">🛒</span><span class="lb">Shop</span></button>
+    <button class="nav-btn ha-nav" data-idx="3"><span class="ic">🏠</span><span class="lb">Smart</span></button>
+  </nav>
+
+  <!-- ITEM MODAL -->
+  <div class="modal-overlay" id="itemModal">
+    <div class="modal">
+      <h2 id="modalTitle">Add Item</h2>
+      <div class="field"><label for="fName">Name</label><input type="text" id="fName" placeholder="e.g. Milk" autocomplete="off"></div>
+      <div class="field"><label for="fQty">Quantity</label><input type="number" id="fQty" min="1" value="1"></div>
+      <div class="field"><label for="fCat">Category</label><select id="fCat"></select></div>
+      <div class="field"><label>Location</label>
+        <div class="loc-pick" id="fLocPick">
+          <button type="button" data-loc="Fridge"><span class="em">🧊</span>Fridge</button>
+          <button type="button" data-loc="Freezer"><span class="em">❄️</span>Freezer</button>
+          <button type="button" data-loc="Pantry"><span class="em">🗄️</span>Pantry</button>
+        </div>
+      </div>
+      <div class="field"><label for="fExp">Expiry date</label><input type="date" id="fExp"></div>
+      <div class="modal-actions">
+        <button class="btn-ghost" id="modalCancel">Cancel</button>
+        <button class="btn-primary" id="modalSave">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOVE MODAL -->
+  <div class="modal-overlay" id="moveModal">
+    <div class="modal">
+      <h2 id="moveTitle">Move item</h2>
+      <div class="page-sub" style="margin-bottom:14px;">Choose a new location:</div>
+      <div class="loc-pick" id="mvLocPick">
+        <button type="button" data-loc="Fridge"><span class="em">🧊</span>Fridge</button>
+        <button type="button" data-loc="Freezer"><span class="em">❄️</span>Freezer</button>
+        <button type="button" data-loc="Pantry"><span class="em">🗄️</span>Pantry</button>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-ghost" id="moveCancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAMERA MODAL -->
+  <div class="cam-overlay" id="camOverlay">
+    <div class="cam-topbar">
+      <div class="cam-title">📷 Scan → <span id="camLocLabel">🧊 Fridge</span></div>
+      <button class="btn-ghost" id="camClose">✕ Close</button>
+    </div>
+    <div class="mode-toggle">
+      <button id="modeBarcode" class="active">🏷️ Barcode</button>
+      <button id="modePhoto">🧾 Photo</button>
+    </div>
+    <div class="cam-body" id="camBody">
+      <div class="cam-stage" id="camStage">
+        <video id="camVideo" autoplay muted playsinline></video>
+        <canvas id="camCanvas"></canvas>
+        <div class="reticle" id="reticle"></div>
+        <div class="scan-line" id="scanLine"></div>
+      </div>
+      <div class="cam-status" id="camStatus">📷 Starting camera…</div>
+      <div class="cam-error" id="camError" style="display:none;"></div>
+      <div class="file-drop" id="fileDrop" style="display:none;">
+        📁 Camera unavailable — take or upload a photo
+        <div><button class="file-btn" id="fileBtn">📷 Choose / Take Photo</button></div>
+        <input type="file" id="fileInput" accept="image/*" capture="environment">
+      </div>
+      <div class="cam-ctrls" id="camCtrls">
+        <button class="btn-primary" id="camCapture" style="display:none;">📸 Capture</button>
+        <button class="btn-ghost" id="camSwitch">🔄 Switch camera</button>
+      </div>
+      <div class="manual-wrap" id="manualBarcodeWrap">
+        <div class="ml">Enter barcode manually</div>
+        <div class="manual-barcode">
+          <input type="text" id="manualBarcode" placeholder="8–13 digit barcode…" inputmode="numeric">
+          <button class="btn-ghost" id="manualBarcodeBtn" style="flex-shrink:0;">Go</button>
+        </div>
+      </div>
+      <div id="camResult" style="width:100%; max-width:500px;"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
 <script>
-(()=>{'use strict';
-const $=id=>document.getElementById(id), LS={inv:'kh6_inventory',shop:'kh6_shop',loc:'kh6_location',city:'kh6_city',haUrl:'kh6_ha_url',haToken:'kh6_ha_token',controls:'kh6_ha_controls',seed:'kh6_seed'};const LOC={Fridge:'🧊',Freezer:'❄️',Pantry:'🗄️'},DEF={Fridge:7,Freezer:90,Pantry:180};const CAT={Dairy:'🥛',Produce:'🥬',Meat:'🍖',Drinks:'🧃',Leftovers:'🍱',Condiments:'🧂',Frozen:'🧊',Bakery:'🍞','Dry goods':'🌾',Other:'📦'};let inv=[],shop=[],loc='Fridge',editItem=null,editControl=null,controls=[],states={},toastTimer,camStream=null,reader=null,scanTimer=null,scanBusy=false;
-const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);const get=(k,d)=>{try{let v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}};const put=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};const e=s=>String(s??'').replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]));const iso=d=>{let x=new Date();x.setDate(x.getDate()+d);return x.toISOString().slice(0,10)};const dleft=x=>x?Math.round((new Date(x+'T00:00:00')-new Date(new Date().toDateString()))/864e5):null;const expText=x=>{let d=dleft(x);return d===null?'No expiry':d<0?'Expired '+Math.abs(d)+'d ago':d===0?'Expires today':d+'d left'};function notice(msg){let t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2800)}
-function guess(n){n=(n||'').toLowerCase();if(/milk|cheese|yog|butter|egg/.test(n))return'Dairy';if(/apple|banana|lettuce|tomato|onion|carrot|fruit|veg/.test(n))return'Produce';if(/chicken|beef|pork|bacon|fish|meat/.test(n))return'Meat';if(/juice|water|soda|coffee|tea|beer|wine/.test(n))return'Drinks';if(/pizza|ice cream|frozen/.test(n))return'Frozen';if(/bread|bun|cake/.test(n))return'Bakery';if(/pasta|rice|flour|beans|cereal|oats|can/.test(n))return'Dry goods';if(/sauce|ketchup|mayo|oil/.test(n))return'Condiments';return'Other'}
-function seed(){if(get(LS.seed,false))return;inv=[['Milk',1,'Dairy',2,'Fridge'],['Lettuce',1,'Produce',1,'Fridge'],['Frozen peas',1,'Frozen',120,'Freezer'],['Pasta',2,'Dry goods',300,'Pantry']].map(x=>({id:uid(),name:x[0],qty:x[1],cat:x[2],exp:iso(x[3]),loc:x[4]}));shop=['Bananas','Bread','Coffee'].map(name=>({id:uid(),name,done:false}));put(LS.inv,inv);put(LS.shop,shop);put(LS.seed,true)}
-function controlSeed(){if(localStorage.getItem(LS.controls)!==null)return;controls=[{id:uid(),name:'Hej hej — all lights off',icon:'👋',entity:'scene.hej_hej',action:'auto'},{id:uid(),name:'Theatre lights',icon:'🎬',entity:'light.theatre',action:'toggle'},{id:uid(),name:'Bedroom lights',icon:'🛏️',entity:'light.bedroom',action:'toggle'}];put(LS.controls,controls)}
-function catOpts(selected){return Object.keys(CAT).map(c=>'<option '+(c===selected?'selected':'')+' value="'+e(c)+'">'+CAT[c]+' '+e(c)+'</option>').join('')}function locOpts(selected){return Object.keys(LOC).map(x=>'<option '+(x===selected?'selected':'')+'>'+LOC[x]+' '+x+'</option>').join('')}
-function clock(){let n=new Date();$('clock').textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');$('date').textContent=n.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})}
-function renderStorage(){let L=inv.filter(x=>x.loc===loc),f=$('catFilter').value,arr=f==='all'?L:L.filter(x=>x.cat===f);arr.sort((a,b)=>$('sort').value==='name'?a.name.localeCompare(b.name):(a.exp||'9999').localeCompare(b.exp||'9999'));$('locs').innerHTML=Object.keys(LOC).map(x=>'<button data-loc="'+x+'" class="'+(x===loc?'on':'')+'"><span class="le">'+LOC[x]+'</span>'+x+'<br><small>'+inv.filter(i=>i.loc===x).length+' items</small></button>').join('');$('locs').querySelectorAll('button').forEach(b=>b.onclick=()=>{loc=b.dataset.loc;put(LS.loc,loc);renderStorage()});$('locTitle').textContent=LOC[loc]+' '+loc;$('locSummary').textContent=L.length+' item'+(L.length===1?'':'s');$('invEmpty').style.display=arr.length?'none':'block';$('inventory').innerHTML=arr.map(x=>{let d=dleft(x.exp),cl=d!==null&&d<0?'expired':d!==null&&d<=7?'soon':'';return'<article class="item '+cl+'"><div class="itemTop"><div><div class="itemName">'+e(x.name)+'</div><div class="meta">Qty '+x.qty+' · '+CAT[x.cat]+' '+e(x.cat)+'</div></div><span class="badge '+(cl==='expired'?'bad':cl?'warn':'good')+'">'+e(expText(x.exp))+'</span></div><div class="itemBtns"><button class="btn" data-a="more">🛒 Need more</button><button class="btn" data-a="move">↔ Move</button><button class="btn" data-a="edit">✏️</button><button class="danger" data-a="del">🗑️</button></div></article>'}).join('');$('inventory').querySelectorAll('.item').forEach((el,i)=>{let x=arr[i];el.querySelector('[data-a="edit"]').onclick=()=>openItem(x.id);el.querySelector('[data-a="del"]').onclick=()=>{if(confirm('Delete '+x.name+'?')){inv=inv.filter(a=>a.id!==x.id);put(LS.inv,inv);renderAll()}};el.querySelector('[data-a="move"]').onclick=()=>{let to=prompt('Move to: Fridge, Freezer, or Pantry',x.loc);if(LOC[to]){x.loc=to;put(LS.inv,inv);renderAll();notice('Moved to '+to)}};el.querySelector('[data-a="more"]').onclick=()=>{if(!shop.some(s=>s.name.toLowerCase()===x.name.toLowerCase()&&!s.done))shop.push({id:uid(),name:x.name,done:false});put(LS.shop,shop);renderAll();notice('Added to shopping list')}})}
-function renderShop(){$('shopping').innerHTML=shop.slice().sort((a,b)=>a.done-b.done).map(x=>'<div class="shop '+(x.done?'done':'')+'"><button class="check">'+(x.done?'✓':'')+'</button><span class="shopName">'+e(x.name)+'</span>'+(x.done?'<button class="btn toStorage">✓🧊</button>':'')+'<button class="danger del">🗑️</button></div>').join('');$('shopEmpty').style.display=shop.length?'none':'block';$('shopSummary').textContent=shop.filter(x=>!x.done).length+' to buy';$('shopping').querySelectorAll('.shop').forEach((r,i)=>{let x=shop.slice().sort((a,b)=>a.done-b.done)[i];r.querySelector('.check').onclick=()=>{x.done=!x.done;put(LS.shop,shop);renderAll()};r.querySelector('.del').onclick=()=>{shop=shop.filter(a=>a.id!==x.id);put(LS.shop,shop);renderAll()};let q=r.querySelector('.toStorage');if(q)q.onclick=()=>{shop=shop.filter(a=>a.id!==x.id);put(LS.shop,shop);renderAll();openItem(null,x.name)}})}
-function renderHome(){let urg=inv.filter(x=>{let d=dleft(x.exp);return d!==null&&d<=7}).sort((a,b)=>(a.exp||'').localeCompare(b.exp||''));$('statItems').textContent=inv.length;$('statExp').textContent=urg.length;$('statShop').textContent=shop.filter(x=>!x.done).length;$('expList').innerHTML=urg.length?urg.slice(0,5).map(x=>'<div class="expRow"><span>'+LOC[x.loc]+' '+e(x.name)+'</span><span class="badge '+(dleft(x.exp)<0?'bad':'warn')+'">'+e(expText(x.exp))+'</span></div>').join(''):'<div class="hint">All fresh 🎉</div>';renderHomeControls()}
-function connected(){return !!(localStorage.getItem(LS.haUrl)&&localStorage.getItem(LS.haToken))}function stateBadge(x){if(!x)return'<span class="badge">Not refreshed</span>';if(x.error)return'<span class="badge bad">Unavailable</span>';let s=String(x.state||'unknown');return'<span class="badge '+(s==='on'?'good':s==='off'?'':'warn')+'">'+e(s)+'</span>'}
-function renderHomeControls(){let box=$('homeControls');if(!connected()){box.innerHTML='<div class="hint">Connect Home Assistant to enable controls.</div><button class="btn wide" style="margin-top:10px" id="connectHA">Connect Home Assistant</button>';$('connectHA').onclick=()=>go(3);return}let a=controls.slice(0,3);box.innerHTML=a.length?'<div class="quickGrid">'+a.map(x=>'<button class="quick" data-id="'+x.id+'"><span class="em">'+e(x.icon||'⚙️')+'</span><span class="qn">'+e(x.name)+'</span>'+stateBadge(states[x.id])+'</button>').join('')+'</div>':'<div class="hint">Add controls in the Smart tab.</div>';box.querySelectorAll('.quick').forEach(b=>b.onclick=()=>runControl(b.dataset.id,b))}
-function renderControls(){let grid=$('controlGrid');grid.innerHTML=controls.map(x=>'<article class="control" data-id="'+x.id+'"><span class="ce">'+e(x.icon||'⚙️')+'</span><span class="cn">'+e(x.name||'Untitled')+'</span><span class="ceid">'+e(x.entity||'No entity ID')+'</span>'+stateBadge(states[x.id])+'<div class="editRow"><button data-c="edit">Edit</button><button data-c="del">Delete</button></div></article>').join('')||'<div class="hint">No controls yet. Add one above.</div>';grid.querySelectorAll('.control').forEach(card=>{let id=card.dataset.id;card.onclick=ev=>{if(!ev.target.closest('.editRow'))runControl(id,card)};card.querySelector('[data-c="edit"]').onclick=ev=>{ev.stopPropagation();openControl(id)};card.querySelector('[data-c="del"]').onclick=ev=>{ev.stopPropagation();if(confirm('Delete this control?')){controls=controls.filter(x=>x.id!==id);put(LS.controls,controls);delete states[id];renderControls();renderHomeControls()}}})}
-function renderAll(){renderStorage();renderShop();renderHome();renderControls()}
-function openItem(id,prefill=''){editItem=id;let x=id&&inv.find(a=>a.id===id);$('itemModalTitle').textContent=x?'Edit item':'Add item';$('iName').value=x?x.name:prefill;$('iQty').value=x?x.qty:1;$('iCat').innerHTML=catOpts(x?x.cat:guess(prefill));$('iLoc').innerHTML=locOpts(x?x.loc:loc);$('iExp').value=x?x.exp:iso(DEF[loc]);$('itemModal').classList.add('show');setTimeout(()=>$('iName').focus(),80)}
-function saveItem(){let name=$('iName').value.trim();if(!name)return notice('Enter an item name');let obj={name,qty:Math.max(1,+$('iQty').value||1),cat:$('iCat').value,loc:$('iLoc').value,exp:$('iExp').value};if(editItem)Object.assign(inv.find(x=>x.id===editItem),obj);else inv.push({id:uid(),...obj});put(LS.inv,inv);close('itemModal');renderAll();notice('Saved '+name)}
-function openControl(id){editControl=id;let x=id&&controls.find(a=>a.id===id);$('controlModalTitle').textContent=x?'Edit quick control':'Add quick control';$('cName').value=x?x.name:'';$('cIcon').value=x?x.icon:'💡';$('cEntity').value=x?x.entity:'';$('cAction').value=x?x.action:'auto';$('controlModal').classList.add('show');setTimeout(()=>$('cName').focus(),80)}
-function saveControl(){let name=$('cName').value.trim(),entity=$('cEntity').value.trim().toLowerCase();if(!name)return notice('Enter a control name');if(entity&&!/^[a-z_]+\.[a-z0-9_]+$/.test(entity))return notice('Use an entity ID like light.kitchen');let o={name,icon:$('cIcon').value.trim()||'⚙️',entity,action:$('cAction').value};if(editControl)Object.assign(controls.find(x=>x.id===editControl),o);else controls.push({id:uid(),...o});put(LS.controls,controls);close('controlModal');renderControls();renderHomeControls();notice('Control saved')}
-function close(id){$(id).classList.remove('show')}function go(n){$('pager').scrollTo({left:n*innerWidth,behavior:'smooth'});page(n)}function page(n){document.querySelectorAll('#nav button').forEach((b,i)=>b.classList.toggle('on',i===n));document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i===n))}
-function base(){return ($('haUrl').value.trim()||localStorage.getItem(LS.haUrl)||'').replace(/\/$/,'')}function token(){return $('haToken').value.trim()||localStorage.getItem(LS.haToken)||''}function haHeaders(){return {'Authorization':'Bearer '+token(),'Content-Type':'application/json'}}function status(msg,type=''){$('haStatus').textContent=msg;$('haStatus').className='statusBox '+type}function errorText(err){if(err instanceof TypeError)return 'Network/CORS error: '+err.message+'\nCheck the URL and Home Assistant CORS setup in Setup help.';return err.message||String(err)}
-async function saveHA(test=false){let u=$('haUrl').value.trim();if(u&&!/^https?:\/\//i.test(u))u='https://'+u;let t=$('haToken').value.trim();if(!u){status('Enter a Home Assistant URL.','err');return false}if(t){localStorage.setItem(LS.haToken,t);$('haToken').value=''}else if(!localStorage.getItem(LS.haToken)){status('Enter a Long-Lived Access Token.','err');return false}localStorage.setItem(LS.haUrl,u.replace(/\/$/,''));$('haUrl').value=u.replace(/\/$/,'');status('Settings saved on this device.','ok');if(test)return testHA();fetchStates();renderHomeControls();return true}
-async function testHA(){let u=base(),t=token();if(!u||!t){status('Add both URL and access token before testing.','err');return}status('Testing connection…');try{let r=await fetch(u+'/api/',{headers:haHeaders()});let text=await r.text();if(!r.ok)throw new Error('HTTP '+r.status+' '+r.statusText+(text?' — '+text.slice(0,180):''));status('✓ Connected to Home Assistant successfully.','ok');await fetchStates()}catch(err){status('Connection failed: '+errorText(err),'err')}}
-async function fetchStates(){if(!connected()&&!token())return;let u=base(),t=token();if(!u||!t)return;controls.filter(c=>c.entity).forEach(c=>states[c.id]={state:'Loading…'});renderControls();renderHomeControls();await Promise.all(controls.filter(c=>c.entity).map(async c=>{try{let r=await fetch(u+'/api/states/'+encodeURIComponent(c.entity),{headers:haHeaders()});if(!r.ok)throw new Error('HTTP '+r.status);let j=await r.json();states[c.id]={state:j.state||'unknown'}}catch(err){states[c.id]={error:true}}}));renderControls();renderHomeControls()}
-function actionFor(c){let domain=(c.entity||'').split('.')[0];if(c.action!=='auto')return[domain,c.action];return[domain,['scene','script'].includes(domain)?'turn_on':['light','switch','fan','input_boolean'].includes(domain)?'toggle':'turn_on']}
-async function runControl(id,el){let c=controls.find(x=>x.id===id);if(!c)return;if(!connected()){go(3);$('haSettings').scrollIntoView({behavior:'smooth'});$('haToken').focus();notice('Add your token to enable controls');return}if(!c.entity){go(3);openControl(id);notice('Add an entity ID first');return}let [domain,service]=actionFor(c);el?.classList.add('busy');states[id]={state:'Running…'};renderControls();renderHomeControls();notice('Running '+c.name+'…');try{let r=await fetch(base()+'/api/services/'+encodeURIComponent(domain)+'/'+encodeURIComponent(service),{method:'POST',headers:haHeaders(),body:JSON.stringify({entity_id:c.entity})});let text=await r.text();if(!r.ok)throw new Error('HTTP '+r.status+' '+r.statusText+(text?' — '+text.slice(0,160):''));states[id]={state:'Sent'};notice('✓ '+c.name+' command sent');setTimeout(fetchStates,700)}catch(err){states[id]={error:true};notice('Control error: '+errorText(err))}finally{el?.classList.remove('busy');renderControls();renderHomeControls()}}
-let remain=0,timerInt=null;function timerRender(){$('timerDisplay').textContent=String(Math.floor(remain/60)).padStart(2,'0')+':'+String(remain%60).padStart(2,'0')}function setTimer(s){clearInterval(timerInt);timerInt=null;remain=s;timerRender();$('timerGo').textContent='Start'}function beep(){try{let a=new (AudioContext||webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.frequency.value=880;g.gain.value=.2;o.connect(g);g.connect(a.destination);o.start();o.stop(a.currentTime+.25)}catch(e){}}function weather(){let city=localStorage.getItem(LS.city)||'';$('city').value=city;if(!city)return;fetch('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(city)+'&count=1').then(r=>r.json()).then(g=>{if(!g.results?.[0])return;let x=g.results[0];return fetch('https://api.open-meteo.com/v1/forecast?latitude='+x.latitude+'&longitude='+x.longitude+'&current=temperature_2m,weather_code').then(r=>r.json()).then(w=>{$('weather').textContent='🌤️ '+Math.round(w.current.temperature_2m)+'°C · '+x.name})}).catch(()=>{})}
-function stopCam(){if(scanTimer)clearInterval(scanTimer);scanTimer=null;if(reader)try{reader.reset()}catch(e){}reader=null;if(camStream)camStream.getTracks().forEach(t=>t.stop());camStream=null;$('video').srcObject=null}function zxing(){if(window.ZXingBrowser?.BrowserMultiFormatReader)return Promise.resolve();return new Promise((yes,no)=>{let s=document.createElement('script');s.src='zxing-browser.min.js';s.onload=()=>window.ZXingBrowser?.BrowserMultiFormatReader?yes():no(new Error('Local ZXing library unavailable'));s.onerror=()=>no(new Error('Could not load local zxing-browser.min.js'));document.head.appendChild(s)})}async function openCam(){$('camera').classList.add('show');$('scanResult').innerHTML='';$('camStatus').textContent='📷 Starting camera…';try{let constraints={video:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:720}},audio:false};if('BarcodeDetector'in window){camStream=await navigator.mediaDevices.getUserMedia(constraints);$('video').srcObject=camStream;await $('video').play();let det=new BarcodeDetector({formats:['ean_13','ean_8','upc_a','upc_e','code_128']});$('camStatus').textContent='🔍 Point the camera at a barcode';scanTimer=setInterval(async()=>{if(scanBusy)return;try{let z=await det.detect($('video'));if(z[0]?.rawValue)lookup(z[0].rawValue)}catch(e){}},500)}else{await zxing();reader=new window.ZXingBrowser.BrowserMultiFormatReader();$('camStatus').textContent='🔍 Point the camera at a barcode';await reader.decodeFromConstraints(constraints,$('video'),r=>{if(r)lookup(r.getText())})}}catch(err){$('camStatus').textContent='Scanner unavailable — enter barcode manually below.'}}async function lookup(code){if(scanBusy)return;scanBusy=true;stopCam();$('camStatus').textContent='Looking up product…';let name='',img='';try{let j=await fetch('https://world.openfoodfacts.org/api/v0/product/'+encodeURIComponent(code)+'.json').then(r=>r.json());name=j.product?.product_name||j.product?.generic_name||'';img=j.product?.image_front_small_url||''}catch(e){}let cat=guess(name);$('scanResult').innerHTML='<div class="card"><b>'+(name?e(name):'Product not found — type item name')+'</b><div class="field"><input id="scanName" value="'+e(name)+'" placeholder="Item name"></div><div class="field"><label>Expiry (required)</label><input id="scanExp" type="date" value="'+iso(DEF[loc])+'"></div><div class="modalActions"><button class="btn" id="scanAgain">Scan another</button><button class="primary" id="scanAdd">Add to '+loc+'</button></div></div>';$('scanAdd').onclick=()=>{let n=$('scanName').value.trim(),ex=$('scanExp').value;if(!n||!ex)return notice('Name and expiry are required');inv.push({id:uid(),name:n,qty:1,cat:guess(n),exp:ex,loc,img});put(LS.inv,inv);renderAll();notice('Added '+n);$('scanResult').innerHTML='';scanBusy=false;openCam()};$('scanAgain').onclick=()=>{scanBusy=false;openCam()};if(!name)$('scanName').focus()}
-function init(){seed();controlSeed();inv=get(LS.inv,[]).map(x=>({...x,loc:x.loc||'Fridge'}));shop=get(LS.shop,[]);controls=get(LS.controls,[]);loc=get(LS.loc,'Fridge');$('haUrl').value=localStorage.getItem(LS.haUrl)||'https://ha.ashcasa.cc';Object.keys(CAT).forEach(c=>$('catFilter').insertAdjacentHTML('beforeend','<option value="'+e(c)+'">'+CAT[c]+' '+e(c)+'</option>'));for(let i=0;i<4;i++)$('dots').insertAdjacentHTML('beforeend','<span class="dot '+(!i?'on':'')+'"></span>');$('nav').querySelectorAll('button').forEach(b=>b.onclick=()=>go(+b.dataset.page));$('pager').addEventListener('scroll',()=>page(Math.round($('pager').scrollLeft/innerWidth)));clock();setInterval(clock,1000);renderAll();weather();if(connected())fetchStates();$('addItem').onclick=()=>openItem();$('saveItem').onclick=saveItem;document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>close(b.dataset.close));$('itemModal').onclick=x=>{if(x.target===$('itemModal'))close('itemModal')};$('controlModal').onclick=x=>{if(x.target===$('controlModal'))close('controlModal')};$('catFilter').onchange=renderStorage;$('sort').onchange=renderStorage;$('shopAdd').onclick=()=>{let n=$('shopInput').value.trim();if(n){shop.push({id:uid(),name:n,done:false});put(LS.shop,shop);$('shopInput').value='';renderAll()}};$('shopInput').onkeydown=x=>x.key==='Enter'&&$('shopAdd').click();$('clearChecked').onclick=()=>{shop=shop.filter(x=>!x.done);put(LS.shop,shop);renderAll()};$('openHaHome').onclick=()=>{let u=localStorage.getItem(LS.haUrl);if(u)window.open(u,'_blank','noopener');else go(3)};$('addControl').onclick=()=>openControl();$('saveControl').onclick=saveControl;$('refreshStates').onclick=fetchStates;$('openHaSettings').onclick=()=>{$('haSettings').scrollIntoView({behavior:'smooth'});$('haToken').focus()};$('haSave').onclick=()=>saveHA(false);$('haTest').onclick=()=>saveHA(true);$('haOpen').onclick=()=>{let u=base();if(u)window.open(u,'_blank','noopener');else notice('Enter a Home Assistant URL first')};$('tokenToggle').onclick=()=>{let i=$('haToken');i.type=i.type==='password'?'text':'password';$('tokenToggle').textContent=i.type==='password'?'Show':'Hide'};$('saveCity').onclick=()=>{localStorage.setItem(LS.city,$('city').value.trim());weather();notice('Weather city saved')};[1,3,5,10,15,30].forEach(m=>{let b=document.createElement('button');b.textContent=m+'m';b.onclick=()=>setTimer(m*60);$('presets').appendChild(b)});$('timerGo').onclick=()=>{if(!remain)return notice('Choose a timer first');if(timerInt){clearInterval(timerInt);timerInt=null;$('timerGo').textContent='Start'}else{$('timerGo').textContent='Pause';timerInt=setInterval(()=>{if(--remain<=0){setTimer(0);beep();notice('⏰ Time is up!')}timerRender()},1000)}};$('timerReset').onclick=()=>setTimer(0);$('scanBtn').onclick=openCam;$('camClose').onclick=()=>{$('camera').classList.remove('show');stopCam();scanBusy=false};$('manualGo').onclick=()=>{let c=$('manualCode').value.trim();if(c)lookup(c);else notice('Enter a barcode')};$('manualCode').onkeydown=x=>x.key==='Enter'&&$('manualGo').click();$('photoFile').onchange=()=>notice('Photo capture is available as a manual item fallback. Add the item with the form.');document.addEventListener('visibilitychange',()=>{if(document.hidden)stopCam()});document.addEventListener('keydown',x=>{if(x.key==='Escape'){['itemModal','controlModal'].forEach(close);if($('camera').classList.contains('show')){$('camera').classList.remove('show');stopCam()}}})}document.addEventListener('DOMContentLoaded',init)})();
-</script></body></html>
+(function(){
+  "use strict";
+
+  const CATS = { "Dairy":"🥛","Produce":"🥬","Meat":"🍖","Drinks":"🧃","Leftovers":"🍱","Condiments":"🧂","Frozen":"🧊","Bakery":"🍞","Dry goods":"🌾","Other":"📦" };
+  const CAT_COLORS = { "Dairy":"#5b8def","Produce":"#4dd0a7","Meat":"#e07a7a","Drinks":"#e8a33d","Leftovers":"#c07ae0","Condiments":"#d4b45a","Frozen":"#5ec7e0","Bakery":"#d99a5b","Dry goods":"#b5a26a","Other":"#8b95a3" };
+  const LOCS = { "Fridge":"🧊", "Freezer":"❄️", "Pantry":"🗄️" };
+  const LOC_DEFAULT_EXP = { "Fridge":7, "Freezer":90, "Pantry":180 };
+
+  const LS = { inv:"kitchenhub_inventory_v2", shop:"kitchenhub_shopping_v2", ha:"kitchenhub_ha_url_v1", seeded:"kitchenhub_seeded_v3", city:"kitchenhub_city_v1", loc:"kitchenhub_curloc_v1" };
+  const OLD_INV = "fridgehub_inventory_v1";
+
+  let inventory=[], shopping=[], editingId=null, moveId=null;
+  let currentLoc = "Fridge";
+  let modalLoc = "Fridge";
+
+  const $ = id => document.getElementById(id);
+  const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+  function load(key,def){ try{ const v=localStorage.getItem(key); return v?JSON.parse(v):def; }catch(e){ return def; } }
+  function save(key,val){ try{ localStorage.setItem(key,JSON.stringify(val)); }catch(e){} }
+  function toast(msg){ const t=$("toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove("show"),2200); }
+  function esc(s){ return String(s).replace(/[&<>"']/g,c=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c])); }
+  function hexA(hex,a){ const n=parseInt(hex.slice(1),16); return "rgba("+((n>>16)&255)+","+((n>>8)&255)+","+(n&255)+","+a+")"; }
+  function todayStr(){ const d=new Date(); d.setHours(0,0,0,0); return d; }
+  function parseDate(s){ if(!s) return null; const d=new Date(s+"T00:00:00"); return isNaN(d)?null:d; }
+  function daysUntil(s){ const d=parseDate(s); if(!d) return null; return Math.round((d-todayStr())/86400000); }
+  function fmtExpiry(s){ const d=parseDate(s); if(!d) return ""; return d.toLocaleDateString(undefined,{month:"short",day:"numeric"}); }
+  function isoOffset(days){ const d=new Date(); d.setDate(d.getDate()+days); return d.toISOString().slice(0,10); }
+
+  function guessCategory(name){
+    const n=(name||"").toLowerCase();
+    if(/milk|cheese|yog|yoghurt|yogurt|butter|cream|egg/.test(n)) return "Dairy";
+    if(/apple|banana|lettuce|tomato|onion|carrot|spinach|pepper|fruit|veg|salad|berry|grape|orange|lemon/.test(n)) return "Produce";
+    if(/chicken|beef|pork|bacon|ham|sausage|steak|fish|salmon|turkey|meat/.test(n)) return "Meat";
+    if(/juice|soda|cola|water|drink|beer|wine|tea|coffee|smoothie/.test(n)) return "Drinks";
+    if(/leftover|pasta|rice|soup|curry/.test(n)) return "Leftovers";
+    if(/sauce|ketchup|mayo|mustard|dressing|jam|honey|oil|vinegar|condiment/.test(n)) return "Condiments";
+    if(/frozen|ice cream|pizza/.test(n)) return "Frozen";
+    if(/bread|bun|roll|bagel|croissant|cake/.test(n)) return "Bakery";
+    if(/flour|sugar|cereal|oats|beans|lentil|can|tin|pasta|rice|noodle/.test(n)) return "Dry goods";
+    return "Other";
+  }
+
+  function migrate(){
+    if(!load(LS.seeded,false)){
+      const old=load(OLD_INV,null) || load("kitchenhub_inventory_v2",null);
+      if(old && old.length){
+        inventory=old.map(i=>Object.assign({loc:"Fridge"},i));
+        save(LS.inv,inventory);
+        shopping=load("fridgehub_shopping_v1",null) || load("kitchenhub_shopping_v2",[]);
+        if(shopping.length) save(LS.shop,shopping);
+        save(LS.seeded,true);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function seed(){
+    if(load(LS.seeded,false)) return;
+    inventory=[
+      { id:uid(), name:"Milk", qty:1, cat:"Dairy", exp:isoOffset(2), loc:"Fridge" },
+      { id:uid(), name:"Eggs", qty:12, cat:"Dairy", exp:isoOffset(9), loc:"Fridge" },
+      { id:uid(), name:"Lettuce", qty:1, cat:"Produce", exp:isoOffset(1), loc:"Fridge" },
+      { id:uid(), name:"Leftover pasta", qty:1, cat:"Leftovers", exp:isoOffset(-1), loc:"Fridge" },
+      { id:uid(), name:"Frozen peas", qty:1, cat:"Frozen", exp:isoOffset(120), loc:"Freezer" },
+      { id:uid(), name:"Ice cream", qty:1, cat:"Frozen", exp:isoOffset(60), loc:"Freezer" },
+      { id:uid(), name:"Pasta", qty:2, cat:"Dry goods", exp:isoOffset(300), loc:"Pantry" },
+      { id:uid(), name:"Rice", qty:1, cat:"Dry goods", exp:isoOffset(200), loc:"Pantry" },
+      { id:uid(), name:"Canned beans", qty:3, cat:"Dry goods", exp:isoOffset(180), loc:"Pantry" }
+    ];
+    shopping=[ { id:uid(), name:"Bananas", done:false }, { id:uid(), name:"Bread", done:false }, { id:uid(), name:"Coffee", done:false } ];
+    save(LS.inv,inventory); save(LS.shop,shopping); save(LS.seeded,true);
+  }
+
+  function tickClock(){
+    const now=new Date();
+    $("clock").textContent = String(now.getHours()).padStart(2,"0")+":"+String(now.getMinutes()).padStart(2,"0");
+    $("date").textContent = now.toLocaleDateString(undefined,{ weekday:"long", month:"long", day:"numeric" });
+  }
+
+  function expState(exp){
+    const d=daysUntil(exp);
+    if(d===null) return {cls:"", key:"none", d:null};
+    if(d<0) return {cls:"exp-past", key:"past", d};
+    if(d<=3) return {cls:"exp-soon", key:"soon", d};
+    if(d<=7) return {cls:"exp-week", key:"week", d};
+    return {cls:"exp-fresh", key:"fresh", d};
+  }
+
+  // ---------- PAGER ----------
+  let currentPage=0;
+  const PAGES=4;
+  function updateActive(idx){
+    currentPage=idx;
+    [...$("dots").children].forEach((d,i)=>d.classList.toggle("active",i===idx));
+    [...$("bottomNav").children].forEach((b,i)=>b.classList.toggle("active",i===idx));
+  }
+  function goToPage(idx){ $("pager").scrollTo({ left: idx*window.innerWidth, behavior:"smooth" }); updateActive(idx); }
+  function initPager(){
+    const dots=$("dots");
+    for(let i=0;i<PAGES;i++){ const d=document.createElement("div"); d.className="dot"+(i===0?" active":""); dots.appendChild(d); }
+    [...$("bottomNav").children].forEach(b=>{ b.onclick=()=>goToPage(parseInt(b.dataset.idx)); });
+    const pager=$("pager");
+    let scrollTimer=null;
+    pager.addEventListener("scroll",()=>{
+      if(scrollTimer) return;
+      scrollTimer=requestAnimationFrame(()=>{
+        scrollTimer=null;
+        const idx=Math.round(pager.scrollLeft/window.innerWidth);
+        if(idx!==currentPage) updateActive(idx);
+      });
+    });
+    window.addEventListener("resize",()=>{ pager.scrollLeft=currentPage*window.innerWidth; });
+  }
+
+  // ---------- LOCATION TOGGLE ----------
+  function setLocation(loc){
+    if(!LOCS[loc]) loc="Fridge";
+    currentLoc=loc; save(LS.loc,loc);
+    [...$("locToggle").children].forEach(b=>b.classList.toggle("active", b.dataset.loc===loc));
+    $("storeTitle").textContent = LOCS[loc]+" "+loc;
+    $("invEmptyMsg").textContent = "Your "+loc.toLowerCase()+" is empty — tap 📷 Scan Items!";
+    renderInventory();
+  }
+  function updateLocCounts(){
+    Object.keys(LOCS).forEach(loc=>{
+      const el=document.querySelector('[data-count="'+loc+'"]');
+      if(el) el.textContent=inventory.filter(i=>i.loc===loc).length;
+    });
+  }
+
+  // ---------- inventory ----------
+  function renderInventory(){
+    const grid=$("invGrid"), filter=$("filterCat").value, sortBy=$("sortBy").value;
+    let list=inventory.filter(i=>i.loc===currentLoc);
+    if(filter!=="all") list=list.filter(i=>i.cat===filter);
+    list.sort((a,b)=>{
+      if(sortBy==="name") return a.name.localeCompare(b.name);
+      if(sortBy==="category") return a.cat.localeCompare(b.cat)||a.name.localeCompare(b.name);
+      const da=a.exp?parseDate(a.exp).getTime():Infinity, db=b.exp?parseDate(b.exp).getTime():Infinity; return da-db;
+    });
+    grid.innerHTML="";
+    $("invEmpty").style.display = list.length ? "none" : "block";
+
+    const locItems=inventory.filter(i=>i.loc===currentLoc);
+    let soon=0,past=0;
+    locItems.forEach(i=>{ const s=expState(i.exp); if(s.key==="past")past++; else if(s.key==="soon"||s.key==="week")soon++; });
+
+    list.forEach(item=>{
+      const s=expState(item.exp); let badge="";
+      if(s.key==="past") badge='<span class="badge past">❌ Expired</span>';
+      else if(s.key==="soon") badge='<span class="badge soon">⚠️ Expiring soon</span>';
+      else if(s.key==="week") badge='<span class="badge week">🔔 Use this week</span>';
+      else if(s.key==="fresh") badge='<span class="badge fresh">✅ Fresh</span>';
+      const color=CAT_COLORS[item.cat]||"#8b95a3";
+      const card=document.createElement("div");
+      card.className="item-card "+s.cls;
+      const thumb=item.img?'<img class="item-thumb" src="'+esc(item.img)+'" alt="">':'';
+      card.innerHTML=
+        '<div class="item-top"><div style="display:flex;gap:10px;align-items:flex-start;">'+thumb+
+        '<div><div class="item-name">'+esc(item.name)+'</div>'+
+        '<div class="item-qty">Qty: '+item.qty+'</div></div></div>'+
+        '<div style="display:flex;gap:6px;">'+
+          '<button class="icon-btn" data-act="edit">✏️</button>'+
+          '<button class="icon-btn" data-act="del">🗑️</button></div></div>'+
+        '<div class="tag-row"><span class="cat-tag" style="background:'+hexA(color,.16)+';color:'+color+';">'+(CATS[item.cat]||"📦")+' '+esc(item.cat)+'</span></div>'+
+        (item.exp?'<span class="expiry-text">📅 '+fmtExpiry(item.exp)+(s.d!==null&&s.d>=0?' ('+s.d+'d)':'')+'</span>':'<span class="expiry-text">📅 No expiry set</span>')+
+        badge+
+        '<div class="item-actions">'+
+          '<button class="icon-btn move" data-act="move">↔ Move</button>'+
+          '<button class="icon-btn cart" data-act="cart">🛒 Need more</button></div>';
+      card.querySelector('[data-act="edit"]').onclick=()=>openModal(item.id);
+      card.querySelector('[data-act="del"]').onclick=()=>deleteItem(item.id);
+      card.querySelector('[data-act="cart"]').onclick=()=>needMore(item.id);
+      card.querySelector('[data-act="move"]').onclick=()=>openMove(item.id);
+      grid.appendChild(card);
+    });
+
+    let sum=locItems.length+" item"+(locItems.length===1?"":"s");
+    const extras=[];
+    if(soon) extras.push('<span class="summary-warn">'+soon+' expiring soon</span>');
+    if(past) extras.push('<span class="summary-danger">'+past+' expired</span>');
+    $("invSummary").innerHTML=sum+(extras.length?' · '+extras.join(" · "):"");
+
+    updateLocCounts();
+    renderHome();
+  }
+
+  function deleteItem(id){
+    const item=inventory.find(i=>i.id===id); if(!item) return;
+    if(confirm('Delete "'+item.name+'"?')){ inventory=inventory.filter(i=>i.id!==id); save(LS.inv,inventory); renderInventory(); toast("Removed "+item.name); }
+  }
+  function needMore(id){
+    const item=inventory.find(i=>i.id===id); if(!item) return;
+    if(!shopping.some(s=>s.name.toLowerCase()===item.name.toLowerCase()&&!s.done)){ shopping.push({id:uid(),name:item.name,done:false}); save(LS.shop,shopping); renderShopping(); }
+    if(confirm('Added "'+item.name+'" to shopping list.\nRemove it from '+item.loc+' too?')){ inventory=inventory.filter(i=>i.id!==id); save(LS.inv,inventory); renderInventory(); }
+    toast("🛒 "+item.name+" added to list");
+  }
+  function addItem(obj){ inventory.push(Object.assign({id:uid(),qty:1,cat:"Other",exp:"",loc:currentLoc},obj)); save(LS.inv,inventory); renderInventory(); }
+
+  // ---------- MOVE ----------
+  function openMove(id){
+    moveId=id; const it=inventory.find(i=>i.id===id); if(!it) return;
+    $("moveTitle").textContent="Move "+it.name;
+    [...$("mvLocPick").children].forEach(b=>b.classList.toggle("on", b.dataset.loc===it.loc));
+    $("moveModal").classList.add("show");
+  }
+  function closeMove(){ $("moveModal").classList.remove("show"); moveId=null; }
+  function doMove(loc){
+    const it=inventory.find(i=>i.id===moveId); if(!it){ closeMove(); return; }
+    it.loc=loc; save(LS.inv,inventory); closeMove(); renderInventory(); toast(LOCS[loc]+" Moved "+it.name+" to "+loc);
+  }
+
+  // ---------- item modal ----------
+  function setModalLoc(loc){ modalLoc=loc; [...$("fLocPick").children].forEach(b=>b.classList.toggle("on", b.dataset.loc===loc)); }
+  function openModal(id, prefillName){
+    editingId=id||null;
+    $("modalTitle").textContent=id?"Edit Item":"Add Item";
+    if(id){ const it=inventory.find(i=>i.id===id); $("fName").value=it.name; $("fQty").value=it.qty; $("fCat").value=it.cat; $("fExp").value=it.exp||""; setModalLoc(it.loc||"Fridge"); }
+    else {
+      const loc=currentLoc;
+      $("fName").value=prefillName||""; $("fQty").value=1;
+      $("fCat").value=prefillName?guessCategory(prefillName):"Other";
+      setModalLoc(loc);
+      $("fExp").value=isoOffset(LOC_DEFAULT_EXP[loc]||7);
+    }
+    $("itemModal").classList.add("show"); setTimeout(()=>$("fName").focus(),50);
+  }
+  function closeModal(){ $("itemModal").classList.remove("show"); editingId=null; }
+  function saveModal(){
+    const name=$("fName").value.trim(); if(!name){ toast("Enter a name"); $("fName").focus(); return; }
+    const qty=Math.max(1,parseInt($("fQty").value)||1), cat=$("fCat").value, exp=$("fExp").value||"", loc=modalLoc;
+    if(editingId){ const it=inventory.find(i=>i.id===editingId); Object.assign(it,{name,qty,cat,exp,loc}); toast("Updated "+name); }
+    else { inventory.push({id:uid(),name,qty,cat,exp,loc}); toast(LOCS[loc]+" Added "+name); }
+    save(LS.inv,inventory);
+    if(loc!==currentLoc && !editingId) setLocation(loc); else renderInventory();
+    closeModal();
+  }
+
+  // ---------- shopping ----------
+  function renderShopping(){
+    const wrap=$("shopList"); wrap.innerHTML="";
+    const sorted=shopping.slice().sort((a,b)=>(a.done?1:0)-(b.done?1:0));
+    $("shopEmpty").style.display=shopping.length?"none":"block";
+    sorted.forEach(item=>{
+      const row=document.createElement("div"); row.className="shop-item"+(item.done?" done":"");
+      row.innerHTML='<button class="check">'+(item.done?"✓":"")+'</button>'+
+        '<span class="shop-name">'+esc(item.name)+'</span>'+
+        '<div class="shop-actions">'+
+        (item.done?'<button class="icon-btn" data-act="tofridge" style="color:var(--accent);">✓🧊</button>':'')+
+        '<button class="icon-btn" data-act="del">🗑️</button></div>';
+      row.querySelector(".check").onclick=()=>{ item.done=!item.done; save(LS.shop,shopping); renderShopping(); };
+      row.querySelector('[data-act="del"]').onclick=()=>{ shopping=shopping.filter(s=>s.id!==item.id); save(LS.shop,shopping); renderShopping(); };
+      const tf=row.querySelector('[data-act="tofridge"]');
+      if(tf) tf.onclick=()=>{ shopping=shopping.filter(s=>s.id!==item.id); save(LS.shop,shopping); renderShopping(); openModal(null,item.name); };
+      wrap.appendChild(row);
+    });
+    const rem=shopping.filter(s=>!s.done).length;
+    $("shopSummary").textContent=rem+" to buy"+(shopping.length-rem?" · "+(shopping.length-rem)+" done":"");
+    renderHome();
+  }
+  function addShop(){ const inp=$("shopInput"), name=inp.value.trim(); if(!name) return; shopping.push({id:uid(),name,done:false}); save(LS.shop,shopping); inp.value=""; renderShopping(); inp.focus(); }
+  function clearChecked(){ if(!shopping.some(s=>s.done)){ toast("Nothing checked"); return; } shopping=shopping.filter(s=>!s.done); save(LS.shop,shopping); renderShopping(); toast("Cleared checked items"); }
+
+  // ---------- HOME ----------
+  let lastWx=null;
+  function renderHome(){
+    let soon=0,past=0;
+    inventory.forEach(i=>{ const s=expState(i.exp); if(s.key==="past")past++; else if(s.key==="soon"||s.key==="week")soon++; });
+    $("homeItems").textContent=inventory.length;
+    $("homeExp").textContent=soon+past;
+    $("homeBuy").textContent=shopping.filter(s=>!s.done).length;
+
+    const urgent=inventory.map(i=>({i,s:expState(i.exp)})).filter(x=>x.s.key==="past"||x.s.key==="soon"||x.s.key==="week").sort((a,b)=>parseDate(a.i.exp)-parseDate(b.i.exp)).slice(0,5);
+    const list=$("homeExpList");
+    if(!urgent.length){ list.innerHTML='<div class="page-sub">All fresh 🎉</div>'; }
+    else {
+      list.innerHTML=urgent.map(x=>{
+        let lbl,cls=x.s.key;
+        if(x.s.key==="past") lbl="❌ "+Math.abs(x.s.d)+"d ago";
+        else if(x.s.d===0) lbl="⚠️ today";
+        else lbl=(x.s.key==="soon"?"⚠️ ":"🔔 ")+x.s.d+"d";
+        return '<div class="home-exp-item"><span><span class="loc">'+(LOCS[x.i.loc]||"🧊")+'</span> '+esc(x.i.name)+'</span><span class="home-exp-badge '+cls+'">'+lbl+'</span></div>';
+      }).join("");
+    }
+    renderMiniWx();
+  }
+  function renderMiniWx(){
+    const el=$("wxMini");
+    if(lastWx){ el.style.display="block"; el.innerHTML='<span class="em">'+lastWx.icon+'</span> '+lastWx.temp+lastWx.unit+' · '+esc(lastWx.cond)+' · '+esc(lastWx.place); }
+    else { el.style.display="none"; }
+  }
+
+  // ---------- weather ----------
+  const WX_CODES = {0:["☀️","Clear"],1:["🌤️","Mainly clear"],2:["⛅","Partly cloudy"],3:["☁️","Overcast"],45:["🌫️","Fog"],48:["🌫️","Rime fog"],51:["🌦️","Light drizzle"],53:["🌦️","Drizzle"],55:["🌦️","Dense drizzle"],56:["🌧️","Freezing drizzle"],57:["🌧️","Freezing drizzle"],61:["🌧️","Light rain"],63:["🌧️","Rain"],65:["🌧️","Heavy rain"],66:["🌧️","Freezing rain"],67:["🌧️","Freezing rain"],71:["❄️","Light snow"],73:["❄️","Snow"],75:["❄️","Heavy snow"],77:["❄️","Snow grains"],80:["🌦️","Showers"],81:["🌦️","Showers"],82:["🌦️","Violent showers"],85:["🌨️","Snow showers"],86:["🌨️","Snow showers"],95:["⛈️","Thunderstorm"],96:["⛈️","Thunderstorm"],99:["⛈️","Thunderstorm"]};
+  function wxInfo(code){ return WX_CODES[code]||["🌡️","Unknown"]; }
+  async function fetchWeather(){
+    const city=load(LS.city,"");
+    if(!city){ lastWx=null; renderMiniWx(); return; }
+    try {
+      const geo=await fetch("https://geocoding-api.open-meteo.com/v1/search?name="+encodeURIComponent(city)+"&count=1").then(r=>r.json());
+      if(!geo.results||!geo.results.length){ lastWx=null; renderMiniWx(); return; }
+      const g=geo.results[0];
+      const wx=await fetch("https://api.open-meteo.com/v1/forecast?latitude="+g.latitude+"&longitude="+g.longitude+"&current=temperature_2m,weather_code&timezone=auto").then(r=>r.json());
+      const cur=wx.current, info=wxInfo(cur.weather_code);
+      const unit=(wx.current_units&&wx.current_units.temperature_2m)||"°C";
+      lastWx={icon:info[0],temp:Math.round(cur.temperature_2m),unit:unit,cond:info[1],place:g.name};
+      renderMiniWx();
+    } catch(e){}
+  }
+  function saveCity(){ const c=$("wxCity").value.trim(); save(LS.city,c); toast(c?"City saved":"City cleared"); fetchWeather(); }
+
+  // ---------- timer ----------
+  let timerTotal=0, timerRemaining=0, timerInterval=null, timerRunning=false, audioCtx=null;
+  function fmtTimer(sec){ const m=Math.floor(sec/60), s=sec%60; return String(m).padStart(2,"0")+":"+String(s).padStart(2,"0"); }
+  function renderTimer(){ $("timerDisplay").textContent=fmtTimer(timerRemaining); }
+  function markPreset(sec){ [...$("timerPresets").children].forEach(b=>b.classList.toggle("on", parseInt(b.dataset.sec)===sec)); }
+  function setTimer(sec){ stopTimerFlash(); pauseTimer(); timerTotal=sec; timerRemaining=sec; $("timerMsg").textContent=""; renderTimer(); markPreset(sec); }
+  function startTimer(){
+    if(timerRemaining<=0){ toast("Set a time first"); return; }
+    if(timerRunning) return;
+    stopTimerFlash(); timerRunning=true; $("timerStart").textContent="Pause";
+    timerInterval=setInterval(()=>{ timerRemaining--; renderTimer(); if(timerRemaining<=0){ timerDone(); } },1000);
+  }
+  function pauseTimer(){ if(timerInterval){ clearInterval(timerInterval); timerInterval=null; } timerRunning=false; $("timerStart").textContent="Start"; }
+  function resetTimer(){ pauseTimer(); stopTimerFlash(); timerRemaining=timerTotal; $("timerMsg").textContent=""; renderTimer(); }
+  function stopTimerFlash(){ $("timerDisplay").classList.remove("done"); }
+  function timerDone(){ pauseTimer(); timerRemaining=0; renderTimer(); $("timerDisplay").classList.add("done"); $("timerMsg").textContent="⏰ Time's up!"; beepAlarm(); toast("⏰ Time's up!"); }
+  function beepAlarm(){
+    try {
+      audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
+      const ctx=audioCtx; let start=ctx.currentTime;
+      for(let i=0;i<4;i++){ const osc=ctx.createOscillator(), gain=ctx.createGain(); osc.type="sine"; osc.frequency.value= i%2===0?880:1046; gain.gain.setValueAtTime(0.0001,start); gain.gain.exponentialRampToValueAtTime(0.4,start+0.02); gain.gain.exponentialRampToValueAtTime(0.0001,start+0.32); osc.connect(gain); gain.connect(ctx.destination); osc.start(start); osc.stop(start+0.34); start+=0.4; }
+    } catch(e){}
+  }
+  function toggleTimer(){ if(timerRunning) pauseTimer(); else startTimer(); }
+  function buildPresets(){ const wrap=$("timerPresets"); [1,3,5,10,15,30].forEach(m=>{ const b=document.createElement("button"); b.className="preset-btn"; b.dataset.sec=m*60; b.textContent=m+"m"; b.onclick=()=>setTimer(m*60); wrap.appendChild(b); }); }
+  function setCustom(){ const v=parseInt($("timerCustom").value); if(!v||v<1){ toast("Enter minutes"); return; } setTimer(Math.min(v,180)*60); $("timerCustom").value=""; markPreset(-1); }
+
+  // ---------- HA ----------
+  function renderHA(){
+    const url=load(LS.ha,""); $("haUrl").value=url||"";
+    const wrap=$("haFrameWrap");
+    if(url){ wrap.innerHTML='<iframe src="'+esc(url)+'" referrerpolicy="no-referrer"></iframe>'; }
+    else { wrap.innerHTML='<div class="ha-placeholder"><span style="font-size:38px;">🏠</span><div style="font-size:16px;font-weight:600;">Connect your smart home</div><div style="font-size:13px;">Paste your HA URL and tap Save.</div></div>'; }
+  }
+  function saveHA(){ let url=$("haUrl").value.trim(); if(url&&!/^https?:\/\//i.test(url)) url="http://"+url; save(LS.ha,url); renderHA(); toast(url?"Home Assistant saved":"URL cleared"); }
+  function openHA(){ const url=load(LS.ha,""); if(!url){ toast("Add your HA URL on the Smart tab"); goToPage(3); setTimeout(()=>$("haUrl").focus(),350); return; } window.open(url,"_blank","noopener"); }
+
+  function populateCats(){
+    const fc=$("fCat"), flt=$("filterCat");
+    Object.keys(CATS).forEach(c=>{
+      const o1=document.createElement("option"); o1.value=c; o1.textContent=CATS[c]+" "+c; fc.appendChild(o1);
+      const o2=document.createElement("option"); o2.value=c; o2.textContent=CATS[c]+" "+c; flt.appendChild(o2);
+    });
+  }
+  function catOptions(sel){ return Object.keys(CATS).map(c=>'<option value="'+c+'"'+(c===sel?' selected':'')+'>'+CATS[c]+' '+c+'</option>').join(''); }
+  function locOptions(sel){ return Object.keys(LOCS).map(l=>'<option value="'+l+'"'+(l===sel?' selected':'')+'>'+LOCS[l]+' '+l+'</option>').join(''); }
+
+  // ================= CAMERA / SCAN (v5 — native BarcodeDetector on Android, LOCAL ZXing on iPhone) =================
+  let camStream=null, camFacing="environment", camMode="barcode";
+  let barcodeDetector=null;                 // native (Android/Chrome)
+  let nativeTimer=null;
+  let zxingReader=null, zxingControls=null; // ZXing (iPhone/Safari) — loaded from LOCAL ./zxing-browser.min.js
+  let zxingLibPromise=null;
+  let scanActive=false, lastBarcode=null, busyLookup=false;
+
+  function setStatus(msg, kind){
+    const el=$("camStatus");
+    el.textContent=msg;
+    el.className="cam-status"+(kind?" "+kind:"");
+    el.style.display="block";
+  }
+
+  function openCam(){
+    $("camOverlay").classList.add("show");
+    $("camLocLabel").textContent=LOCS[currentLoc]+" "+currentLoc;
+    $("camResult").innerHTML="";
+    lastBarcode=null; busyLookup=false;
+    setMode("barcode");
+  }
+
+  function closeCam(){
+    $("camOverlay").classList.remove("show");
+    stopScan();
+    stopCamera();
+    $("camResult").innerHTML="";
+    lastBarcode=null; busyLookup=false;
+  }
+
+  function stopCamera(){
+    if(camStream){ camStream.getTracks().forEach(t=>{ try{ t.stop(); }catch(e){} }); camStream=null; }
+    const v=$("camVideo"); if(v){ try{ v.pause(); }catch(e){} v.srcObject=null; }
+  }
+
+  // Critical for iPhone: reset() the ZXing reader so the camera light turns off.
+  function stopScan(){
+    scanActive=false;
+    if(nativeTimer){ clearInterval(nativeTimer); nativeTimer=null; }
+    if(zxingControls){ try{ zxingControls.stop(); }catch(e){} zxingControls=null; }
+    if(zxingReader){ try{ zxingReader.reset(); }catch(e){} }
+  }
+
+  // ---- ZXing loader from LOCAL sibling file only (no external CDNs) ----
+  // Loads ./zxing-browser.min.js (official @zxing/browser UMD build) served from our own origin.
+  // Exposes the global window.ZXingBrowser.BrowserMultiFormatReader.
+  function loadZXingLib(){
+    if(window.ZXingBrowser && window.ZXingBrowser.BrowserMultiFormatReader) return Promise.resolve();
+    if(zxingLibPromise) return zxingLibPromise;
+    zxingLibPromise=new Promise((resolve,reject)=>{
+      const s=document.createElement("script");
+      s.src="zxing-browser.min.js"; // relative to index.html, same origin
+      s.async=true;
+      s.onload=()=>{
+        if(window.ZXingBrowser && window.ZXingBrowser.BrowserMultiFormatReader) resolve();
+        else reject(new Error("ZXingBrowser global not found after load"));
+      };
+      s.onerror=()=>reject(new Error("failed to load ./zxing-browser.min.js"));
+      document.head.appendChild(s);
+    });
+    return zxingLibPromise;
+  }
+
+  function setMode(mode){
+    camMode=mode;
+    $("modeBarcode").classList.toggle("active", mode==="barcode");
+    $("modePhoto").classList.toggle("active", mode==="photo");
+    $("camResult").innerHTML=""; lastBarcode=null; busyLookup=false;
+    stopScan();
+
+    if(mode==="barcode"){
+      $("scanLine").style.display="block";
+      $("reticle").style.display="block";
+      $("camCapture").style.display="none";
+      $("manualBarcodeWrap").style.display="block";
+      startBarcodeFlow();
+    } else {
+      $("scanLine").style.display="none";
+      $("reticle").style.display="none";
+      $("camCapture").style.display="";
+      $("manualBarcodeWrap").style.display="none";
+      startPhotoCamera();
+    }
+  }
+
+  // High-res rear-camera constraints (helps iPhone decode quality)
+  function scanVideoConstraints(){
+    return { video: { facingMode: { ideal: camFacing }, width: { ideal: 1280 }, height: { ideal: 720 } }, audio:false };
+  }
+
+  // ---- Barcode flow: pick engine ----
+  async function startBarcodeFlow(){
+    setStatus("📷 Starting camera…");
+    $("camError").style.display="none";
+    $("fileDrop").style.display="none";
+    $("camStage").style.display="";
+
+    if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+      camFail("Camera API not available on this device/browser.");
+      return;
+    }
+
+    // 1) Native BarcodeDetector (Android/Chrome) — ONLY if it exists AND constructs.
+    let nativeOK=false;
+    if("BarcodeDetector" in window){
+      try {
+        barcodeDetector=new window.BarcodeDetector({ formats:["ean_13","ean_8","upc_a","upc_e","code_128","code_39","codabar","itf"] });
+        nativeOK=true;
+      } catch(e){ nativeOK=false; barcodeDetector=null; }
+    }
+
+    if(nativeOK){
+      const ok=await startPlainCamera();
+      if(!ok) return;
+      setStatus("🔍 Point the camera at a barcode");
+      scanActive=true;
+      nativeTimer=setInterval(runNativeDetect,500);
+      return;
+    }
+
+    // 2) Fallback (iPhone/Safari): LOCAL ZXing library
+    setStatus("⏳ Loading scanner…");
+    try {
+      await loadZXingLib();
+    } catch(e){
+      // Local library failed to load — camera preview + manual entry
+      await startPlainCamera();
+      setStatus("Scanner couldn't load — enter the barcode number manually below", "err");
+      $("manualBarcodeWrap").style.display="block";
+      setTimeout(()=>$("manualBarcode").focus(),100);
+      return;
+    }
+    startZXing();
+  }
+
+  // Plain camera stream into the video element (native path & photo mode)
+  async function startPlainCamera(){
+    stopCamera();
+    const video=$("camVideo");
+    try {
+      camStream=await navigator.mediaDevices.getUserMedia(scanVideoConstraints());
+      video.srcObject=camStream;
+      await video.play().catch(()=>{});
+      return true;
+    } catch(e){
+      let msg="Couldn't access the camera.";
+      if(e && e.name==="NotAllowedError") msg="Camera permission denied. Allow access or upload a photo below.";
+      else if(e && e.name==="NotFoundError") msg="No camera found on this device.";
+      camFail(msg);
+      return false;
+    }
+  }
+
+  async function runNativeDetect(){
+    if(!scanActive || busyLookup) return;
+    const video=$("camVideo"); if(!video || video.readyState<2) return;
+    try {
+      const codes=await barcodeDetector.detect(video);
+      if(codes && codes.length && codes[0].rawValue){
+        setStatus("Scanning…");
+        onBarcode(codes[0].rawValue);
+      }
+    } catch(e){}
+  }
+
+  async function startZXing(){
+    const RC = (window.ZXingBrowser && window.ZXingBrowser.BrowserMultiFormatReader) || null;
+    if(!RC){
+      await startPlainCamera();
+      setStatus("Scanner couldn't load — enter the barcode number manually below", "err");
+      $("manualBarcodeWrap").style.display="block";
+      return;
+    }
+    try {
+      zxingReader=new RC();
+      const video=$("camVideo");
+      scanActive=true;
+      setStatus("📷 Starting camera…");
+
+      const decodeCb=(result, err, controls)=>{
+        if(controls && !zxingControls) zxingControls=controls;
+        if(!scanActive) return;
+        if(result){
+          const text = result.getText ? result.getText() : (result.text || String(result));
+          if(text){ setStatus("Scanning…"); onBarcode(text); }
+        }
+        // NotFoundException between frames is normal — ignore.
+      };
+
+      // Prefer continuous decode against high-res rear-camera constraints.
+      if(typeof zxingReader.decodeFromConstraints === "function"){
+        zxingControls = await zxingReader.decodeFromConstraints(scanVideoConstraints(), video, decodeCb);
+      } else if(typeof zxingReader.decodeFromVideoDevice === "function"){
+        // Fallback API: null deviceId = default (rear on most phones)
+        zxingControls = await zxingReader.decodeFromVideoDevice(null, video, decodeCb);
+      } else {
+        throw new Error("No usable ZXing decode method");
+      }
+
+      // Capture the stream ZXing created so we can stop it on close (iPhone light off)
+      if(video.srcObject) camStream=video.srcObject;
+      setStatus("🔍 Point the camera at a barcode");
+    } catch(e){
+      let msg="Couldn't start the scanner.";
+      if(e && e.name==="NotAllowedError") msg="Camera permission denied. Allow access or upload a photo below.";
+      else if(e && e.name==="NotFoundError") msg="No camera found on this device.";
+      camFail(msg);
+      $("manualBarcodeWrap").style.display="block";
+    }
+  }
+
+  async function startPhotoCamera(){
+    setStatus("📷 Starting camera…");
+    $("camError").style.display="none";
+    $("fileDrop").style.display="none";
+    $("camStage").style.display="";
+    if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+      camFail("Camera API not available."); return;
+    }
+    const ok=await startPlainCamera();
+    if(ok) setStatus("📸 Tap Capture to snap the shelf/receipt");
+  }
+
+  function camFail(msg){
+    stopScan(); stopCamera();
+    setStatus(msg, "err");
+    $("camStage").style.display="none";
+    $("camCtrls").querySelector("#camCapture").style.display="none";
+    $("fileDrop").style.display="block";
+    if(camMode==="barcode") $("manualBarcodeWrap").style.display="block";
+  }
+
+  function switchCamera(){
+    camFacing = camFacing==="environment" ? "user" : "environment";
+    setMode(camMode);
+  }
+
+  async function onBarcode(code){
+    code=String(code).trim();
+    if(!code || busyLookup) return;
+    if(code===lastBarcode) return;
+    lastBarcode=code;
+    busyLookup=true;
+    stopScan();
+    beepShort();
+    setStatus("✅ Found: "+code+" — Looking up product…", "ok");
+
+    let product=null;
+    try {
+      const r=await fetch("https://world.openfoodfacts.org/api/v0/product/"+encodeURIComponent(code)+".json").then(x=>x.json());
+      if(r && r.status===1 && r.product){
+        product={
+          name:r.product.product_name||r.product.generic_name||"",
+          brand:(r.product.brands||"").split(",")[0]||"",
+          img:r.product.image_front_small_url||r.product.image_url||""
+        };
+      }
+    } catch(e){}
+    showBarcodeConfirm(code, product);
+    busyLookup=false;
+  }
+
+  function manualLookup(){
+    const v=$("manualBarcode").value.trim();
+    if(!v){ toast("Enter a barcode"); $("manualBarcode").focus(); return; }
+    lastBarcode=null; busyLookup=false;
+    onBarcode(v);
+    $("manualBarcode").value="";
+  }
+
+  function showBarcodeConfirm(code, product){
+    const found = product && product.name;
+    if(found) setStatus("✅ Found: "+product.name, "ok");
+    else setStatus("Product not in database — type the item name below", "err");
+
+    const name = found ? product.name : "";
+    const brand = found ? product.brand : "";
+    const img = found ? product.img : "";
+    const guessed = guessCategory(name);
+    const box=$("camResult");
+    box.innerHTML=
+      '<div class="confirm-box">'+
+        '<div class="confirm-head">'+
+          (img?'<img src="'+esc(img)+'" alt="">':'<div class="ph">'+(CATS[guessed]||'📦')+'</div>')+
+          '<div><div class="cn">'+(found?esc(name):'Product not found')+'</div>'+
+          '<div class="cb">'+(brand?esc(brand)+' · ':'')+'Barcode '+esc(code)+(found?'':' — type the name')+'</div></div>'+
+        '</div>'+
+        '<div class="conf-grid">'+
+          '<div class="field conf-full"><label>Name</label><input type="text" id="bcName" value="'+esc(name)+'" placeholder="Product name"></div>'+
+          '<div class="field"><label>Quantity</label><input type="number" id="bcQty" min="1" value="1"></div>'+
+          '<div class="field"><label>Category</label><select id="bcCat">'+catOptions(guessed)+'</select></div>'+
+          '<div class="field"><label>Location</label><select id="bcLoc">'+locOptions(currentLoc)+'</select></div>'+
+          '<div class="field"><label>Expiry (required)</label><input type="date" id="bcExp" value="'+isoOffset(LOC_DEFAULT_EXP[currentLoc]||7)+'"></div>'+
+        '</div>'+
+        '<div class="modal-actions">'+
+          '<button class="btn-ghost" id="bcAgain">↺ Scan another</button>'+
+          '<button class="btn-primary" id="bcAdd">➕ Add to '+esc(currentLoc)+'</button>'+
+        '</div>'+
+      '</div>';
+    if(!found) setTimeout(()=>$("bcName").focus(),50);
+    $("bcLoc").onchange=function(){ $("bcExp").value=isoOffset(LOC_DEFAULT_EXP[this.value]||7); $("bcAdd").textContent="➕ Add to "+this.value; };
+    $("bcAdd").onclick=()=>{
+      const nm=$("bcName").value.trim(); if(!nm){ toast("Enter a name"); $("bcName").focus(); return; }
+      const exp=$("bcExp").value; if(!exp){ toast("Please set an expiry date"); $("bcExp").focus(); return; }
+      const loc=$("bcLoc").value;
+      addItem({ name:nm, qty:Math.max(1,parseInt($("bcQty").value)||1), cat:$("bcCat").value, exp, loc, img: img||"" });
+      if(loc!==currentLoc) setLocation(loc);
+      toast(LOCS[loc]+" Added "+nm);
+      box.innerHTML=""; lastBarcode=null; busyLookup=false;
+      // resume scanning for the next item
+      startBarcodeFlow();
+    };
+    $("bcAgain").onclick=()=>{ box.innerHTML=""; lastBarcode=null; busyLookup=false; startBarcodeFlow(); };
+  }
+
+  function beepShort(){
+    try {
+      audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
+      const ctx=audioCtx, osc=ctx.createOscillator(), g=ctx.createGain();
+      osc.type="square"; osc.frequency.value=1200;
+      g.gain.setValueAtTime(0.0001,ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.25,ctx.currentTime+0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001,ctx.currentTime+0.14);
+      osc.connect(g); g.connect(ctx.destination); osc.start(); osc.stop(ctx.currentTime+0.15);
+    } catch(e){}
+  }
+
+  function capturePhoto(){
+    const video=$("camVideo"); if(!video || video.readyState<2){ toast("Camera not ready"); return; }
+    const c=$("camCanvas"); c.width=video.videoWidth||640; c.height=video.videoHeight||480;
+    c.getContext("2d").drawImage(video,0,0,c.width,c.height);
+    showPhotoForm(c.toDataURL("image/jpeg",0.6));
+  }
+  function handleFile(file){ if(!file) return; const reader=new FileReader(); reader.onload=e=>showPhotoForm(e.target.result); reader.readAsDataURL(file); }
+  function showPhotoForm(imgData){
+    const box=$("camResult");
+    box.innerHTML=
+      '<div class="confirm-box">'+
+        '<div style="display:flex;gap:14px;align-items:center;margin-bottom:14px;">'+
+          '<img class="receipt-thumb" src="'+imgData+'" alt="captured">'+
+          '<div><div style="font-weight:800;font-size:17px;">Add items from photo</div>'+
+          '<div style="color:var(--muted);font-size:13px;">Location: <select id="phLoc" style="min-height:38px;padding:6px 8px;width:auto;display:inline-block;">'+locOptions(currentLoc)+'</select></div></div>'+
+        '</div>'+
+        '<div id="lineRows"></div>'+
+        '<button class="btn-ghost" id="addLine" style="width:100%;">＋ Add another line</button>'+
+        '<div class="modal-actions">'+
+          '<button class="btn-ghost" id="phCancel">Cancel</button>'+
+          '<button class="btn-primary" id="phAddAll">➕ Add all</button>'+
+        '</div>'+
+      '</div>';
+    addLineRow();
+    $("addLine").onclick=addLineRow;
+    $("phCancel").onclick=()=>{ box.innerHTML=""; };
+    $("phAddAll").onclick=()=>addAllLines(imgData);
+    box.scrollIntoView({behavior:"smooth"});
+  }
+  function addLineRow(){
+    const wrap=$("lineRows");
+    const loc = $("phLoc") ? $("phLoc").value : currentLoc;
+    const row=document.createElement("div"); row.className="line-row";
+    row.innerHTML=
+      '<input type="text" class="ln-name" placeholder="Item name">'+
+      '<input type="number" class="ln-qty" min="1" value="1" title="Qty">'+
+      '<select class="ln-cat">'+catOptions("Other")+'</select>'+
+      '<input type="date" class="ln-exp" value="'+isoOffset(LOC_DEFAULT_EXP[loc]||7)+'">'+
+      '<button class="line-del">✕ Remove line</button>';
+    row.querySelector(".line-del").onclick=()=>{ if($("lineRows").children.length>1) row.remove(); else row.querySelector(".ln-name").value=""; };
+    row.querySelector(".ln-name").addEventListener("input",function(){ this.closest(".line-row").querySelector(".ln-cat").value=guessCategory(this.value); });
+    wrap.appendChild(row);
+  }
+  function addAllLines(imgData){
+    const loc = $("phLoc") ? $("phLoc").value : currentLoc;
+    const rows=[...document.querySelectorAll("#lineRows .line-row")];
+    let added=0, missingExp=false, first=true;
+    rows.forEach(r=>{
+      const name=r.querySelector(".ln-name").value.trim(); if(!name) return;
+      const exp=r.querySelector(".ln-exp").value; if(!exp){ missingExp=true; return; }
+      addItem({ name, qty:Math.max(1,parseInt(r.querySelector(".ln-qty").value)||1), cat:r.querySelector(".ln-cat").value, exp, loc, img: first?imgData:"" });
+      first=false; added++;
+    });
+    if(missingExp){ toast("Set an expiry for every item"); return; }
+    if(!added){ toast("Enter at least one item"); return; }
+    if(loc!==currentLoc) setLocation(loc);
+    toast(LOCS[loc]+" Added "+added+" item"+(added===1?"":"s")); $("camResult").innerHTML="";
+  }
+
+  // ---------- init ----------
+  function init(){
+    populateCats();
+    if(!migrate()) seed();
+    inventory=load(LS.inv,[]).map(i=>Object.assign({loc:"Fridge"},i));
+    shopping=load(LS.shop,[]);
+    currentLoc=load(LS.loc,"Fridge");
+
+    initPager();
+    tickClock(); setInterval(tickClock,1000);
+
+    [...$("locToggle").children].forEach(b=>{ b.onclick=()=>setLocation(b.dataset.loc); });
+    setLocation(currentLoc);
+
+    renderShopping(); renderHA(); renderHome();
+
+    $("addItemBtn").onclick=()=>openModal(null);
+    $("scanBtn").onclick=openCam;
+    $("modalCancel").onclick=closeModal;
+    $("modalSave").onclick=saveModal;
+    $("itemModal").onclick=e=>{ if(e.target===$("itemModal")) closeModal(); };
+    [...$("fLocPick").children].forEach(b=>{ b.onclick=()=>{ setModalLoc(b.dataset.loc); if(!editingId) $("fExp").value=isoOffset(LOC_DEFAULT_EXP[b.dataset.loc]||7); }; });
+    $("fName").addEventListener("keydown",e=>{ if(e.key==="Enter") saveModal(); });
+    $("filterCat").onchange=renderInventory;
+    $("sortBy").onchange=renderInventory;
+
+    [...$("mvLocPick").children].forEach(b=>{ b.onclick=()=>doMove(b.dataset.loc); });
+    $("moveCancel").onclick=closeMove;
+    $("moveModal").onclick=e=>{ if(e.target===$("moveModal")) closeMove(); };
+
+    $("camClose").onclick=closeCam;
+    $("modeBarcode").onclick=()=>setMode("barcode");
+    $("modePhoto").onclick=()=>setMode("photo");
+    $("camSwitch").onclick=switchCamera;
+    $("camCapture").onclick=capturePhoto;
+    $("fileBtn").onclick=()=>$("fileInput").click();
+    $("fileInput").onchange=e=>handleFile(e.target.files[0]);
+    $("manualBarcodeBtn").onclick=manualLookup;
+    $("manualBarcode").addEventListener("keydown",e=>{ if(e.key==="Enter") manualLookup(); });
+
+    $("shopAddBtn").onclick=addShop;
+    $("shopInput").addEventListener("keydown",e=>{ if(e.key==="Enter") addShop(); });
+    $("clearCheckedBtn").onclick=clearChecked;
+
+    $("wxSave").onclick=saveCity;
+    $("wxCity").addEventListener("keydown",e=>{ if(e.key==="Enter") saveCity(); });
+    $("wxCity").value=load(LS.city,"");
+    fetchWeather(); setInterval(fetchWeather, 30*60*1000);
+
+    buildPresets(); renderTimer();
+    $("timerStart").onclick=toggleTimer;
+    $("timerReset").onclick=resetTimer;
+    $("timerSet").onclick=setCustom;
+    $("timerCustom").addEventListener("keydown",e=>{ if(e.key==="Enter") setCustom(); });
+
+    $("haQuickTile").onclick=openHA;
+    $("haSaveBtn").onclick=saveHA;
+    $("haOpenBtn").onclick=openHA;
+    $("haUrl").addEventListener("keydown",e=>{ if(e.key==="Enter") saveHA(); });
+
+    document.addEventListener("keydown",e=>{
+      if(e.key==="Escape"){
+        if($("camOverlay").classList.contains("show")) closeCam();
+        else if($("moveModal").classList.contains("show")) closeMove();
+        else closeModal();
+      }
+    });
+
+    // Safety: ensure camera released (and reader reset) if page hidden — iPhone light off
+    document.addEventListener("visibilitychange",()=>{ if(document.hidden && $("camOverlay").classList.contains("show")){ stopScan(); stopCamera(); } });
+  }
+  document.addEventListener("DOMContentLoaded", init);
+})();
+</script>
+</body>
+</html>
