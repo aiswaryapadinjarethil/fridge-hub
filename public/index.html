@@ -313,12 +313,14 @@
   .toast { position: fixed; bottom: calc(var(--nav-h) + 16px); left: 50%; transform: translateX(-50%) translateY(120px); background: var(--accent); color: #08130f; font-weight: 700; padding: 13px 20px; border-radius: 14px; z-index: 200; box-shadow: 0 8px 24px rgba(0,0,0,.4); transition: transform .3s ease; font-size: 15px; max-width: 90vw; text-align: center; }
   .toast.show { transform: translateX(-50%) translateY(0); }
 </style>
+  
+  
   <script type="application/ld+json">
 {
   "@context": "urn:goose.ai:schema",
   "@type": "GooseApp",
   "name": "fridge-hub",
-  "description": "Phone-first kitchen command center with reliable cross-platform barcode scanning, Fridge/Freezer/Pantry storage, shopping list & Home Assistant.",
+  "description": "Phone-first kitchen command center (v5): reliable barcode scanner using native detector on Android and a locally-served ZXing library on iPhone/Safari.",
   "width": 400,
   "height": 840,
   "resizable": true,
@@ -328,10 +330,10 @@
 }
   </script>
   <script type="application/x-goose-prd">
-Kitchen Hub — Phone-First Kitchen Command Center (v4: Reliable cross-platform barcode scanner)
+Kitchen Hub — Phone-First Kitchen Command Center (v5: Local-file ZXing barcode scanner)
 
 OVERVIEW:
-A mobile-first, single-file HTML app for phones in PORTRAIT. Horizontal SWIPEABLE PAGER (CSS scroll-snap), one feature per full-screen page, with page-dot indicators and a fixed bottom tab bar. Dark mode, large legible text, min 48px tap targets, no horizontal page scrolling. Data persists in localStorage; works offline except Open Food Facts barcode lookups, ZXing CDN fallback, and optional weather. A "v4" build label appears in Home and Smart footers.
+A mobile-first, single-file HTML app for phones in PORTRAIT. Horizontal SWIPEABLE PAGER (CSS scroll-snap), one feature per full-screen page, with page-dot indicators and a fixed bottom tab bar. Dark mode, large legible text, min 48px tap targets, no horizontal page scrolling. Data persists in localStorage; works offline except Open Food Facts barcode lookups and optional weather. A "v5" build label appears in Home and Smart footers. The app is a single self-contained HTML file except for one sibling asset it loads locally: ./zxing-browser.min.js (the official @zxing/browser UMD build).
 
 PWA / ADD TO HOME SCREEN:
 Installable/home-screen friendly. Inline web app manifest (data URI), apple-mobile-web-app-capable, black-translucent status bar, theme-color, viewport-fit=cover, apple-touch-icon and favicon as inline SVG (🧊). Launches full-screen when added to home screen.
@@ -343,16 +345,19 @@ STORAGE LOCATIONS:
 Three locations: 🧊 FRIDGE, ❄️ FREEZER, 🗄️ PANTRY. Every item is tagged with a location. Large high-contrast segmented toggle (≥76px tall, live counts), active-location header, per-location item lists. Selected location persists. Each item has ↔ Move. Adds default to current location with in-form picker. Per-location default expiry: Fridge +7d, Freezer +90d, Pantry +180d.
 
 PAGES:
-1. HOME — live clock + date; optional one-line weather; prominent Home Assistant quick tile; combined stat summary; top expiring-soon list across all locations with location emoji; compact kitchen timer (presets + custom, flashing + Web Audio beep); weather city input; "Kitchen Hub · v4" footer.
+1. HOME — live clock + date; optional one-line weather; prominent Home Assistant quick tile; combined stat summary; top expiring-soon list across all locations with location emoji; compact kitchen timer (presets + custom, flashing + Web Audio beep); weather city input; "Kitchen Hub · v5" footer.
 2. STORAGE — segmented toggle + active-location header + inventory; "📷 Scan Items" + "➕ Add Item Manually"; category filter/sort; expiry badges; item cards with edit/delete/move/need-more.
 3. SHOPPING — add input (Enter adds), checkable items, delete, clear checked, "✓🧊 add to storage", remaining count.
-4. HOME ASSISTANT — HA URL saved, open-in-new-tab button, iframe embed, placeholder when unset; "Kitchen Hub · v4" footer.
+4. HOME ASSISTANT — HA URL saved, open-in-new-tab button, iframe embed, placeholder when unset; "Kitchen Hub · v5" footer.
 
-BARCODE SCANNER (rebuilt, reliable & cross-platform — v4 focus):
-- ENGINE SELECTION: First try native BarcodeDetector ONLY if it exists AND constructs successfully (wrapped in try/catch; skipped cleanly on iOS Safari). Otherwise load ZXing browser library.
-- ZXing LOADING: Dynamically inject <script> for `https://unpkg.com/@zxing/browser@latest` and WAIT for onload (with onerror handler). On failure, automatically retry jsdelivr mirror `https://cdn.jsdelivr.net/npm/@zxing/browser@latest`, then @zxing/library UMD builds as further fallbacks.
-- CONTINUOUS DECODE: Uses BrowserMultiFormatReader.decodeFromConstraints against the live rear-camera stream (facingMode environment), firing a callback on decode. Native path runs a real detect loop every 500ms against the playing video. No interval calls to an uninitialized detector.
-- ON-SCREEN STATUS (always visible): status line transitions through "📷 Starting camera…" → "🔍 Point the camera at a barcode" → "Scanning…" → "✅ Found: <code / product name>". If the library fails to load: RED message "Scanner couldn't load — enter the barcode number manually below" and manual field revealed. If camera fails/denied: clear message + file-upload fallback.
+BARCODE SCANNER (v5 — engine selection with LOCAL ZXing on iPhone):
+- ENGINE SELECTION:
+  1) ANDROID / CHROME (and any browser where a working BarcodeDetector can be constructed): use the native BarcodeDetector. It is constructed inside try/catch; if it exists and constructs, a real detect loop runs every 500ms against the playing rear-camera video. This path is unchanged and known-good.
+  2) iPHONE / SAFARI (or any environment where BarcodeDetector is missing/unavailable): dynamically load the ZXing library from the LOCAL relative path `zxing-browser.min.js` (served from the same origin as index.html — the official @zxing/browser UMD build). Wait for its onload, then use the global `window.ZXingBrowser.BrowserMultiFormatReader`.
+- NO EXTERNAL CDN: All previous unpkg/jsdelivr @zxing loading has been removed. ZXing is only loaded from the local sibling file.
+- CONTINUOUS DECODE (ZXing path): Prefer `reader.decodeFromConstraints(constraints, video, cb)`; fall back to `reader.decodeFromVideoDevice(null, video, cb)` if needed. The callback fires the existing product-lookup flow when a code decodes. NotFoundException between frames is ignored. The decode loop runs continuously until a code is found or the dialog is closed.
+- HIGH-RES CAMERA: Rear camera requested with facingMode 'environment', width ideal 1280, height ideal 720 for better iPhone decode quality (used by both the native/plain path and the ZXing path).
+- ON-SCREEN STATUS (always visible): "📷 Starting camera…" → "🔍 Point the camera at a barcode" → "Scanning…" → "✅ Found: <code / product name>". If the local library fails to load: RED "Scanner couldn't load — enter the barcode number manually below" and manual field revealed/focused. If camera fails/denied: clear message + file-upload fallback.
 - VISUAL RETICLE: rounded rectangle overlay + animated scan line in the center to aim.
 - MANUAL FALLBACK: an "Enter barcode manually" input + Go button is ALWAYS visible in the scanner. The "➕ Add Item Manually" form is also always available on Storage.
 - PRODUCT LOOKUP: once a barcode is obtained (scanned or typed) shows "Looking up product…", queries Open Food Facts. On success prefills product_name/brand and auto-guesses category. On not-found shows "Product not in database — type the item name". User confirms quantity, category, expiry (default from current location).
@@ -365,8 +370,11 @@ Capture or upload a photo/receipt, multi-line entry (name/qty/category/expiry wi
 DATA PERSISTENCE & MIGRATION:
 Inventory (with location + thumbnails), shopping list, HA URL, weather city, selected location in localStorage. Migrates prior v1/v2 inventory (no location → Fridge). Seeds sample items across all three locations on first run plus shopping items.
 
+DEPLOYMENT NOTE:
+Ship `zxing-browser.min.js` (the official @zxing/browser UMD build) alongside index.html in the same directory so iPhone/Safari can load the scanner locally without any CDN dependency.
+
 POLISH:
-Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full/near-full-screen modals; toasts; empty states; Esc/overlay closes modals (camera → move → item). Single self-contained HTML with inline CSS/JS. "v4" version label for deploy verification.
+Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full/near-full-screen modals; toasts; empty states; Esc/overlay closes modals (camera → move → item). Single self-contained HTML with inline CSS/JS (plus the one local zxing-browser.min.js sibling). "v5" version label for deploy verification.
   </script>
 </head>
 <body>
@@ -422,7 +430,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
         </div>
       </div>
 
-      <div class="app-footer">Kitchen Hub · v4</div>
+      <div class="app-footer">Kitchen Hub · v5</div>
     </section>
 
     <!-- PAGE 2: STORAGE -->
@@ -486,7 +494,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
         <div class="ha-frame-wrap" id="haFrameWrap"></div>
         <div class="ha-note">Some setups block embedding. If blank, use "Open".</div>
       </div>
-      <div class="app-footer">Kitchen Hub · v4</div>
+      <div class="app-footer">Kitchen Hub · v5</div>
     </section>
 
   </div>
@@ -938,11 +946,11 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
   function catOptions(sel){ return Object.keys(CATS).map(c=>'<option value="'+c+'"'+(c===sel?' selected':'')+'>'+CATS[c]+' '+c+'</option>').join(''); }
   function locOptions(sel){ return Object.keys(LOCS).map(l=>'<option value="'+l+'"'+(l===sel?' selected':'')+'>'+LOCS[l]+' '+l+'</option>').join(''); }
 
-  // ================= CAMERA / SCAN (rebuilt v4) =================
+  // ================= CAMERA / SCAN (v5 — native BarcodeDetector on Android, LOCAL ZXing on iPhone) =================
   let camStream=null, camFacing="environment", camMode="barcode";
-  let barcodeDetector=null;           // native
+  let barcodeDetector=null;                 // native (Android/Chrome)
   let nativeTimer=null;
-  let zxingReader=null, zxingControls=null; // ZXing
+  let zxingReader=null, zxingControls=null; // ZXing (iPhone/Safari) — loaded from LOCAL ./zxing-browser.min.js
   let zxingLibPromise=null;
   let scanActive=false, lastBarcode=null, busyLookup=false;
 
@@ -974,6 +982,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     const v=$("camVideo"); if(v){ try{ v.pause(); }catch(e){} v.srcObject=null; }
   }
 
+  // Critical for iPhone: reset() the ZXing reader so the camera light turns off.
   function stopScan(){
     scanActive=false;
     if(nativeTimer){ clearInterval(nativeTimer); nativeTimer=null; }
@@ -981,36 +990,24 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     if(zxingReader){ try{ zxingReader.reset(); }catch(e){} }
   }
 
-  // ---- ZXing loader with unpkg -> jsdelivr fallback ----
+  // ---- ZXing loader from LOCAL sibling file only (no external CDNs) ----
+  // Loads ./zxing-browser.min.js (official @zxing/browser UMD build) served from our own origin.
+  // Exposes the global window.ZXingBrowser.BrowserMultiFormatReader.
   function loadZXingLib(){
-    if(window.ZXingBrowser || window.ZXing) return Promise.resolve();
+    if(window.ZXingBrowser && window.ZXingBrowser.BrowserMultiFormatReader) return Promise.resolve();
     if(zxingLibPromise) return zxingLibPromise;
-    const urls=[
-      "https://unpkg.com/@zxing/browser@latest",
-      "https://cdn.jsdelivr.net/npm/@zxing/browser@latest",
-      "https://unpkg.com/@zxing/library@latest/umd/index.min.js",
-      "https://cdn.jsdelivr.net/npm/@zxing/library@latest/umd/index.min.js"
-    ];
     zxingLibPromise=new Promise((resolve,reject)=>{
-      let i=0;
-      function tryNext(){
-        if(i>=urls.length){ reject(new Error("all CDNs failed")); return; }
-        const url=urls[i++];
-        const s=document.createElement("script");
-        s.src=url; s.async=true;
-        s.onload=()=>{ if(window.ZXingBrowser || window.ZXing) resolve(); else tryNext(); };
-        s.onerror=()=>{ tryNext(); };
-        document.head.appendChild(s);
-      }
-      tryNext();
+      const s=document.createElement("script");
+      s.src="zxing-browser.min.js"; // relative to index.html, same origin
+      s.async=true;
+      s.onload=()=>{
+        if(window.ZXingBrowser && window.ZXingBrowser.BrowserMultiFormatReader) resolve();
+        else reject(new Error("ZXingBrowser global not found after load"));
+      };
+      s.onerror=()=>reject(new Error("failed to load ./zxing-browser.min.js"));
+      document.head.appendChild(s);
     });
     return zxingLibPromise;
-  }
-
-  function getReaderClass(){
-    if(window.ZXingBrowser && window.ZXingBrowser.BrowserMultiFormatReader) return window.ZXingBrowser.BrowserMultiFormatReader;
-    if(window.ZXing && window.ZXing.BrowserMultiFormatReader) return window.ZXing.BrowserMultiFormatReader;
-    return null;
   }
 
   function setMode(mode){
@@ -1035,7 +1032,12 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     }
   }
 
-  // ---- Barcode flow: camera + engine ----
+  // High-res rear-camera constraints (helps iPhone decode quality)
+  function scanVideoConstraints(){
+    return { video: { facingMode: { ideal: camFacing }, width: { ideal: 1280 }, height: { ideal: 720 } }, audio:false };
+  }
+
+  // ---- Barcode flow: pick engine ----
   async function startBarcodeFlow(){
     setStatus("📷 Starting camera…");
     $("camError").style.display="none";
@@ -1047,7 +1049,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
       return;
     }
 
-    // Try native BarcodeDetector ONLY if it exists and constructs.
+    // 1) Native BarcodeDetector (Android/Chrome) — ONLY if it exists AND constructs.
     let nativeOK=false;
     if("BarcodeDetector" in window){
       try {
@@ -1065,12 +1067,12 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
       return;
     }
 
-    // Fallback: ZXing
+    // 2) Fallback (iPhone/Safari): LOCAL ZXing library
     setStatus("⏳ Loading scanner…");
     try {
       await loadZXingLib();
     } catch(e){
-      // engine failed to load — camera preview + manual entry
+      // Local library failed to load — camera preview + manual entry
       await startPlainCamera();
       setStatus("Scanner couldn't load — enter the barcode number manually below", "err");
       $("manualBarcodeWrap").style.display="block";
@@ -1080,14 +1082,12 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     startZXing();
   }
 
-  // Get a plain camera stream into the video element (used by native path & photo mode)
+  // Plain camera stream into the video element (native path & photo mode)
   async function startPlainCamera(){
     stopCamera();
     const video=$("camVideo");
     try {
-      camStream=await navigator.mediaDevices.getUserMedia({
-        video:{ facingMode: { ideal: camFacing } }, audio:false
-      });
+      camStream=await navigator.mediaDevices.getUserMedia(scanVideoConstraints());
       video.srcObject=camStream;
       await video.play().catch(()=>{});
       return true;
@@ -1113,7 +1113,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
   }
 
   async function startZXing(){
-    const RC=getReaderClass();
+    const RC = (window.ZXingBrowser && window.ZXingBrowser.BrowserMultiFormatReader) || null;
     if(!RC){
       await startPlainCamera();
       setStatus("Scanner couldn't load — enter the barcode number manually below", "err");
@@ -1125,24 +1125,34 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
       const video=$("camVideo");
       scanActive=true;
       setStatus("📷 Starting camera…");
-      // decodeFromConstraints uses continuous scanning against the live stream
-      const constraints={ video:{ facingMode:{ ideal: camFacing } }, audio:false };
-      zxingControls=await zxingReader.decodeFromConstraints(constraints, video, (result, err, controls)=>{
+
+      const decodeCb=(result, err, controls)=>{
+        if(controls && !zxingControls) zxingControls=controls;
         if(!scanActive) return;
         if(result){
           const text = result.getText ? result.getText() : (result.text || String(result));
           if(text){ setStatus("Scanning…"); onBarcode(text); }
         }
-        // err (NotFoundException) is normal between frames — ignore
-      });
-      // capture the stream ZXing created so we can stop it on close
+        // NotFoundException between frames is normal — ignore.
+      };
+
+      // Prefer continuous decode against high-res rear-camera constraints.
+      if(typeof zxingReader.decodeFromConstraints === "function"){
+        zxingControls = await zxingReader.decodeFromConstraints(scanVideoConstraints(), video, decodeCb);
+      } else if(typeof zxingReader.decodeFromVideoDevice === "function"){
+        // Fallback API: null deviceId = default (rear on most phones)
+        zxingControls = await zxingReader.decodeFromVideoDevice(null, video, decodeCb);
+      } else {
+        throw new Error("No usable ZXing decode method");
+      }
+
+      // Capture the stream ZXing created so we can stop it on close (iPhone light off)
       if(video.srcObject) camStream=video.srcObject;
       setStatus("🔍 Point the camera at a barcode");
     } catch(e){
       let msg="Couldn't start the scanner.";
       if(e && e.name==="NotAllowedError") msg="Camera permission denied. Allow access or upload a photo below.";
       else if(e && e.name==="NotFoundError") msg="No camera found on this device.";
-      // fall back to camera preview + manual
       camFail(msg);
       $("manualBarcodeWrap").style.display="block";
     }
@@ -1391,7 +1401,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
       }
     });
 
-    // Safety: ensure camera released if page hidden
+    // Safety: ensure camera released (and reader reset) if page hidden — iPhone light off
     document.addEventListener("visibilitychange",()=>{ if(document.hidden && $("camOverlay").classList.contains("show")){ stopScan(); stopCamera(); } });
   }
   document.addEventListener("DOMContentLoaded", init);
