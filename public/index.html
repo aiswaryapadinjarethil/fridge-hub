@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Kitchen Hub</title>
+<title>Kitchen Hub v6</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Kitchen Hub">
@@ -168,7 +168,7 @@
 
   .app-footer { text-align: center; color: var(--muted); font-size: 11px; font-weight: 600; margin-top: 18px; opacity: .6; letter-spacing: .5px; }
 
-  /* SEGMENTED LOCATION TOGGLE — big, high-contrast */
+  /* SEGMENTED LOCATION TOGGLE â€” big, high-contrast */
   .loc-toggle {
     display: flex; gap: 8px; background: var(--panel-2); padding: 7px;
     border-radius: 20px; margin-bottom: 14px; border: 2px solid var(--border);
@@ -240,12 +240,41 @@
   /* HA PAGE */
   .ha-row { display: flex; gap: 10px; }
   .ha-row input { flex: 1; }
-  .ha-frame-wrap { height: 360px; border-radius: 14px; overflow: hidden; border: 1px solid var(--border); position: relative; background: var(--panel-2); margin-top: 14px; }
-  .ha-frame-wrap iframe { width: 100%; height: 100%; border: none; display: block; }
-  .ha-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; color: var(--muted); padding: 20px; gap: 8px; }
-  .ha-note { font-size: 12px; color: var(--muted); text-align: center; margin-top: 10px; }
   .btn-ha { background: var(--ha); color: #08122e; font-weight: 800; }
 
+
+  /* HOME ASSISTANT QUICK CONTROLS (v6) */
+  .home-controls { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:10px; }
+  .home-control-btn { min-height:76px; padding:8px 5px; background:rgba(122,162,255,.13); border:1px solid rgba(122,162,255,.35); color:var(--text); display:flex; flex-direction:column; justify-content:center; align-items:center; gap:4px; }
+  .home-control-btn .ha-icon { font-size:22px; line-height:1; }
+  .home-control-btn .ha-name { font-size:11px; font-weight:800; line-height:1.1; text-align:center; overflow:hidden; text-overflow:ellipsis; max-width:100%; white-space:nowrap; }
+  .home-control-btn .ha-state { font-size:10px; color:var(--muted); font-weight:700; }
+  .home-control-btn.on { border-color:var(--accent); background:rgba(77,208,167,.16); }
+  .home-control-btn.unavailable { border-color:var(--danger); }
+  .ha-setup-title { font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:.45px; color:var(--muted); margin-bottom:12px; }
+  .ha-token-row { display:flex; gap:8px; }
+  .ha-token-row input { flex:1; }
+  .ha-small-btn { min-height:50px; padding:10px 12px; flex-shrink:0; font-size:14px; }
+  .ha-status { min-height:22px; margin-top:10px; font-size:13px; font-weight:700; color:var(--muted); }
+  .ha-status.ok { color:var(--accent); }
+  .ha-status.err { color:#ff9d9d; }
+  .ha-actions { display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-top:12px; }
+  .ha-controls-head { display:flex; align-items:center; justify-content:space-between; gap:8px; margin:18px 0 10px; }
+  .ha-controls-head h2 { margin:0; font-size:20px; }
+  .ha-controls-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+  .ha-control-card { position:relative; min-height:145px; background:var(--card); border:1px solid var(--border); border-radius:16px; padding:13px; display:flex; flex-direction:column; align-items:flex-start; gap:7px; text-align:left; }
+  .ha-control-card.on { border-color:var(--accent); box-shadow:inset 0 0 0 1px rgba(77,208,167,.22); }
+  .ha-control-card .ha-icon { font-size:27px; }
+  .ha-control-card .ha-name { font-size:16px; font-weight:800; line-height:1.15; padding-right:30px; }
+  .ha-control-card .ha-entity { color:var(--muted); font-size:11px; white-space:nowrap; max-width:100%; overflow:hidden; text-overflow:ellipsis; }
+  .ha-control-card .ha-state { margin-top:auto; padding:4px 8px; background:var(--panel-2); border-radius:8px; font-size:12px; font-weight:800; color:var(--muted); }
+  .ha-control-card .ha-state.on { color:var(--accent); }
+  .ha-control-card .ha-state.err { color:#ff9d9d; }
+  .ha-card-tools { position:absolute; top:8px; right:8px; display:flex; gap:4px; }
+  .ha-card-tools button { width:32px; height:32px; font-size:14px; background:rgba(255,255,255,.08); }
+  .ha-help { margin-top:14px; font-size:13px; color:var(--muted); line-height:1.45; }
+  .ha-help summary { color:var(--ha); cursor:pointer; font-weight:800; }
+  .ha-help pre { white-space:pre-wrap; overflow:auto; background:#0b0e13; border:1px solid var(--border); padding:12px; border-radius:10px; color:#d6e3ff; font-size:12px; user-select:text; }
   .empty { text-align: center; color: var(--muted); padding: 34px 20px; font-size: 16px; }
   .empty .em { font-size: 42px; display: block; margin-bottom: 10px; }
   .summary-warn { color: var(--warn); }
@@ -320,7 +349,7 @@
   "@context": "urn:goose.ai:schema",
   "@type": "GooseApp",
   "name": "fridge-hub",
-  "description": "Phone-first kitchen command center (v5): reliable barcode scanner using native detector on Android and a locally-served ZXing library on iPhone/Safari.",
+  "description": "Phone-first kitchen command center (v6): direct Home Assistant quick controls and reliable barcode scanner using native detector on Android and a locally-served ZXing library on iPhone/Safari.",
   "width": 400,
   "height": 840,
   "resizable": true,
@@ -330,37 +359,37 @@
 }
   </script>
   <script type="application/x-goose-prd">
-Kitchen Hub — Phone-First Kitchen Command Center (v5: Local-file ZXing barcode scanner)
+Kitchen Hub â€” Phone-First Kitchen Command Center (v5: Local-file ZXing barcode scanner)
 
 OVERVIEW:
 A mobile-first, single-file HTML app for phones in PORTRAIT. Horizontal SWIPEABLE PAGER (CSS scroll-snap), one feature per full-screen page, with page-dot indicators and a fixed bottom tab bar. Dark mode, large legible text, min 48px tap targets, no horizontal page scrolling. Data persists in localStorage; works offline except Open Food Facts barcode lookups and optional weather. A "v5" build label appears in Home and Smart footers. The app is a single self-contained HTML file except for one sibling asset it loads locally: ./zxing-browser.min.js (the official @zxing/browser UMD build).
 
 PWA / ADD TO HOME SCREEN:
-Installable/home-screen friendly. Inline web app manifest (data URI), apple-mobile-web-app-capable, black-translucent status bar, theme-color, viewport-fit=cover, apple-touch-icon and favicon as inline SVG (🧊). Launches full-screen when added to home screen.
+Installable/home-screen friendly. Inline web app manifest (data URI), apple-mobile-web-app-capable, black-translucent status bar, theme-color, viewport-fit=cover, apple-touch-icon and favicon as inline SVG (ðŸ§Š). Launches full-screen when added to home screen.
 
 NAVIGATION (4 pages):
-Horizontal scroll-snapping pager; each page 100vw with vertical scroll inside. Page-dot indicators update on swipe. Fixed bottom nav: 🏠 Home · 🗃️ Storage · 🛒 Shop · 🏠 Smart. Tapping snaps to a page; swipe/dots/nav stay in sync. No Notes feature.
+Horizontal scroll-snapping pager; each page 100vw with vertical scroll inside. Page-dot indicators update on swipe. Fixed bottom nav: ðŸ  Home Â· ðŸ—ƒï¸ Storage Â· ðŸ›’ Shop Â· ðŸ  Smart. Tapping snaps to a page; swipe/dots/nav stay in sync. No Notes feature.
 
 STORAGE LOCATIONS:
-Three locations: 🧊 FRIDGE, ❄️ FREEZER, 🗄️ PANTRY. Every item is tagged with a location. Large high-contrast segmented toggle (≥76px tall, live counts), active-location header, per-location item lists. Selected location persists. Each item has ↔ Move. Adds default to current location with in-form picker. Per-location default expiry: Fridge +7d, Freezer +90d, Pantry +180d.
+Three locations: ðŸ§Š FRIDGE, â„ï¸ FREEZER, ðŸ—„ï¸ PANTRY. Every item is tagged with a location. Large high-contrast segmented toggle (â‰¥76px tall, live counts), active-location header, per-location item lists. Selected location persists. Each item has â†” Move. Adds default to current location with in-form picker. Per-location default expiry: Fridge +7d, Freezer +90d, Pantry +180d.
 
 PAGES:
-1. HOME — live clock + date; optional one-line weather; prominent Home Assistant quick tile; combined stat summary; top expiring-soon list across all locations with location emoji; compact kitchen timer (presets + custom, flashing + Web Audio beep); weather city input; "Kitchen Hub · v5" footer.
-2. STORAGE — segmented toggle + active-location header + inventory; "📷 Scan Items" + "➕ Add Item Manually"; category filter/sort; expiry badges; item cards with edit/delete/move/need-more.
-3. SHOPPING — add input (Enter adds), checkable items, delete, clear checked, "✓🧊 add to storage", remaining count.
-4. HOME ASSISTANT — HA URL saved, open-in-new-tab button, iframe embed, placeholder when unset; "Kitchen Hub · v5" footer.
+1. HOME â€” live clock + date; optional one-line weather; prominent Home Assistant quick tile; combined stat summary; top expiring-soon list across all locations with location emoji; compact kitchen timer (presets + custom, flashing + Web Audio beep); weather city input; "Kitchen Hub Â· v5" footer.
+2. STORAGE â€” segmented toggle + active-location header + inventory; "ðŸ“· Scan Items" + "âž• Add Item Manually"; category filter/sort; expiry badges; item cards with edit/delete/move/need-more.
+3. SHOPPING â€” add input (Enter adds), checkable items, delete, clear checked, "âœ“ðŸ§Š add to storage", remaining count.
+4. HOME ASSISTANT â€” HA URL saved, open-in-new-tab button, iframe embed, placeholder when unset; "Kitchen Hub Â· v5" footer.
 
-BARCODE SCANNER (v5 — engine selection with LOCAL ZXing on iPhone):
+BARCODE SCANNER (v5 â€” engine selection with LOCAL ZXing on iPhone):
 - ENGINE SELECTION:
   1) ANDROID / CHROME (and any browser where a working BarcodeDetector can be constructed): use the native BarcodeDetector. It is constructed inside try/catch; if it exists and constructs, a real detect loop runs every 500ms against the playing rear-camera video. This path is unchanged and known-good.
-  2) iPHONE / SAFARI (or any environment where BarcodeDetector is missing/unavailable): dynamically load the ZXing library from the LOCAL relative path `zxing-browser.min.js` (served from the same origin as index.html — the official @zxing/browser UMD build). Wait for its onload, then use the global `window.ZXingBrowser.BrowserMultiFormatReader`.
+  2) iPHONE / SAFARI (or any environment where BarcodeDetector is missing/unavailable): dynamically load the ZXing library from the LOCAL relative path `zxing-browser.min.js` (served from the same origin as index.html â€” the official @zxing/browser UMD build). Wait for its onload, then use the global `window.ZXingBrowser.BrowserMultiFormatReader`.
 - NO EXTERNAL CDN: All previous unpkg/jsdelivr @zxing loading has been removed. ZXing is only loaded from the local sibling file.
 - CONTINUOUS DECODE (ZXing path): Prefer `reader.decodeFromConstraints(constraints, video, cb)`; fall back to `reader.decodeFromVideoDevice(null, video, cb)` if needed. The callback fires the existing product-lookup flow when a code decodes. NotFoundException between frames is ignored. The decode loop runs continuously until a code is found or the dialog is closed.
 - HIGH-RES CAMERA: Rear camera requested with facingMode 'environment', width ideal 1280, height ideal 720 for better iPhone decode quality (used by both the native/plain path and the ZXing path).
-- ON-SCREEN STATUS (always visible): "📷 Starting camera…" → "🔍 Point the camera at a barcode" → "Scanning…" → "✅ Found: <code / product name>". If the local library fails to load: RED "Scanner couldn't load — enter the barcode number manually below" and manual field revealed/focused. If camera fails/denied: clear message + file-upload fallback.
+- ON-SCREEN STATUS (always visible): "ðŸ“· Starting cameraâ€¦" â†’ "ðŸ” Point the camera at a barcode" â†’ "Scanningâ€¦" â†’ "âœ… Found: <code / product name>". If the local library fails to load: RED "Scanner couldn't load â€” enter the barcode number manually below" and manual field revealed/focused. If camera fails/denied: clear message + file-upload fallback.
 - VISUAL RETICLE: rounded rectangle overlay + animated scan line in the center to aim.
-- MANUAL FALLBACK: an "Enter barcode manually" input + Go button is ALWAYS visible in the scanner. The "➕ Add Item Manually" form is also always available on Storage.
-- PRODUCT LOOKUP: once a barcode is obtained (scanned or typed) shows "Looking up product…", queries Open Food Facts. On success prefills product_name/brand and auto-guesses category. On not-found shows "Product not in database — type the item name". User confirms quantity, category, expiry (default from current location).
+- MANUAL FALLBACK: an "Enter barcode manually" input + Go button is ALWAYS visible in the scanner. The "âž• Add Item Manually" form is also always available on Storage.
+- PRODUCT LOOKUP: once a barcode is obtained (scanned or typed) shows "Looking up productâ€¦", queries Open Food Facts. On success prefills product_name/brand and auto-guesses category. On not-found shows "Product not in database â€” type the item name". User confirms quantity, category, expiry (default from current location).
 - ADD TARGET: item added to the CURRENTLY SELECTED storage location (with an in-form override picker). After adding, scanning resumes for the next item; "Scan another" restarts the flow.
 - CAMERA CLEANUP (critical for iPhone): closing the scanner (button, overlay, Esc, tab hidden) stops all media tracks AND calls reader.reset()/controls.stop() so the camera light turns off. Photo mode reuses the same camera lifecycle.
 
@@ -368,13 +397,13 @@ PHOTO MODE:
 Capture or upload a photo/receipt, multi-line entry (name/qty/category/expiry with auto category guess), location picker, "Add all" (each requires expiry), photo attached to first item.
 
 DATA PERSISTENCE & MIGRATION:
-Inventory (with location + thumbnails), shopping list, HA URL, weather city, selected location in localStorage. Migrates prior v1/v2 inventory (no location → Fridge). Seeds sample items across all three locations on first run plus shopping items.
+Inventory (with location + thumbnails), shopping list, HA URL, weather city, selected location in localStorage. Migrates prior v1/v2 inventory (no location â†’ Fridge). Seeds sample items across all three locations on first run plus shopping items.
 
 DEPLOYMENT NOTE:
 Ship `zxing-browser.min.js` (the official @zxing/browser UMD build) alongside index.html in the same directory so iPhone/Safari can load the scanner locally without any CDN dependency.
 
 POLISH:
-Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full/near-full-screen modals; toasts; empty states; Esc/overlay closes modals (camera → move → item). Single self-contained HTML with inline CSS/JS (plus the one local zxing-browser.min.js sibling). "v5" version label for deploy verification.
+Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full/near-full-screen modals; toasts; empty states; Esc/overlay closes modals (camera â†’ move â†’ item). Single self-contained HTML with inline CSS/JS (plus the one local zxing-browser.min.js sibling). "v5" version label for deploy verification.
   </script>
 </head>
 <body>
@@ -384,16 +413,15 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
 
     <!-- PAGE 1: HOME -->
     <section class="page" data-page="home">
-      <div class="home-brand">🧊 KITCHEN HUB</div>
+      <div class="home-brand">ðŸ§Š KITCHEN HUB</div>
       <div class="card" style="text-align:center;">
         <div class="clock-big" id="clock">--:--</div>
-        <div class="date-big" id="date">—</div>
+        <div class="date-big" id="date">â€”</div>
         <div class="wx-mini" id="wxMini" style="display:none;"></div>
       </div>
 
-      <button class="ha-tile" id="haQuickTile">
-        <span class="big">🏠</span><span>Open Home Assistant</span>
-      </button>
+      <button class="ha-tile" id="haQuickTile"><span class="big">ðŸ </span><span>Home Assistant Controls</span></button>
+      <div class="home-controls" id="homeControls"></div>
 
       <div class="stat-row">
         <div class="stat"><div class="n" id="homeItems">0</div><div class="l">Items</div></div>
@@ -402,12 +430,12 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
       </div>
 
       <div class="card" style="margin-top:14px;">
-        <div class="home-sec-title">⏳ Expiring soon</div>
+        <div class="home-sec-title">â³ Expiring soon</div>
         <div id="homeExpList"></div>
       </div>
 
       <div class="card">
-        <div class="home-sec-title">⏲️ Kitchen timer</div>
+        <div class="home-sec-title">â²ï¸ Kitchen timer</div>
         <div class="htimer">
           <div class="disp" id="timerDisplay">00:00</div>
           <div class="ctrls">
@@ -430,31 +458,31 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
         </div>
       </div>
 
-      <div class="app-footer">Kitchen Hub · v5</div>
+      <div class="app-footer">Kitchen Hub Â· v5</div>
     </section>
 
     <!-- PAGE 2: STORAGE -->
     <section class="page" data-page="storage">
       <div class="page-head">
-        <div><div class="page-title">🗃️ Storage</div><div class="page-sub">Tap a location below to switch</div></div>
+        <div><div class="page-title">ðŸ—ƒï¸ Storage</div><div class="page-sub">Tap a location below to switch</div></div>
       </div>
 
       <!-- BIG, HIGH-CONTRAST SEGMENTED TOGGLE -->
       <div class="loc-toggle" id="locToggle">
-        <button class="loc-btn active" data-loc="Fridge"><span class="em">🧊</span><span class="nm">Fridge</span><span class="ct" data-count="Fridge">0</span></button>
-        <button class="loc-btn" data-loc="Freezer"><span class="em">❄️</span><span class="nm">Freezer</span><span class="ct" data-count="Freezer">0</span></button>
-        <button class="loc-btn" data-loc="Pantry"><span class="em">🗄️</span><span class="nm">Pantry</span><span class="ct" data-count="Pantry">0</span></button>
+        <button class="loc-btn active" data-loc="Fridge"><span class="em">ðŸ§Š</span><span class="nm">Fridge</span><span class="ct" data-count="Fridge">0</span></button>
+        <button class="loc-btn" data-loc="Freezer"><span class="em">â„ï¸</span><span class="nm">Freezer</span><span class="ct" data-count="Freezer">0</span></button>
+        <button class="loc-btn" data-loc="Pantry"><span class="em">ðŸ—„ï¸</span><span class="nm">Pantry</span><span class="ct" data-count="Pantry">0</span></button>
       </div>
 
       <!-- ACTIVE LOCATION HEADER -->
       <div class="loc-header">
-        <span class="lh-name" id="storeTitle">🧊 Fridge</span>
+        <span class="lh-name" id="storeTitle">ðŸ§Š Fridge</span>
         <span class="lh-meta" id="invSummary">0 items</span>
       </div>
 
       <div class="inv-actions">
-        <button class="btn-scan" id="scanBtn">📷 Scan Items</button>
-        <button class="btn-ghost" id="addItemBtn">➕ Add Item Manually</button>
+        <button class="btn-scan" id="scanBtn">ðŸ“· Scan Items</button>
+        <button class="btn-ghost" id="addItemBtn">âž• Add Item Manually</button>
       </div>
       <div class="inv-filters">
         <select id="filterCat"><option value="all">All categories</option></select>
@@ -465,46 +493,51 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
         </select>
       </div>
       <div id="invGrid"></div>
-      <div class="empty" id="invEmpty" style="display:none;"><span class="em">🫙</span><span id="invEmptyMsg">This location is empty — tap 📷 Scan Items!</span></div>
+      <div class="empty" id="invEmpty" style="display:none;"><span class="em">ðŸ«™</span><span id="invEmptyMsg">This location is empty â€” tap ðŸ“· Scan Items!</span></div>
     </section>
 
     <!-- PAGE 3: SHOPPING -->
     <section class="page" data-page="shop">
       <div class="page-head">
-        <div><div class="page-title">🛒 Shopping</div><div class="page-sub" id="shopSummary">0 to buy</div></div>
+        <div><div class="page-title">ðŸ›’ Shopping</div><div class="page-sub" id="shopSummary">0 to buy</div></div>
       </div>
       <div class="shop-add">
-        <input type="text" id="shopInput" placeholder="Add an item to buy…" autocomplete="off">
+        <input type="text" id="shopInput" placeholder="Add an item to buyâ€¦" autocomplete="off">
         <button class="btn-primary" id="shopAddBtn">Add</button>
       </div>
-      <button class="btn-ghost" id="clearCheckedBtn" style="width:100%;margin-bottom:14px;">🧹 Clear checked</button>
+      <button class="btn-ghost" id="clearCheckedBtn" style="width:100%;margin-bottom:14px;">ðŸ§¹ Clear checked</button>
       <div id="shopList"></div>
-      <div class="empty" id="shopEmpty" style="display:none;"><span class="em">📝</span>Nothing to buy — all stocked up!</div>
+      <div class="empty" id="shopEmpty" style="display:none;"><span class="em">ðŸ“</span>Nothing to buy â€” all stocked up!</div>
     </section>
 
-    <!-- PAGE 4: HOME ASSISTANT -->
+    <!-- PAGE 4: HOME ASSISTANT QUICK CONTROLS -->
     <section class="page" data-page="ha">
-      <div class="page-head"><div class="page-title">🏠 Home Assistant</div></div>
+      <div class="page-head"><div><div class="page-title">ðŸ  Home Assistant</div><div class="page-sub">Quick controls â€” no iframe needed</div></div></div>
       <div class="card">
-        <div class="ha-row">
-          <input type="url" id="haUrl" placeholder="http://homeassistant.local:8123">
-          <button class="btn-ghost" id="haSaveBtn" style="flex-shrink:0;">Save</button>
-        </div>
-        <button class="btn-primary btn-ha" id="haOpenBtn" style="width:100%;margin-top:10px;">↗ Open dashboard in new tab</button>
-        <div class="ha-frame-wrap" id="haFrameWrap"></div>
-        <div class="ha-note">Some setups block embedding. If blank, use "Open".</div>
+        <div class="ha-setup-title">Connect this phone</div>
+        <div class="field"><label for="haUrl">Home Assistant URL</label><input type="url" id="haUrl" placeholder="https://ha.ashcasa.cc"></div>
+        <div class="field"><label for="haToken">Long-Lived Access Token</label><div class="ha-token-row"><input type="password" id="haToken" placeholder="Paste token from your HA profile" autocomplete="off"><button class="btn-ghost ha-small-btn" id="haTokenShow">Show</button></div></div>
+        <div class="ha-actions"><button class="btn-primary btn-ha" id="haSaveBtn">Save settings</button><button class="btn-ghost" id="haTestBtn">Test connection</button></div>
+        <div class="ha-status" id="haStatus">Token stays only on this phone and is sent only to your Home Assistant URL.</div>
+        <button class="btn-ghost" id="haOpenBtn" style="width:100%;margin-top:10px;">Open full Home Assistant</button>
       </div>
-      <div class="app-footer">Kitchen Hub · v5</div>
+      <div class="ha-controls-head"><h2>Quick controls</h2><button class="btn-ghost ha-small-btn" id="haRefreshBtn">Refresh</button></div>
+      <div class="ha-controls-grid" id="haControls"></div>
+      <button class="btn-primary btn-ha" id="haAddBtn" style="width:100%;margin-top:12px;">ï¼‹ Add a control</button>
+      <details class="card ha-help"><summary>Connection setup / CORS help</summary><p>For this app to call Home Assistant directly, add this to <b>configuration.yaml</b>, then restart Home Assistant:</p><pre>http:
+  cors_allowed_origins:
+    - https://fridge-hub-phi.vercel.app</pre><p>A browser CORS error means this entry is missing. Find entity IDs in Home Assistant: <b>Settings â†’ Devices &amp; services â†’ Entities</b>.</p></details>
+      <div class="app-footer">Kitchen Hub Â· v6</div>
     </section>
 
   </div>
 
   <!-- BOTTOM NAV -->
   <nav class="bottom-nav" id="bottomNav">
-    <button class="nav-btn active" data-idx="0"><span class="ic">🏠</span><span class="lb">Home</span></button>
-    <button class="nav-btn" data-idx="1"><span class="ic">🗃️</span><span class="lb">Storage</span></button>
-    <button class="nav-btn" data-idx="2"><span class="ic">🛒</span><span class="lb">Shop</span></button>
-    <button class="nav-btn ha-nav" data-idx="3"><span class="ic">🏠</span><span class="lb">Smart</span></button>
+    <button class="nav-btn active" data-idx="0"><span class="ic">ðŸ </span><span class="lb">Home</span></button>
+    <button class="nav-btn" data-idx="1"><span class="ic">ðŸ—ƒï¸</span><span class="lb">Storage</span></button>
+    <button class="nav-btn" data-idx="2"><span class="ic">ðŸ›’</span><span class="lb">Shop</span></button>
+    <button class="nav-btn ha-nav" data-idx="3"><span class="ic">ðŸ </span><span class="lb">Smart</span></button>
   </nav>
 
   <!-- ITEM MODAL -->
@@ -516,9 +549,9 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
       <div class="field"><label for="fCat">Category</label><select id="fCat"></select></div>
       <div class="field"><label>Location</label>
         <div class="loc-pick" id="fLocPick">
-          <button type="button" data-loc="Fridge"><span class="em">🧊</span>Fridge</button>
-          <button type="button" data-loc="Freezer"><span class="em">❄️</span>Freezer</button>
-          <button type="button" data-loc="Pantry"><span class="em">🗄️</span>Pantry</button>
+          <button type="button" data-loc="Fridge"><span class="em">ðŸ§Š</span>Fridge</button>
+          <button type="button" data-loc="Freezer"><span class="em">â„ï¸</span>Freezer</button>
+          <button type="button" data-loc="Pantry"><span class="em">ðŸ—„ï¸</span>Pantry</button>
         </div>
       </div>
       <div class="field"><label for="fExp">Expiry date</label><input type="date" id="fExp"></div>
@@ -535,9 +568,9 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
       <h2 id="moveTitle">Move item</h2>
       <div class="page-sub" style="margin-bottom:14px;">Choose a new location:</div>
       <div class="loc-pick" id="mvLocPick">
-        <button type="button" data-loc="Fridge"><span class="em">🧊</span>Fridge</button>
-        <button type="button" data-loc="Freezer"><span class="em">❄️</span>Freezer</button>
-        <button type="button" data-loc="Pantry"><span class="em">🗄️</span>Pantry</button>
+        <button type="button" data-loc="Fridge"><span class="em">ðŸ§Š</span>Fridge</button>
+        <button type="button" data-loc="Freezer"><span class="em">â„ï¸</span>Freezer</button>
+        <button type="button" data-loc="Pantry"><span class="em">ðŸ—„ï¸</span>Pantry</button>
       </div>
       <div class="modal-actions">
         <button class="btn-ghost" id="moveCancel">Cancel</button>
@@ -545,15 +578,27 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     </div>
   </div>
 
+  <!-- HOME ASSISTANT CONTROL MODAL -->
+  <div class="modal-overlay" id="haControlModal">
+    <div class="modal">
+      <h2 id="haControlTitle">Add quick control</h2>
+      <div class="field"><label for="hcName">Button name</label><input type="text" id="hcName" placeholder="e.g. Theatre lights"></div>
+      <div class="field"><label for="hcIcon">Icon / emoji</label><input type="text" id="hcIcon" placeholder="ðŸ’¡" maxlength="8"></div>
+      <div class="field"><label for="hcEntity">Home Assistant entity ID</label><input type="text" id="hcEntity" placeholder="light.theatre" autocapitalize="off" autocomplete="off"></div>
+      <div class="field"><label for="hcAction">Action</label><select id="hcAction"><option value="auto">Auto (recommended)</option><option value="toggle">Toggle</option><option value="on">Turn on</option><option value="off">Turn off</option></select></div>
+      <div class="page-sub">Find IDs in HA: Settings â†’ Devices &amp; services â†’ Entities.</div>
+      <div class="modal-actions"><button class="btn-ghost" id="haControlCancel">Cancel</button><button class="btn-primary" id="haControlSave">Save control</button></div>
+    </div>
+  </div>
   <!-- CAMERA MODAL -->
   <div class="cam-overlay" id="camOverlay">
     <div class="cam-topbar">
-      <div class="cam-title">📷 Scan → <span id="camLocLabel">🧊 Fridge</span></div>
-      <button class="btn-ghost" id="camClose">✕ Close</button>
+      <div class="cam-title">ðŸ“· Scan â†’ <span id="camLocLabel">ðŸ§Š Fridge</span></div>
+      <button class="btn-ghost" id="camClose">âœ• Close</button>
     </div>
     <div class="mode-toggle">
-      <button id="modeBarcode" class="active">🏷️ Barcode</button>
-      <button id="modePhoto">🧾 Photo</button>
+      <button id="modeBarcode" class="active">ðŸ·ï¸ Barcode</button>
+      <button id="modePhoto">ðŸ§¾ Photo</button>
     </div>
     <div class="cam-body" id="camBody">
       <div class="cam-stage" id="camStage">
@@ -562,21 +607,21 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
         <div class="reticle" id="reticle"></div>
         <div class="scan-line" id="scanLine"></div>
       </div>
-      <div class="cam-status" id="camStatus">📷 Starting camera…</div>
+      <div class="cam-status" id="camStatus">ðŸ“· Starting cameraâ€¦</div>
       <div class="cam-error" id="camError" style="display:none;"></div>
       <div class="file-drop" id="fileDrop" style="display:none;">
-        📁 Camera unavailable — take or upload a photo
-        <div><button class="file-btn" id="fileBtn">📷 Choose / Take Photo</button></div>
+        ðŸ“ Camera unavailable â€” take or upload a photo
+        <div><button class="file-btn" id="fileBtn">ðŸ“· Choose / Take Photo</button></div>
         <input type="file" id="fileInput" accept="image/*" capture="environment">
       </div>
       <div class="cam-ctrls" id="camCtrls">
-        <button class="btn-primary" id="camCapture" style="display:none;">📸 Capture</button>
-        <button class="btn-ghost" id="camSwitch">🔄 Switch camera</button>
+        <button class="btn-primary" id="camCapture" style="display:none;">ðŸ“¸ Capture</button>
+        <button class="btn-ghost" id="camSwitch">ðŸ”„ Switch camera</button>
       </div>
       <div class="manual-wrap" id="manualBarcodeWrap">
         <div class="ml">Enter barcode manually</div>
         <div class="manual-barcode">
-          <input type="text" id="manualBarcode" placeholder="8–13 digit barcode…" inputmode="numeric">
+          <input type="text" id="manualBarcode" placeholder="8â€“13 digit barcodeâ€¦" inputmode="numeric">
           <button class="btn-ghost" id="manualBarcodeBtn" style="flex-shrink:0;">Go</button>
         </div>
       </div>
@@ -590,17 +635,18 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
 (function(){
   "use strict";
 
-  const CATS = { "Dairy":"🥛","Produce":"🥬","Meat":"🍖","Drinks":"🧃","Leftovers":"🍱","Condiments":"🧂","Frozen":"🧊","Bakery":"🍞","Dry goods":"🌾","Other":"📦" };
+  const CATS = { "Dairy":"ðŸ¥›","Produce":"ðŸ¥¬","Meat":"ðŸ–","Drinks":"ðŸ§ƒ","Leftovers":"ðŸ±","Condiments":"ðŸ§‚","Frozen":"ðŸ§Š","Bakery":"ðŸž","Dry goods":"ðŸŒ¾","Other":"ðŸ“¦" };
   const CAT_COLORS = { "Dairy":"#5b8def","Produce":"#4dd0a7","Meat":"#e07a7a","Drinks":"#e8a33d","Leftovers":"#c07ae0","Condiments":"#d4b45a","Frozen":"#5ec7e0","Bakery":"#d99a5b","Dry goods":"#b5a26a","Other":"#8b95a3" };
-  const LOCS = { "Fridge":"🧊", "Freezer":"❄️", "Pantry":"🗄️" };
+  const LOCS = { "Fridge":"ðŸ§Š", "Freezer":"â„ï¸", "Pantry":"ðŸ—„ï¸" };
   const LOC_DEFAULT_EXP = { "Fridge":7, "Freezer":90, "Pantry":180 };
 
-  const LS = { inv:"kitchenhub_inventory_v2", shop:"kitchenhub_shopping_v2", ha:"kitchenhub_ha_url_v1", seeded:"kitchenhub_seeded_v3", city:"kitchenhub_city_v1", loc:"kitchenhub_curloc_v1" };
+  const LS = { inv:"kitchenhub_inventory_v2", shop:"kitchenhub_shopping_v2", ha:"kitchenhub_ha_url_v1", haToken:"kitchenhub_ha_token_v1", haControls:"kitchenhub_ha_controls_v1", seeded:"kitchenhub_seeded_v3", city:"kitchenhub_city_v1", loc:"kitchenhub_curloc_v1" };
   const OLD_INV = "fridgehub_inventory_v1";
 
   let inventory=[], shopping=[], editingId=null, moveId=null;
   let currentLoc = "Fridge";
   let modalLoc = "Fridge";
+  let haControls=[], editingHAControlId=null;
 
   const $ = id => document.getElementById(id);
   const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
@@ -708,7 +754,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     currentLoc=loc; save(LS.loc,loc);
     [...$("locToggle").children].forEach(b=>b.classList.toggle("active", b.dataset.loc===loc));
     $("storeTitle").textContent = LOCS[loc]+" "+loc;
-    $("invEmptyMsg").textContent = "Your "+loc.toLowerCase()+" is empty — tap 📷 Scan Items!";
+    $("invEmptyMsg").textContent = "Your "+loc.toLowerCase()+" is empty â€” tap ðŸ“· Scan Items!";
     renderInventory();
   }
   function updateLocCounts(){
@@ -737,10 +783,10 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
 
     list.forEach(item=>{
       const s=expState(item.exp); let badge="";
-      if(s.key==="past") badge='<span class="badge past">❌ Expired</span>';
-      else if(s.key==="soon") badge='<span class="badge soon">⚠️ Expiring soon</span>';
-      else if(s.key==="week") badge='<span class="badge week">🔔 Use this week</span>';
-      else if(s.key==="fresh") badge='<span class="badge fresh">✅ Fresh</span>';
+      if(s.key==="past") badge='<span class="badge past">âŒ Expired</span>';
+      else if(s.key==="soon") badge='<span class="badge soon">âš ï¸ Expiring soon</span>';
+      else if(s.key==="week") badge='<span class="badge week">ðŸ”” Use this week</span>';
+      else if(s.key==="fresh") badge='<span class="badge fresh">âœ… Fresh</span>';
       const color=CAT_COLORS[item.cat]||"#8b95a3";
       const card=document.createElement("div");
       card.className="item-card "+s.cls;
@@ -750,14 +796,14 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
         '<div><div class="item-name">'+esc(item.name)+'</div>'+
         '<div class="item-qty">Qty: '+item.qty+'</div></div></div>'+
         '<div style="display:flex;gap:6px;">'+
-          '<button class="icon-btn" data-act="edit">✏️</button>'+
-          '<button class="icon-btn" data-act="del">🗑️</button></div></div>'+
-        '<div class="tag-row"><span class="cat-tag" style="background:'+hexA(color,.16)+';color:'+color+';">'+(CATS[item.cat]||"📦")+' '+esc(item.cat)+'</span></div>'+
-        (item.exp?'<span class="expiry-text">📅 '+fmtExpiry(item.exp)+(s.d!==null&&s.d>=0?' ('+s.d+'d)':'')+'</span>':'<span class="expiry-text">📅 No expiry set</span>')+
+          '<button class="icon-btn" data-act="edit">âœï¸</button>'+
+          '<button class="icon-btn" data-act="del">ðŸ—‘ï¸</button></div></div>'+
+        '<div class="tag-row"><span class="cat-tag" style="background:'+hexA(color,.16)+';color:'+color+';">'+(CATS[item.cat]||"ðŸ“¦")+' '+esc(item.cat)+'</span></div>'+
+        (item.exp?'<span class="expiry-text">ðŸ“… '+fmtExpiry(item.exp)+(s.d!==null&&s.d>=0?' ('+s.d+'d)':'')+'</span>':'<span class="expiry-text">ðŸ“… No expiry set</span>')+
         badge+
         '<div class="item-actions">'+
-          '<button class="icon-btn move" data-act="move">↔ Move</button>'+
-          '<button class="icon-btn cart" data-act="cart">🛒 Need more</button></div>';
+          '<button class="icon-btn move" data-act="move">â†” Move</button>'+
+          '<button class="icon-btn cart" data-act="cart">ðŸ›’ Need more</button></div>';
       card.querySelector('[data-act="edit"]').onclick=()=>openModal(item.id);
       card.querySelector('[data-act="del"]').onclick=()=>deleteItem(item.id);
       card.querySelector('[data-act="cart"]').onclick=()=>needMore(item.id);
@@ -769,7 +815,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     const extras=[];
     if(soon) extras.push('<span class="summary-warn">'+soon+' expiring soon</span>');
     if(past) extras.push('<span class="summary-danger">'+past+' expired</span>');
-    $("invSummary").innerHTML=sum+(extras.length?' · '+extras.join(" · "):"");
+    $("invSummary").innerHTML=sum+(extras.length?' Â· '+extras.join(" Â· "):"");
 
     updateLocCounts();
     renderHome();
@@ -783,7 +829,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     const item=inventory.find(i=>i.id===id); if(!item) return;
     if(!shopping.some(s=>s.name.toLowerCase()===item.name.toLowerCase()&&!s.done)){ shopping.push({id:uid(),name:item.name,done:false}); save(LS.shop,shopping); renderShopping(); }
     if(confirm('Added "'+item.name+'" to shopping list.\nRemove it from '+item.loc+' too?')){ inventory=inventory.filter(i=>i.id!==id); save(LS.inv,inventory); renderInventory(); }
-    toast("🛒 "+item.name+" added to list");
+    toast("ðŸ›’ "+item.name+" added to list");
   }
   function addItem(obj){ inventory.push(Object.assign({id:uid(),qty:1,cat:"Other",exp:"",loc:currentLoc},obj)); save(LS.inv,inventory); renderInventory(); }
 
@@ -833,11 +879,11 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     $("shopEmpty").style.display=shopping.length?"none":"block";
     sorted.forEach(item=>{
       const row=document.createElement("div"); row.className="shop-item"+(item.done?" done":"");
-      row.innerHTML='<button class="check">'+(item.done?"✓":"")+'</button>'+
+      row.innerHTML='<button class="check">'+(item.done?"âœ“":"")+'</button>'+
         '<span class="shop-name">'+esc(item.name)+'</span>'+
         '<div class="shop-actions">'+
-        (item.done?'<button class="icon-btn" data-act="tofridge" style="color:var(--accent);">✓🧊</button>':'')+
-        '<button class="icon-btn" data-act="del">🗑️</button></div>';
+        (item.done?'<button class="icon-btn" data-act="tofridge" style="color:var(--accent);">âœ“ðŸ§Š</button>':'')+
+        '<button class="icon-btn" data-act="del">ðŸ—‘ï¸</button></div>';
       row.querySelector(".check").onclick=()=>{ item.done=!item.done; save(LS.shop,shopping); renderShopping(); };
       row.querySelector('[data-act="del"]').onclick=()=>{ shopping=shopping.filter(s=>s.id!==item.id); save(LS.shop,shopping); renderShopping(); };
       const tf=row.querySelector('[data-act="tofridge"]');
@@ -845,7 +891,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
       wrap.appendChild(row);
     });
     const rem=shopping.filter(s=>!s.done).length;
-    $("shopSummary").textContent=rem+" to buy"+(shopping.length-rem?" · "+(shopping.length-rem)+" done":"");
+    $("shopSummary").textContent=rem+" to buy"+(shopping.length-rem?" Â· "+(shopping.length-rem)+" done":"");
     renderHome();
   }
   function addShop(){ const inp=$("shopInput"), name=inp.value.trim(); if(!name) return; shopping.push({id:uid(),name,done:false}); save(LS.shop,shopping); inp.value=""; renderShopping(); inp.focus(); }
@@ -862,27 +908,27 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
 
     const urgent=inventory.map(i=>({i,s:expState(i.exp)})).filter(x=>x.s.key==="past"||x.s.key==="soon"||x.s.key==="week").sort((a,b)=>parseDate(a.i.exp)-parseDate(b.i.exp)).slice(0,5);
     const list=$("homeExpList");
-    if(!urgent.length){ list.innerHTML='<div class="page-sub">All fresh 🎉</div>'; }
+    if(!urgent.length){ list.innerHTML='<div class="page-sub">All fresh ðŸŽ‰</div>'; }
     else {
       list.innerHTML=urgent.map(x=>{
         let lbl,cls=x.s.key;
-        if(x.s.key==="past") lbl="❌ "+Math.abs(x.s.d)+"d ago";
-        else if(x.s.d===0) lbl="⚠️ today";
-        else lbl=(x.s.key==="soon"?"⚠️ ":"🔔 ")+x.s.d+"d";
-        return '<div class="home-exp-item"><span><span class="loc">'+(LOCS[x.i.loc]||"🧊")+'</span> '+esc(x.i.name)+'</span><span class="home-exp-badge '+cls+'">'+lbl+'</span></div>';
+        if(x.s.key==="past") lbl="âŒ "+Math.abs(x.s.d)+"d ago";
+        else if(x.s.d===0) lbl="âš ï¸ today";
+        else lbl=(x.s.key==="soon"?"âš ï¸ ":"ðŸ”” ")+x.s.d+"d";
+        return '<div class="home-exp-item"><span><span class="loc">'+(LOCS[x.i.loc]||"ðŸ§Š")+'</span> '+esc(x.i.name)+'</span><span class="home-exp-badge '+cls+'">'+lbl+'</span></div>';
       }).join("");
     }
     renderMiniWx();
   }
   function renderMiniWx(){
     const el=$("wxMini");
-    if(lastWx){ el.style.display="block"; el.innerHTML='<span class="em">'+lastWx.icon+'</span> '+lastWx.temp+lastWx.unit+' · '+esc(lastWx.cond)+' · '+esc(lastWx.place); }
+    if(lastWx){ el.style.display="block"; el.innerHTML='<span class="em">'+lastWx.icon+'</span> '+lastWx.temp+lastWx.unit+' Â· '+esc(lastWx.cond)+' Â· '+esc(lastWx.place); }
     else { el.style.display="none"; }
   }
 
   // ---------- weather ----------
-  const WX_CODES = {0:["☀️","Clear"],1:["🌤️","Mainly clear"],2:["⛅","Partly cloudy"],3:["☁️","Overcast"],45:["🌫️","Fog"],48:["🌫️","Rime fog"],51:["🌦️","Light drizzle"],53:["🌦️","Drizzle"],55:["🌦️","Dense drizzle"],56:["🌧️","Freezing drizzle"],57:["🌧️","Freezing drizzle"],61:["🌧️","Light rain"],63:["🌧️","Rain"],65:["🌧️","Heavy rain"],66:["🌧️","Freezing rain"],67:["🌧️","Freezing rain"],71:["❄️","Light snow"],73:["❄️","Snow"],75:["❄️","Heavy snow"],77:["❄️","Snow grains"],80:["🌦️","Showers"],81:["🌦️","Showers"],82:["🌦️","Violent showers"],85:["🌨️","Snow showers"],86:["🌨️","Snow showers"],95:["⛈️","Thunderstorm"],96:["⛈️","Thunderstorm"],99:["⛈️","Thunderstorm"]};
-  function wxInfo(code){ return WX_CODES[code]||["🌡️","Unknown"]; }
+  const WX_CODES = {0:["â˜€ï¸","Clear"],1:["ðŸŒ¤ï¸","Mainly clear"],2:["â›…","Partly cloudy"],3:["â˜ï¸","Overcast"],45:["ðŸŒ«ï¸","Fog"],48:["ðŸŒ«ï¸","Rime fog"],51:["ðŸŒ¦ï¸","Light drizzle"],53:["ðŸŒ¦ï¸","Drizzle"],55:["ðŸŒ¦ï¸","Dense drizzle"],56:["ðŸŒ§ï¸","Freezing drizzle"],57:["ðŸŒ§ï¸","Freezing drizzle"],61:["ðŸŒ§ï¸","Light rain"],63:["ðŸŒ§ï¸","Rain"],65:["ðŸŒ§ï¸","Heavy rain"],66:["ðŸŒ§ï¸","Freezing rain"],67:["ðŸŒ§ï¸","Freezing rain"],71:["â„ï¸","Light snow"],73:["â„ï¸","Snow"],75:["â„ï¸","Heavy snow"],77:["â„ï¸","Snow grains"],80:["ðŸŒ¦ï¸","Showers"],81:["ðŸŒ¦ï¸","Showers"],82:["ðŸŒ¦ï¸","Violent showers"],85:["ðŸŒ¨ï¸","Snow showers"],86:["ðŸŒ¨ï¸","Snow showers"],95:["â›ˆï¸","Thunderstorm"],96:["â›ˆï¸","Thunderstorm"],99:["â›ˆï¸","Thunderstorm"]};
+  function wxInfo(code){ return WX_CODES[code]||["ðŸŒ¡ï¸","Unknown"]; }
   async function fetchWeather(){
     const city=load(LS.city,"");
     if(!city){ lastWx=null; renderMiniWx(); return; }
@@ -892,7 +938,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
       const g=geo.results[0];
       const wx=await fetch("https://api.open-meteo.com/v1/forecast?latitude="+g.latitude+"&longitude="+g.longitude+"&current=temperature_2m,weather_code&timezone=auto").then(r=>r.json());
       const cur=wx.current, info=wxInfo(cur.weather_code);
-      const unit=(wx.current_units&&wx.current_units.temperature_2m)||"°C";
+      const unit=(wx.current_units&&wx.current_units.temperature_2m)||"Â°C";
       lastWx={icon:info[0],temp:Math.round(cur.temperature_2m),unit:unit,cond:info[1],place:g.name};
       renderMiniWx();
     } catch(e){}
@@ -914,7 +960,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
   function pauseTimer(){ if(timerInterval){ clearInterval(timerInterval); timerInterval=null; } timerRunning=false; $("timerStart").textContent="Start"; }
   function resetTimer(){ pauseTimer(); stopTimerFlash(); timerRemaining=timerTotal; $("timerMsg").textContent=""; renderTimer(); }
   function stopTimerFlash(){ $("timerDisplay").classList.remove("done"); }
-  function timerDone(){ pauseTimer(); timerRemaining=0; renderTimer(); $("timerDisplay").classList.add("done"); $("timerMsg").textContent="⏰ Time's up!"; beepAlarm(); toast("⏰ Time's up!"); }
+  function timerDone(){ pauseTimer(); timerRemaining=0; renderTimer(); $("timerDisplay").classList.add("done"); $("timerMsg").textContent="â° Time's up!"; beepAlarm(); toast("â° Time's up!"); }
   function beepAlarm(){
     try {
       audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
@@ -926,16 +972,32 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
   function buildPresets(){ const wrap=$("timerPresets"); [1,3,5,10,15,30].forEach(m=>{ const b=document.createElement("button"); b.className="preset-btn"; b.dataset.sec=m*60; b.textContent=m+"m"; b.onclick=()=>setTimer(m*60); wrap.appendChild(b); }); }
   function setCustom(){ const v=parseInt($("timerCustom").value); if(!v||v<1){ toast("Enter minutes"); return; } setTimer(Math.min(v,180)*60); $("timerCustom").value=""; markPreset(-1); }
 
-  // ---------- HA ----------
-  function renderHA(){
-    const url=load(LS.ha,""); $("haUrl").value=url||"";
-    const wrap=$("haFrameWrap");
-    if(url){ wrap.innerHTML='<iframe src="'+esc(url)+'" referrerpolicy="no-referrer"></iframe>'; }
-    else { wrap.innerHTML='<div class="ha-placeholder"><span style="font-size:38px;">🏠</span><div style="font-size:16px;font-weight:600;">Connect your smart home</div><div style="font-size:13px;">Paste your HA URL and tap Save.</div></div>'; }
-  }
-  function saveHA(){ let url=$("haUrl").value.trim(); if(url&&!/^https?:\/\//i.test(url)) url="http://"+url; save(LS.ha,url); renderHA(); toast(url?"Home Assistant saved":"URL cleared"); }
-  function openHA(){ const url=load(LS.ha,""); if(!url){ toast("Add your HA URL on the Smart tab"); goToPage(3); setTimeout(()=>$("haUrl").focus(),350); return; } window.open(url,"_blank","noopener"); }
-
+  // ---------- HOME ASSISTANT: direct REST controls (v6) ----------
+  const DEFAULT_HA_URL="https://ha.ashcasa.cc";
+  function defaultHAControls(){ return [
+    {id:uid(),name:"Hej hej â€” all lights off",icon:"ðŸ‘‹",entity:"scene.hej_hej",action:"auto"},
+    {id:uid(),name:"Theatre lights",icon:"ðŸŽ¬",entity:"light.theatre",action:"toggle"},
+    {id:uid(),name:"Bedroom lights",icon:"ðŸ›ï¸",entity:"light.bedroom",action:"toggle"}
+  ]; }
+  function haURL(){ return (load(LS.ha,DEFAULT_HA_URL)||DEFAULT_HA_URL).replace(/\/$/,""); }
+  function haToken(){ return load(LS.haToken,"")||""; }
+  function setHAStatus(msg,kind){ const el=$("haStatus"); if(!el) return; el.textContent=msg; el.className="ha-status"+(kind?" "+kind:""); }
+  function haHeaders(){ return {"Authorization":"Bearer "+haToken(),"Content-Type":"application/json"}; }
+  function isOn(state){ return ["on","open","playing","home","heat","cool"].includes(String(state).toLowerCase()); }
+  function actionFor(control){ const domain=(control.entity||"").split(".")[0]||""; if(control.action==="toggle") return {domain,service:"toggle"}; if(control.action==="on") return {domain,service:"turn_on"}; if(control.action==="off") return {domain,service:"turn_off"}; return {domain,service:(domain==="scene"||domain==="script"?"turn_on":"toggle")}; }
+  function safeHAName(c){ return esc(c.name||c.entity||"Quick control"); }
+  function renderHA(){ if(!haControls.length){ haControls=defaultHAControls(); save(LS.haControls,haControls); } $("haUrl").value=haURL(); $("haToken").value=haToken(); renderHAControls(); renderHomeControls(); }
+  function renderHAControls(){ const wrap=$("haControls"); if(!wrap) return; wrap.innerHTML=""; if(!haControls.length){ wrap.innerHTML='<div class="empty" style="grid-column:1/-1">No controls yet â€” add one below.</div>'; return; } haControls.forEach(c=>{ const state=c._state||"Not refreshed", stateClass=c._error?"err":(isOn(state)?"on":""); const card=document.createElement("div"); card.setAttribute("role","button"); card.tabIndex=0; card.className="ha-control-card "+(isOn(state)?"on":""); card.innerHTML='<span class="ha-icon">'+esc(c.icon||"ðŸ’¡")+'</span><span class="ha-name">'+safeHAName(c)+'</span><span class="ha-entity">'+esc(c.entity||"Set entity ID")+'</span><span class="ha-state '+stateClass+'">'+esc(state)+'</span><span class="ha-card-tools"><button data-edit="1" title="Edit">âœŽ</button><button data-del="1" title="Delete">Ã—</button></span>'; card.onclick=e=>{ if(e.target.closest("[data-edit]")){ e.stopPropagation(); openHAControl(c.id); } else if(e.target.closest("[data-del]")){ e.stopPropagation(); deleteHAControl(c.id); } else runHAControl(c.id); }; wrap.appendChild(card); }); }
+  function renderHomeControls(){ const wrap=$("homeControls"); if(!wrap) return; wrap.innerHTML=""; if(!haToken()) { wrap.innerHTML='<button class="home-control-btn" style="grid-column:1/-1"><span class="ha-name">Connect Home Assistant to enable controls</span><span class="ha-state">Tap to set up</span></button>'; wrap.firstElementChild.onclick=()=>goToPage(3); return; } haControls.slice(0,3).forEach(c=>{ const state=c._state||"Tap to run"; const b=document.createElement("button"); b.className="home-control-btn "+(isOn(state)?"on":"")+(c._error?" unavailable":""); b.innerHTML='<span class="ha-icon">'+esc(c.icon||"ðŸ’¡")+'</span><span class="ha-name">'+safeHAName(c)+'</span><span class="ha-state">'+esc(state)+'</span>'; b.onclick=()=>runHAControl(c.id); wrap.appendChild(b); }); }
+  async function testHA(){ if(!haToken()){ setHAStatus("Paste a Long-Lived Access Token first.","err"); $("haToken").focus(); return; } setHAStatus("Testing connectionâ€¦"); try { const r=await fetch(haURL()+"/api/",{headers:haHeaders()}); if(!r.ok) throw new Error("HTTP "+r.status); const data=await r.json(); setHAStatus("âœ“ Connected: "+(data.message||"Home Assistant is ready"),"ok"); await refreshHAStates(); } catch(e){ setHAStatus("Could not connect: "+e.message+". Check URL, token and CORS setup.","err"); } }
+  function saveHA(){ let url=$("haUrl").value.trim()||DEFAULT_HA_URL; if(!/^https:\/\//i.test(url)) url="https://"+url; url=url.replace(/\/$/,""); save(LS.ha,url); save(LS.haToken,$("haToken").value.trim()); setHAStatus("Settings saved on this phone only.","ok"); renderHAControls(); renderHomeControls(); }
+  function openHA(){ window.open(haURL(),"_blank","noopener"); }
+  async function refreshHAStates(){ if(!haToken()){ renderHAControls(); renderHomeControls(); return; } setHAStatus("Refreshing control statesâ€¦"); await Promise.all(haControls.map(async c=>{ if(!c.entity) return; try { const r=await fetch(haURL()+"/api/states/"+encodeURIComponent(c.entity),{headers:haHeaders()}); if(!r.ok) throw new Error("HTTP "+r.status); const d=await r.json(); c._state=d.state||"unknown"; c._error=false; } catch(e){ c._state="Unavailable"; c._error=true; } })); renderHAControls(); renderHomeControls(); setHAStatus("States refreshed.","ok"); }
+  async function runHAControl(id){ const c=haControls.find(x=>x.id===id); if(!c) return; if(!haToken()){ goToPage(3); setHAStatus("Connect Home Assistant first: paste your token, then Save settings.","err"); return; } if(!c.entity || !c.entity.includes(".")){ goToPage(3); openHAControl(c.id); toast("Set a valid entity ID first"); return; } const a=actionFor(c); if(!a.domain){ toast("Set a valid entity ID first"); return; } c._state="Runningâ€¦"; c._error=false; renderHAControls(); renderHomeControls(); try { const r=await fetch(haURL()+"/api/services/"+encodeURIComponent(a.domain)+"/"+encodeURIComponent(a.service),{method:"POST",headers:haHeaders(),body:JSON.stringify({entity_id:c.entity})}); if(!r.ok) throw new Error("HTTP "+r.status); toast("âœ“ "+c.name); setTimeout(refreshHAStates,700); } catch(e){ c._state="Error"; c._error=true; renderHAControls(); renderHomeControls(); goToPage(3); setHAStatus("Control failed: "+e.message+". Check CORS, token and entity ID.","err"); } }
+  function openHAControl(id){ editingHAControlId=id||null; const c=id?haControls.find(x=>x.id===id):null; $("haControlTitle").textContent=c?"Edit quick control":"Add quick control"; $("hcName").value=c?c.name:""; $("hcIcon").value=c?c.icon:"ðŸ’¡"; $("hcEntity").value=c?c.entity:""; $("hcAction").value=c?c.action:"auto"; $("haControlModal").classList.add("show"); setTimeout(()=>$("hcName").focus(),50); }
+  function closeHAControl(){ $("haControlModal").classList.remove("show"); editingHAControlId=null; }
+  function saveHAControl(){ const name=$("hcName").value.trim(), entity=$("hcEntity").value.trim().toLowerCase(), icon=$("hcIcon").value.trim()||"ðŸ’¡", action=$("hcAction").value; if(!name||!entity.includes(".")){ toast("Enter a name and entity ID (for example light.kitchen)"); return; } if(editingHAControlId){ const c=haControls.find(x=>x.id===editingHAControlId); Object.assign(c,{name,entity,icon,action,_state:"Not refreshed",_error:false}); } else haControls.push({id:uid(),name,entity,icon,action,_state:"Not refreshed",_error:false}); save(LS.haControls,haControls); closeHAControl(); renderHAControls(); renderHomeControls(); toast("Control saved"); }
+  function deleteHAControl(id){ const c=haControls.find(x=>x.id===id); if(c&&confirm('Delete "'+c.name+'"?')){ haControls=haControls.filter(x=>x.id!==id); save(LS.haControls,haControls); renderHAControls(); renderHomeControls(); } }
   function populateCats(){
     const fc=$("fCat"), flt=$("filterCat");
     Object.keys(CATS).forEach(c=>{
@@ -946,11 +1008,11 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
   function catOptions(sel){ return Object.keys(CATS).map(c=>'<option value="'+c+'"'+(c===sel?' selected':'')+'>'+CATS[c]+' '+c+'</option>').join(''); }
   function locOptions(sel){ return Object.keys(LOCS).map(l=>'<option value="'+l+'"'+(l===sel?' selected':'')+'>'+LOCS[l]+' '+l+'</option>').join(''); }
 
-  // ================= CAMERA / SCAN (v5 — native BarcodeDetector on Android, LOCAL ZXing on iPhone) =================
+  // ================= CAMERA / SCAN (v5 â€” native BarcodeDetector on Android, LOCAL ZXing on iPhone) =================
   let camStream=null, camFacing="environment", camMode="barcode";
   let barcodeDetector=null;                 // native (Android/Chrome)
   let nativeTimer=null;
-  let zxingReader=null, zxingControls=null; // ZXing (iPhone/Safari) — loaded from LOCAL ./zxing-browser.min.js
+  let zxingReader=null, zxingControls=null; // ZXing (iPhone/Safari) â€” loaded from LOCAL ./zxing-browser.min.js
   let zxingLibPromise=null;
   let scanActive=false, lastBarcode=null, busyLookup=false;
 
@@ -1039,7 +1101,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
 
   // ---- Barcode flow: pick engine ----
   async function startBarcodeFlow(){
-    setStatus("📷 Starting camera…");
+    setStatus("ðŸ“· Starting cameraâ€¦");
     $("camError").style.display="none";
     $("fileDrop").style.display="none";
     $("camStage").style.display="";
@@ -1049,7 +1111,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
       return;
     }
 
-    // 1) Native BarcodeDetector (Android/Chrome) — ONLY if it exists AND constructs.
+    // 1) Native BarcodeDetector (Android/Chrome) â€” ONLY if it exists AND constructs.
     let nativeOK=false;
     if("BarcodeDetector" in window){
       try {
@@ -1061,20 +1123,20 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     if(nativeOK){
       const ok=await startPlainCamera();
       if(!ok) return;
-      setStatus("🔍 Point the camera at a barcode");
+      setStatus("ðŸ” Point the camera at a barcode");
       scanActive=true;
       nativeTimer=setInterval(runNativeDetect,500);
       return;
     }
 
     // 2) Fallback (iPhone/Safari): LOCAL ZXing library
-    setStatus("⏳ Loading scanner…");
+    setStatus("â³ Loading scannerâ€¦");
     try {
       await loadZXingLib();
     } catch(e){
-      // Local library failed to load — camera preview + manual entry
+      // Local library failed to load â€” camera preview + manual entry
       await startPlainCamera();
-      setStatus("Scanner couldn't load — enter the barcode number manually below", "err");
+      setStatus("Scanner couldn't load â€” enter the barcode number manually below", "err");
       $("manualBarcodeWrap").style.display="block";
       setTimeout(()=>$("manualBarcode").focus(),100);
       return;
@@ -1106,7 +1168,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     try {
       const codes=await barcodeDetector.detect(video);
       if(codes && codes.length && codes[0].rawValue){
-        setStatus("Scanning…");
+        setStatus("Scanningâ€¦");
         onBarcode(codes[0].rawValue);
       }
     } catch(e){}
@@ -1116,7 +1178,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     const RC = (window.ZXingBrowser && window.ZXingBrowser.BrowserMultiFormatReader) || null;
     if(!RC){
       await startPlainCamera();
-      setStatus("Scanner couldn't load — enter the barcode number manually below", "err");
+      setStatus("Scanner couldn't load â€” enter the barcode number manually below", "err");
       $("manualBarcodeWrap").style.display="block";
       return;
     }
@@ -1124,16 +1186,16 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
       zxingReader=new RC();
       const video=$("camVideo");
       scanActive=true;
-      setStatus("📷 Starting camera…");
+      setStatus("ðŸ“· Starting cameraâ€¦");
 
       const decodeCb=(result, err, controls)=>{
         if(controls && !zxingControls) zxingControls=controls;
         if(!scanActive) return;
         if(result){
           const text = result.getText ? result.getText() : (result.text || String(result));
-          if(text){ setStatus("Scanning…"); onBarcode(text); }
+          if(text){ setStatus("Scanningâ€¦"); onBarcode(text); }
         }
-        // NotFoundException between frames is normal — ignore.
+        // NotFoundException between frames is normal â€” ignore.
       };
 
       // Prefer continuous decode against high-res rear-camera constraints.
@@ -1148,7 +1210,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
 
       // Capture the stream ZXing created so we can stop it on close (iPhone light off)
       if(video.srcObject) camStream=video.srcObject;
-      setStatus("🔍 Point the camera at a barcode");
+      setStatus("ðŸ” Point the camera at a barcode");
     } catch(e){
       let msg="Couldn't start the scanner.";
       if(e && e.name==="NotAllowedError") msg="Camera permission denied. Allow access or upload a photo below.";
@@ -1159,7 +1221,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
   }
 
   async function startPhotoCamera(){
-    setStatus("📷 Starting camera…");
+    setStatus("ðŸ“· Starting cameraâ€¦");
     $("camError").style.display="none";
     $("fileDrop").style.display="none";
     $("camStage").style.display="";
@@ -1167,7 +1229,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
       camFail("Camera API not available."); return;
     }
     const ok=await startPlainCamera();
-    if(ok) setStatus("📸 Tap Capture to snap the shelf/receipt");
+    if(ok) setStatus("ðŸ“¸ Tap Capture to snap the shelf/receipt");
   }
 
   function camFail(msg){
@@ -1192,7 +1254,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     busyLookup=true;
     stopScan();
     beepShort();
-    setStatus("✅ Found: "+code+" — Looking up product…", "ok");
+    setStatus("âœ… Found: "+code+" â€” Looking up productâ€¦", "ok");
 
     let product=null;
     try {
@@ -1219,8 +1281,8 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
 
   function showBarcodeConfirm(code, product){
     const found = product && product.name;
-    if(found) setStatus("✅ Found: "+product.name, "ok");
-    else setStatus("Product not in database — type the item name below", "err");
+    if(found) setStatus("âœ… Found: "+product.name, "ok");
+    else setStatus("Product not in database â€” type the item name below", "err");
 
     const name = found ? product.name : "";
     const brand = found ? product.brand : "";
@@ -1230,9 +1292,9 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     box.innerHTML=
       '<div class="confirm-box">'+
         '<div class="confirm-head">'+
-          (img?'<img src="'+esc(img)+'" alt="">':'<div class="ph">'+(CATS[guessed]||'📦')+'</div>')+
+          (img?'<img src="'+esc(img)+'" alt="">':'<div class="ph">'+(CATS[guessed]||'ðŸ“¦')+'</div>')+
           '<div><div class="cn">'+(found?esc(name):'Product not found')+'</div>'+
-          '<div class="cb">'+(brand?esc(brand)+' · ':'')+'Barcode '+esc(code)+(found?'':' — type the name')+'</div></div>'+
+          '<div class="cb">'+(brand?esc(brand)+' Â· ':'')+'Barcode '+esc(code)+(found?'':' â€” type the name')+'</div></div>'+
         '</div>'+
         '<div class="conf-grid">'+
           '<div class="field conf-full"><label>Name</label><input type="text" id="bcName" value="'+esc(name)+'" placeholder="Product name"></div>'+
@@ -1242,12 +1304,12 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
           '<div class="field"><label>Expiry (required)</label><input type="date" id="bcExp" value="'+isoOffset(LOC_DEFAULT_EXP[currentLoc]||7)+'"></div>'+
         '</div>'+
         '<div class="modal-actions">'+
-          '<button class="btn-ghost" id="bcAgain">↺ Scan another</button>'+
-          '<button class="btn-primary" id="bcAdd">➕ Add to '+esc(currentLoc)+'</button>'+
+          '<button class="btn-ghost" id="bcAgain">â†º Scan another</button>'+
+          '<button class="btn-primary" id="bcAdd">âž• Add to '+esc(currentLoc)+'</button>'+
         '</div>'+
       '</div>';
     if(!found) setTimeout(()=>$("bcName").focus(),50);
-    $("bcLoc").onchange=function(){ $("bcExp").value=isoOffset(LOC_DEFAULT_EXP[this.value]||7); $("bcAdd").textContent="➕ Add to "+this.value; };
+    $("bcLoc").onchange=function(){ $("bcExp").value=isoOffset(LOC_DEFAULT_EXP[this.value]||7); $("bcAdd").textContent="âž• Add to "+this.value; };
     $("bcAdd").onclick=()=>{
       const nm=$("bcName").value.trim(); if(!nm){ toast("Enter a name"); $("bcName").focus(); return; }
       const exp=$("bcExp").value; if(!exp){ toast("Please set an expiry date"); $("bcExp").focus(); return; }
@@ -1291,10 +1353,10 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
           '<div style="color:var(--muted);font-size:13px;">Location: <select id="phLoc" style="min-height:38px;padding:6px 8px;width:auto;display:inline-block;">'+locOptions(currentLoc)+'</select></div></div>'+
         '</div>'+
         '<div id="lineRows"></div>'+
-        '<button class="btn-ghost" id="addLine" style="width:100%;">＋ Add another line</button>'+
+        '<button class="btn-ghost" id="addLine" style="width:100%;">ï¼‹ Add another line</button>'+
         '<div class="modal-actions">'+
           '<button class="btn-ghost" id="phCancel">Cancel</button>'+
-          '<button class="btn-primary" id="phAddAll">➕ Add all</button>'+
+          '<button class="btn-primary" id="phAddAll">âž• Add all</button>'+
         '</div>'+
       '</div>';
     addLineRow();
@@ -1312,7 +1374,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
       '<input type="number" class="ln-qty" min="1" value="1" title="Qty">'+
       '<select class="ln-cat">'+catOptions("Other")+'</select>'+
       '<input type="date" class="ln-exp" value="'+isoOffset(LOC_DEFAULT_EXP[loc]||7)+'">'+
-      '<button class="line-del">✕ Remove line</button>';
+      '<button class="line-del">âœ• Remove line</button>';
     row.querySelector(".line-del").onclick=()=>{ if($("lineRows").children.length>1) row.remove(); else row.querySelector(".ln-name").value=""; };
     row.querySelector(".ln-name").addEventListener("input",function(){ this.closest(".line-row").querySelector(".ln-cat").value=guessCategory(this.value); });
     wrap.appendChild(row);
@@ -1339,6 +1401,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     if(!migrate()) seed();
     inventory=load(LS.inv,[]).map(i=>Object.assign({loc:"Fridge"},i));
     shopping=load(LS.shop,[]);
+    haControls=load(LS.haControls,[]);
     currentLoc=load(LS.loc,"Fridge");
 
     initPager();
@@ -1388,9 +1451,16 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     $("timerSet").onclick=setCustom;
     $("timerCustom").addEventListener("keydown",e=>{ if(e.key==="Enter") setCustom(); });
 
-    $("haQuickTile").onclick=openHA;
+    $("haQuickTile").onclick=()=>goToPage(3);
     $("haSaveBtn").onclick=saveHA;
+    $("haTestBtn").onclick=testHA;
+    $("haRefreshBtn").onclick=refreshHAStates;
     $("haOpenBtn").onclick=openHA;
+    $("haAddBtn").onclick=()=>openHAControl();
+    $("haTokenShow").onclick=()=>{ const t=$("haToken"); t.type=t.type==="password"?"text":"password"; $("haTokenShow").textContent=t.type==="password"?"Show":"Hide"; };
+    $("haControlCancel").onclick=closeHAControl;
+    $("haControlSave").onclick=saveHAControl;
+    $("haControlModal").onclick=e=>{ if(e.target===$("haControlModal")) closeHAControl(); };
     $("haUrl").addEventListener("keydown",e=>{ if(e.key==="Enter") saveHA(); });
 
     document.addEventListener("keydown",e=>{
@@ -1401,7 +1471,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
       }
     });
 
-    // Safety: ensure camera released (and reader reset) if page hidden — iPhone light off
+    // Safety: ensure camera released (and reader reset) if page hidden â€” iPhone light off
     document.addEventListener("visibilitychange",()=>{ if(document.hidden && $("camOverlay").classList.contains("show")){ stopScan(); stopCamera(); } });
   }
   document.addEventListener("DOMContentLoaded", init);
@@ -1409,3 +1479,4 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
 </script>
 </body>
 </html>
+
