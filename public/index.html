@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -1021,6 +1021,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     if(control.action==="toggle") return {domain,service:"toggle"};
     if(control.action==="on") return {domain,service:"turn_on"};
     if(control.action==="off") return {domain,service:"turn_off"};
+    if(domain==="automation") return {domain,service:"trigger"};
     return {domain,service:(domain==="scene"||domain==="script")?"turn_on":"toggle"};
   }
   function defaultHAControls(){
