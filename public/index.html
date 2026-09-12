@@ -142,7 +142,6 @@
   .home-exp-badge.past { background: var(--danger); color: #3a1010; }
   .home-exp-badge.soon { background: var(--warn); color: #2a1e08; }
   .home-exp-badge.week { background: var(--week); color: #2a2508; }
-  .home-note { font-size: 15px; font-weight: 600; color: #ffe08a; white-space: pre-wrap; word-break: break-word; }
 
   .ha-tile {
     width: 100%; background: linear-gradient(135deg, #7aa2ff, #5a7fe0);
@@ -167,22 +166,34 @@
   .timer-custom input { flex: 1; }
   .timer-msg { font-size: 14px; font-weight: 700; color: var(--danger); min-height: 18px; margin-top: 8px; }
 
-  /* SEGMENTED LOCATION TOGGLE */
+  .app-footer { text-align: center; color: var(--muted); font-size: 11px; font-weight: 600; margin-top: 18px; opacity: .6; letter-spacing: .5px; }
+
+  /* SEGMENTED LOCATION TOGGLE — big, high-contrast */
   .loc-toggle {
-    display: flex; gap: 8px; background: var(--panel-2); padding: 6px;
-    border-radius: 18px; margin-bottom: 16px; border: 1px solid var(--border);
+    display: flex; gap: 8px; background: var(--panel-2); padding: 7px;
+    border-radius: 20px; margin-bottom: 14px; border: 2px solid var(--border);
+    box-shadow: inset 0 1px 4px rgba(0,0,0,.3);
   }
   .loc-btn {
     flex: 1; background: transparent; color: var(--muted); border: none;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 4px; padding: 12px 4px; min-height: 68px; border-radius: 13px;
-    font-weight: 700; transition: all .2s;
+    gap: 5px; padding: 12px 4px; min-height: 76px; border-radius: 15px;
+    font-weight: 800; transition: all .2s;
   }
-  .loc-btn .em { font-size: 26px; line-height: 1; }
-  .loc-btn .nm { font-size: 12px; letter-spacing: .3px; }
-  .loc-btn .ct { font-size: 10px; opacity: .7; font-weight: 600; }
-  .loc-btn.active { background: var(--accent); color: #06120f; box-shadow: 0 3px 12px rgba(77,208,167,.3); }
-  .loc-btn.active .ct { opacity: .8; }
+  .loc-btn .em { font-size: 30px; line-height: 1; }
+  .loc-btn .nm { font-size: 14px; letter-spacing: .3px; }
+  .loc-btn .ct { font-size: 11px; opacity: .75; font-weight: 700; }
+  .loc-btn.active { background: var(--accent); color: #06120f; box-shadow: 0 4px 16px rgba(77,208,167,.45); transform: translateY(-1px); }
+  .loc-btn.active .ct { opacity: .85; }
+
+  .loc-header {
+    display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;
+    background: var(--panel); border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    border-radius: 14px; padding: 12px 14px; margin-bottom: 14px;
+  }
+  .loc-header .lh-name { font-size: 20px; font-weight: 800; }
+  .loc-header .lh-meta { font-size: 13px; color: var(--muted); font-weight: 600; }
 
   .inv-actions { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
   .inv-filters { display: flex; gap: 8px; margin-bottom: 14px; }
@@ -225,18 +236,6 @@
   .shop-item.done .check { border-color: var(--accent); background: rgba(77,208,167,.15); }
   .shop-name { flex: 1; font-size: 17px; font-weight: 600; word-break: break-word; }
   .shop-actions { display: flex; gap: 6px; }
-
-  /* NOTES */
-  .notes-add { display: flex; gap: 10px; margin-bottom: 14px; }
-  .notes-add input { flex: 1; }
-  .notes-add button { flex-shrink: 0; }
-  .notes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .note { border-radius: 12px; padding: 12px; color: #2a2410; position: relative; min-height: 100px; display: flex; flex-direction: column; box-shadow: 0 3px 10px rgba(0,0,0,.3); transform: rotate(-1deg); }
-  .note:nth-child(3n) { transform: rotate(1.2deg); }
-  .note:nth-child(2n) { transform: rotate(.6deg); }
-  .note-text { font-size: 15px; font-weight: 600; word-break: break-word; flex: 1; white-space: pre-wrap; }
-  .note-time { font-size: 11px; opacity: .7; margin-top: 8px; font-weight: 600; }
-  .note-del { position: absolute; top: 5px; right: 5px; width: 28px; height: 28px; background: rgba(0,0,0,.12); border-radius: 8px; font-size: 15px; display: flex; align-items: center; justify-content: center; color: #2a2410; }
 
   /* HA PAGE */
   .ha-row { display: flex; gap: 10px; }
@@ -313,7 +312,7 @@
   "@context": "urn:goose.ai:schema",
   "@type": "GooseApp",
   "name": "fridge-hub",
-  "description": "Phone-first kitchen hub with Fridge/Freezer/Pantry storage, expiry tracking, camera scan, shopping, notes & Home Assistant.",
+  "description": "Phone-first kitchen command center: storage locations (Fridge/Freezer/Pantry), scanning, expiry tracking, shopping & Home Assistant.",
   "width": 400,
   "height": 840,
   "resizable": true,
@@ -323,31 +322,32 @@
 }
   </script>
   <script type="application/x-goose-prd">
-Kitchen Hub — Phone-First Kitchen Command Center (v2: Storage Locations)
+Kitchen Hub — Phone-First Kitchen Command Center (v3: Notes removed, prominent Storage locations)
 
 OVERVIEW:
-A mobile-first, single-file HTML app for phones in PORTRAIT. Organized as a horizontal SWIPEABLE PAGER (CSS scroll-snap), one feature per full-screen page, with page-dot indicators and a fixed bottom tab bar. Dark mode, large legible text, min 48px tap targets, no horizontal page scrolling. All data persists in localStorage; works offline except Open Food Facts barcode lookups, optional ZXing CDN fallback, and optional weather.
+A mobile-first, single-file HTML app for phones in PORTRAIT. Organized as a horizontal SWIPEABLE PAGER (CSS scroll-snap), one feature per full-screen page, with page-dot indicators and a fixed bottom tab bar. Dark mode, large legible text, min 48px tap targets, no horizontal page scrolling. All data persists in localStorage; works offline except Open Food Facts barcode lookups, optional ZXing CDN fallback, and optional weather. A subtle "v3" build label appears in footers (Home and Smart pages).
 
 PWA / ADD TO HOME SCREEN:
 Installable/home-screen friendly. Includes inline web app manifest (data URI), apple-mobile-web-app-capable, apple-mobile-web-app-status-bar-style (black-translucent), theme-color, viewport with viewport-fit=cover, apple-touch-icon and favicon as inline SVG (🧊 fridge icon). Launches full-screen when added to the home screen.
 
-NAVIGATION:
+NAVIGATION (4 pages):
 - Horizontal scroll-snapping pager; each page width:100vw, vertical scroll inside.
 - Page-dot indicators reflect/update while swiping.
-- Fixed bottom nav (5 tabs): 🏠 Home · 🧊 Storage · 🛒 Shop · 📝 Notes · 🏠 Smart (HA). Tapping snaps to a page; active tab highlighted; swipe, dots, and nav stay in sync.
+- Fixed bottom nav (4 tabs): 🏠 Home · 🗃️ Storage · 🛒 Shop · 🏠 Smart (HA). Tapping snaps to a page; active tab highlighted; swipe, dots, and nav stay in sync.
+- NOTE: The Notes / family message board feature has been removed entirely (no page, no tab, no Home reference). Recipes may be added later but are not present now.
 
-STORAGE LOCATIONS (core feature):
+STORAGE LOCATIONS (core feature — made unmistakable in v3):
 - Three locations: 🧊 FRIDGE, ❄️ FREEZER, 🗄️ PANTRY. Every inventory item is tagged with a location.
-- Storage page has a big, thumb-friendly SEGMENTED TOGGLE (three large buttons: Fridge | Freezer | Pantry) at the top, each showing an item count. Active location clearly highlighted; switching instantly filters the list and updates counts/summary. Selected location persists.
-- Each item has a "↔ Move" action to move it to another location (e.g. freezer→fridge to defrost).
+- Storage page layout (top to bottom): page title "🗃️ Storage" → LARGE HIGH-CONTRAST SEGMENTED TOGGLE (three big side-by-side buttons: 🧊 Fridge | ❄️ Freezer | 🗄️ Pantry, ≥76px tall, full-width, rounded, active segment filled bright accent + lifted shadow, inactive muted, each showing a live count) → ACTIVE LOCATION HEADER card ("🧊 Fridge — 4 items · 1 expiring soon") → Scan/Add buttons → filters → item list.
+- Tapping a segment instantly filters the inventory to ONLY that location's items and updates all counts and the header. Each location maintains its own separate list. Selected location persists in localStorage.
+- Each item has a "↔ Move" action to move it to another location.
 - Adding items (manual, camera scan, or shopping "bought it") defaults to the currently selected location, with an in-form location picker. Per-location default expiry suggestions: Fridge +7d, Freezer +90d, Pantry +180d (auto-updates when location changes in the form).
 
 PAGES:
-1. HOME/OVERVIEW (landing) — big live clock (HH:MM, updates every second) + full date; optional tiny one-line weather readout (city saved on Home); prominent HOME ASSISTANT quick tile (one tap to open HA); combined stat summary (total items · expiring · to-buy); top "Expiring soon" list across ALL locations, each labeled with its location emoji; compact secondary kitchen TIMER (MM:SS, presets 1/3/5/10/15/30 + custom, Start/Pause/Reset, flashing + Web Audio beep on zero); latest note; small city input for weather.
-2. STORAGE — location segmented toggle + inventory for the selected location; prominent "📷 Scan Items" + smaller "➕ Add" fallback; category filter/sort (default soonest-expiring); expiry badges (❌ expired, ⚠️ ≤3d, 🔔 ≤7d, ✅ fresh); item cards with name/qty/category/expiry/optional thumbnail; edit/delete (confirm); "↔ Move" and "🛒 Need more".
+1. HOME/OVERVIEW (landing) — big live clock (HH:MM, updates every second) + full date; optional tiny one-line weather readout (city saved on Home); prominent HOME ASSISTANT quick tile (one tap to open HA); combined stat summary (total items · expiring · to-buy); top "Expiring soon" list across ALL locations, each labeled with its location emoji; compact secondary kitchen TIMER (MM:SS, presets 1/3/5/10/15/30 + custom, Start/Pause/Reset, flashing + Web Audio beep on zero); small city input for weather; subtle "Kitchen Hub · v3" footer.
+2. STORAGE — prominent location segmented toggle + active-location header + inventory for the selected location; prominent "📷 Scan Items" + smaller "➕ Add" fallback; category filter/sort (default soonest-expiring); expiry badges (❌ expired, ⚠️ ≤3d, 🔔 ≤7d, ✅ fresh); item cards with name/qty/category/expiry/optional thumbnail; edit/delete (confirm); "↔ Move" and "🛒 Need more".
 3. SHOPPING — add input (Enter adds), checkable items (strike-through, move to bottom), delete, "Clear checked", checked items get "✓🧊 add to storage" (opens add form), remaining count.
-4. NOTES — family sticky-note board, rotating pastel colors, text + time, add/delete, persisted.
-5. HOME ASSISTANT (first-class) — HA URL saved to localStorage, big Open-in-new-tab button, iframe embed (some setups block embedding), placeholder when unset. Also reachable via the Home quick tile.
+4. HOME ASSISTANT (first-class) — HA URL saved to localStorage, big Open-in-new-tab button, iframe embed (some setups block embedding), placeholder when unset; "Kitchen Hub · v3" footer. Also reachable via the Home quick tile.
 
 WEATHER (de-emphasized):
 No dedicated weather page. Optional minimal one-line current temp on the Home clock card via Open-Meteo geocode + current forecast; city saved to localStorage; hidden when unset/offline; refresh on load + every 30min.
@@ -361,10 +361,10 @@ CAMERA-BASED ITEM ENTRY (featured):
 - Every added item requires an expiry date.
 
 DATA PERSISTENCE & MIGRATION:
-Inventory (with location + thumbnails), shopping list, HA URL, weather city, notes, selected location in localStorage. Gracefully migrates prior v1 inventory: items without a location default to Fridge. Seeds sample items across all three locations, shopping items, and a welcome note on first run.
+Inventory (with location + thumbnails), shopping list, HA URL, weather city, selected location in localStorage. Notes storage keys are no longer read or written. Gracefully migrates prior v1/v2 inventory: items without a location default to Fridge. Seeds sample items across ALL three locations on first run (Fridge: Milk, Eggs, Lettuce, Leftover pasta; Freezer: Frozen peas, Ice cream; Pantry: Pasta, Rice, Canned beans) plus shopping items, so location separation is immediately visible.
 
 POLISH:
-Clean, calm, modern dark UI; generous spacing; rounded cards; smooth transitions; satisfying tap feedback; one clear focus per page. Mobile-friendly full/near-full-screen modals, toasts, empty states, Esc/overlay closes modals (camera → move → item order). Single self-contained HTML with inline CSS/JS.
+Clean, calm, modern dark UI; generous spacing; rounded cards; smooth transitions; satisfying tap feedback; one clear focus per page. Mobile-friendly full/near-full-screen modals, toasts, empty states, Esc/overlay closes modals (camera → move → item order). Single self-contained HTML with inline CSS/JS. Subtle version label ("v3") for deployment verification.
   </script>
 </head>
 <body>
@@ -413,29 +413,33 @@ Clean, calm, modern dark UI; generous spacing; rounded cards; smooth transitions
         <div class="timer-msg" id="timerMsg"></div>
       </div>
 
-      <div class="card">
-        <div class="home-sec-title">📝 Latest note</div>
-        <div id="homeNote" class="home-note">No notes yet.</div>
-      </div>
-
       <div class="card" style="padding:12px 16px;">
         <div style="display:flex;gap:10px;align-items:center;">
           <input type="text" id="wxCity" placeholder="City for weather (optional)" autocomplete="off" style="min-height:44px;font-size:14px;">
           <button class="btn-ghost" id="wxSave" style="flex-shrink:0;min-height:44px;padding:10px 14px;">Save</button>
         </div>
       </div>
+
+      <div class="app-footer">Kitchen Hub · v3</div>
     </section>
 
     <!-- PAGE 2: STORAGE -->
     <section class="page" data-page="storage">
       <div class="page-head">
-        <div><div class="page-title" id="storeTitle">🧊 Fridge</div><div class="page-sub" id="invSummary">0 items</div></div>
+        <div><div class="page-title">🗃️ Storage</div><div class="page-sub">Tap a location below to switch</div></div>
       </div>
 
+      <!-- BIG, HIGH-CONTRAST SEGMENTED TOGGLE -->
       <div class="loc-toggle" id="locToggle">
         <button class="loc-btn active" data-loc="Fridge"><span class="em">🧊</span><span class="nm">Fridge</span><span class="ct" data-count="Fridge">0</span></button>
         <button class="loc-btn" data-loc="Freezer"><span class="em">❄️</span><span class="nm">Freezer</span><span class="ct" data-count="Freezer">0</span></button>
         <button class="loc-btn" data-loc="Pantry"><span class="em">🗄️</span><span class="nm">Pantry</span><span class="ct" data-count="Pantry">0</span></button>
+      </div>
+
+      <!-- ACTIVE LOCATION HEADER -->
+      <div class="loc-header">
+        <span class="lh-name" id="storeTitle">🧊 Fridge</span>
+        <span class="lh-meta" id="invSummary">0 items</span>
       </div>
 
       <div class="inv-actions">
@@ -468,20 +472,7 @@ Clean, calm, modern dark UI; generous spacing; rounded cards; smooth transitions
       <div class="empty" id="shopEmpty" style="display:none;"><span class="em">📝</span>Nothing to buy — all stocked up!</div>
     </section>
 
-    <!-- PAGE 4: NOTES -->
-    <section class="page" data-page="notes">
-      <div class="page-head">
-        <div><div class="page-title">📝 Notes</div><div class="page-sub" id="notesSummary">0 notes</div></div>
-      </div>
-      <div class="notes-add">
-        <input type="text" id="noteInput" placeholder="Leave a note…" autocomplete="off">
-        <button class="btn-primary" id="noteAddBtn">Post</button>
-      </div>
-      <div class="notes-grid" id="notesGrid"></div>
-      <div class="empty" id="notesEmpty" style="display:none;"><span class="em">🗒️</span>No notes yet — post the first one!</div>
-    </section>
-
-    <!-- PAGE 5: HOME ASSISTANT -->
+    <!-- PAGE 4: HOME ASSISTANT -->
     <section class="page" data-page="ha">
       <div class="page-head"><div class="page-title">🏠 Home Assistant</div></div>
       <div class="card">
@@ -493,6 +484,7 @@ Clean, calm, modern dark UI; generous spacing; rounded cards; smooth transitions
         <div class="ha-frame-wrap" id="haFrameWrap"></div>
         <div class="ha-note">Some setups block embedding. If blank, use "Open".</div>
       </div>
+      <div class="app-footer">Kitchen Hub · v3</div>
     </section>
 
   </div>
@@ -500,10 +492,9 @@ Clean, calm, modern dark UI; generous spacing; rounded cards; smooth transitions
   <!-- BOTTOM NAV -->
   <nav class="bottom-nav" id="bottomNav">
     <button class="nav-btn active" data-idx="0"><span class="ic">🏠</span><span class="lb">Home</span></button>
-    <button class="nav-btn" data-idx="1"><span class="ic">🧊</span><span class="lb">Storage</span></button>
+    <button class="nav-btn" data-idx="1"><span class="ic">🗃️</span><span class="lb">Storage</span></button>
     <button class="nav-btn" data-idx="2"><span class="ic">🛒</span><span class="lb">Shop</span></button>
-    <button class="nav-btn" data-idx="3"><span class="ic">📝</span><span class="lb">Notes</span></button>
-    <button class="nav-btn ha-nav" data-idx="4"><span class="ic">🏠</span><span class="lb">Smart</span></button>
+    <button class="nav-btn ha-nav" data-idx="3"><span class="ic">🏠</span><span class="lb">Smart</span></button>
   </nav>
 
   <!-- ITEM MODAL -->
@@ -587,14 +578,13 @@ Clean, calm, modern dark UI; generous spacing; rounded cards; smooth transitions
 
   const CATS = { "Dairy":"🥛","Produce":"🥬","Meat":"🍖","Drinks":"🧃","Leftovers":"🍱","Condiments":"🧂","Frozen":"🧊","Bakery":"🍞","Dry goods":"🌾","Other":"📦" };
   const CAT_COLORS = { "Dairy":"#5b8def","Produce":"#4dd0a7","Meat":"#e07a7a","Drinks":"#e8a33d","Leftovers":"#c07ae0","Condiments":"#d4b45a","Frozen":"#5ec7e0","Bakery":"#d99a5b","Dry goods":"#b5a26a","Other":"#8b95a3" };
-  const NOTE_COLORS = ["#ffe08a","#a8e6cf","#ffb3ba","#bae1ff","#d5b3ff","#ffd6a5"];
   const LOCS = { "Fridge":"🧊", "Freezer":"❄️", "Pantry":"🗄️" };
   const LOC_DEFAULT_EXP = { "Fridge":7, "Freezer":90, "Pantry":180 };
 
-  const LS = { inv:"kitchenhub_inventory_v2", shop:"kitchenhub_shopping_v2", ha:"kitchenhub_ha_url_v1", seeded:"kitchenhub_seeded_v2", city:"kitchenhub_city_v1", notes:"kitchenhub_notes_v1", loc:"kitchenhub_curloc_v1" };
+  const LS = { inv:"kitchenhub_inventory_v2", shop:"kitchenhub_shopping_v2", ha:"kitchenhub_ha_url_v1", seeded:"kitchenhub_seeded_v3", city:"kitchenhub_city_v1", loc:"kitchenhub_curloc_v1" };
   const OLD_INV = "fridgehub_inventory_v1";
 
-  let inventory=[], shopping=[], notes=[], editingId=null, moveId=null;
+  let inventory=[], shopping=[], editingId=null, moveId=null;
   let currentLoc = "Fridge";
   let modalLoc = "Fridge";
 
@@ -626,16 +616,14 @@ Clean, calm, modern dark UI; generous spacing; rounded cards; smooth transitions
   }
 
   function migrate(){
-    // migrate old v1 inventory (no location) if present and v2 not seeded
+    // migrate old v1 inventory (no location) if present and v3 not seeded
     if(!load(LS.seeded,false)){
-      const old=load(OLD_INV,null);
+      const old=load(OLD_INV,null) || load("kitchenhub_inventory_v2",null);
       if(old && old.length){
         inventory=old.map(i=>Object.assign({loc:"Fridge"},i));
         save(LS.inv,inventory);
-        shopping=load("fridgehub_shopping_v1",[]);
-        notes=load("fridgehub_notes_v1",[]);
+        shopping=load("fridgehub_shopping_v1",null) || load("kitchenhub_shopping_v2",[]);
         if(shopping.length) save(LS.shop,shopping);
-        if(notes.length) save(LS.notes,notes);
         save(LS.seeded,true);
         return true;
       }
@@ -646,19 +634,21 @@ Clean, calm, modern dark UI; generous spacing; rounded cards; smooth transitions
   function seed(){
     if(load(LS.seeded,false)) return;
     inventory=[
+      // FRIDGE
       { id:uid(), name:"Milk", qty:1, cat:"Dairy", exp:isoOffset(2), loc:"Fridge" },
       { id:uid(), name:"Eggs", qty:12, cat:"Dairy", exp:isoOffset(9), loc:"Fridge" },
       { id:uid(), name:"Lettuce", qty:1, cat:"Produce", exp:isoOffset(1), loc:"Fridge" },
       { id:uid(), name:"Leftover pasta", qty:1, cat:"Leftovers", exp:isoOffset(-1), loc:"Fridge" },
+      // FREEZER
       { id:uid(), name:"Frozen peas", qty:1, cat:"Frozen", exp:isoOffset(120), loc:"Freezer" },
       { id:uid(), name:"Ice cream", qty:1, cat:"Frozen", exp:isoOffset(60), loc:"Freezer" },
+      // PANTRY
       { id:uid(), name:"Pasta", qty:2, cat:"Dry goods", exp:isoOffset(300), loc:"Pantry" },
       { id:uid(), name:"Rice", qty:1, cat:"Dry goods", exp:isoOffset(200), loc:"Pantry" },
-      { id:uid(), name:"Olive oil", qty:1, cat:"Condiments", exp:isoOffset(150), loc:"Pantry" }
+      { id:uid(), name:"Canned beans", qty:3, cat:"Dry goods", exp:isoOffset(180), loc:"Pantry" }
     ];
     shopping=[ { id:uid(), name:"Bananas", done:false }, { id:uid(), name:"Bread", done:false }, { id:uid(), name:"Coffee", done:false } ];
-    notes=[ { id:uid(), text:"Welcome to Kitchen Hub! 👋 Swipe between pages. Tap the location toggle on Storage.", t:Date.now() } ];
-    save(LS.inv,inventory); save(LS.shop,shopping); save(LS.notes,notes); save(LS.seeded,true);
+    save(LS.inv,inventory); save(LS.shop,shopping); save(LS.seeded,true);
   }
 
   function tickClock(){
@@ -678,7 +668,7 @@ Clean, calm, modern dark UI; generous spacing; rounded cards; smooth transitions
 
   // ---------- PAGER ----------
   let currentPage=0;
-  const PAGES=5;
+  const PAGES=4;
   function updateActive(idx){
     currentPage=idx;
     [...$("dots").children].forEach((d,i)=>d.classList.toggle("active",i===idx));
@@ -704,6 +694,7 @@ Clean, calm, modern dark UI; generous spacing; rounded cards; smooth transitions
 
   // ---------- LOCATION TOGGLE ----------
   function setLocation(loc){
+    if(!LOCS[loc]) loc="Fridge";
     currentLoc=loc; save(LS.loc,loc);
     [...$("locToggle").children].forEach(b=>b.classList.toggle("active", b.dataset.loc===loc));
     $("storeTitle").textContent = LOCS[loc]+" "+loc;
@@ -764,9 +755,9 @@ Clean, calm, modern dark UI; generous spacing; rounded cards; smooth transitions
       grid.appendChild(card);
     });
 
-    let sum=locItems.length+" item"+(locItems.length===1?"":"s")+" in "+currentLoc;
+    let sum=locItems.length+" item"+(locItems.length===1?"":"s");
     const extras=[];
-    if(soon) extras.push('<span class="summary-warn">'+soon+' expiring</span>');
+    if(soon) extras.push('<span class="summary-warn">'+soon+' expiring soon</span>');
     if(past) extras.push('<span class="summary-danger">'+past+' expired</span>');
     $("invSummary").innerHTML=sum+(extras.length?' · '+extras.join(" · "):"");
 
@@ -850,23 +841,6 @@ Clean, calm, modern dark UI; generous spacing; rounded cards; smooth transitions
   function addShop(){ const inp=$("shopInput"), name=inp.value.trim(); if(!name) return; shopping.push({id:uid(),name,done:false}); save(LS.shop,shopping); inp.value=""; renderShopping(); inp.focus(); }
   function clearChecked(){ if(!shopping.some(s=>s.done)){ toast("Nothing checked"); return; } shopping=shopping.filter(s=>!s.done); save(LS.shop,shopping); renderShopping(); toast("Cleared checked items"); }
 
-  // ---------- notes ----------
-  function renderNotes(){
-    const grid=$("notesGrid"); grid.innerHTML="";
-    $("notesEmpty").style.display=notes.length?"none":"block";
-    notes.slice().reverse().forEach((n,idx)=>{
-      const color=NOTE_COLORS[idx%NOTE_COLORS.length];
-      const el=document.createElement("div"); el.className="note"; el.style.background=color;
-      const time=new Date(n.t).toLocaleString(undefined,{month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"});
-      el.innerHTML='<button class="note-del">✕</button><div class="note-text">'+esc(n.text)+'</div><div class="note-time">'+time+'</div>';
-      el.querySelector(".note-del").onclick=()=>{ notes=notes.filter(x=>x.id!==n.id); save(LS.notes,notes); renderNotes(); };
-      grid.appendChild(el);
-    });
-    $("notesSummary").textContent=notes.length+" note"+(notes.length===1?"":"s");
-    renderHome();
-  }
-  function addNote(){ const inp=$("noteInput"), text=inp.value.trim(); if(!text) return; notes.push({id:uid(),text,t:Date.now()}); save(LS.notes,notes); inp.value=""; renderNotes(); inp.focus(); }
-
   // ---------- HOME ----------
   let lastWx=null;
   function renderHome(){
@@ -888,8 +862,6 @@ Clean, calm, modern dark UI; generous spacing; rounded cards; smooth transitions
         return '<div class="home-exp-item"><span><span class="loc">'+(LOCS[x.i.loc]||"🧊")+'</span> '+esc(x.i.name)+'</span><span class="home-exp-badge '+cls+'">'+lbl+'</span></div>';
       }).join("");
     }
-    if(notes.length){ $("homeNote").textContent=notes[notes.length-1].text; }
-    else $("homeNote").textContent="No notes yet.";
     renderMiniWx();
   }
   function renderMiniWx(){
@@ -952,7 +924,7 @@ Clean, calm, modern dark UI; generous spacing; rounded cards; smooth transitions
     else { wrap.innerHTML='<div class="ha-placeholder"><span style="font-size:38px;">🏠</span><div style="font-size:16px;font-weight:600;">Connect your smart home</div><div style="font-size:13px;">Paste your HA URL and tap Save.</div></div>'; }
   }
   function saveHA(){ let url=$("haUrl").value.trim(); if(url&&!/^https?:\/\//i.test(url)) url="http://"+url; save(LS.ha,url); renderHA(); toast(url?"Home Assistant saved":"URL cleared"); }
-  function openHA(){ const url=load(LS.ha,""); if(!url){ toast("Add your HA URL on the Smart tab"); goToPage(4); setTimeout(()=>$("haUrl").focus(),350); return; } window.open(url,"_blank","noopener"); }
+  function openHA(){ const url=load(LS.ha,""); if(!url){ toast("Add your HA URL on the Smart tab"); goToPage(3); setTimeout(()=>$("haUrl").focus(),350); return; } window.open(url,"_blank","noopener"); }
 
   function populateCats(){
     const fc=$("fCat"), flt=$("filterCat");
@@ -1169,7 +1141,7 @@ Clean, calm, modern dark UI; generous spacing; rounded cards; smooth transitions
     populateCats();
     if(!migrate()) seed();
     inventory=load(LS.inv,[]).map(i=>Object.assign({loc:"Fridge"},i));
-    shopping=load(LS.shop,[]); notes=load(LS.notes,[]);
+    shopping=load(LS.shop,[]);
     currentLoc=load(LS.loc,"Fridge");
 
     initPager();
@@ -1179,7 +1151,7 @@ Clean, calm, modern dark UI; generous spacing; rounded cards; smooth transitions
     [...$("locToggle").children].forEach(b=>{ b.onclick=()=>setLocation(b.dataset.loc); });
     setLocation(currentLoc);
 
-    renderShopping(); renderNotes(); renderHA(); renderHome();
+    renderShopping(); renderHA(); renderHome();
 
     $("addItemBtn").onclick=()=>openModal(null);
     $("scanBtn").onclick=openCam;
@@ -1209,9 +1181,6 @@ Clean, calm, modern dark UI; generous spacing; rounded cards; smooth transitions
     $("shopAddBtn").onclick=addShop;
     $("shopInput").addEventListener("keydown",e=>{ if(e.key==="Enter") addShop(); });
     $("clearCheckedBtn").onclick=clearChecked;
-
-    $("noteAddBtn").onclick=addNote;
-    $("noteInput").addEventListener("keydown",e=>{ if(e.key==="Enter") addNote(); });
 
     // weather (home)
     $("wxSave").onclick=saveCity;
