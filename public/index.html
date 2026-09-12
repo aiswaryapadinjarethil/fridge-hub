@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -153,6 +153,11 @@
   .ha-tile .big { font-size: 26px; }
 
   .ha-home-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
+  .music-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:8px; }
+  .music-btn { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; padding:18px 8px; border-radius:14px; border:none; cursor:pointer; font-size:14px; font-weight:700; color:#fff; min-height:76px; width:100%; }
+  .music-btn.spotify { background:#1DB954; }
+  .music-btn.youtube { background:#FF0000; }
+  .music-btn .em { font-size:30px; }
   .ha-controls-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .ha-control-card, .ha-home-card {
     background: var(--card); border-radius: 14px; padding: 14px 10px; text-align: center;
@@ -449,7 +454,14 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
         </div>
       </div>
 
-      <div class="app-footer">Kitchen Hub · v6</div>
+      <div class="card">
+        <div class="home-sec-title">&#127925; Music</div>
+        <div class="music-grid">
+          <button class="music-btn spotify" onclick="window.open('https://open.spotify.com','_blank','noopener')"><span class="em">&#x1F7E2;</span>Spotify</button>
+          <button class="music-btn youtube" onclick="window.open('https://youtube.com','_blank','noopener')"><span class="em">&#x25B6;&#xFE0F;</span>YouTube</button>
+        </div>
+      </div>
+      <div class="app-footer">Kitchen Hub · v7</div>
     </section>
 
     <!-- PAGE 2: STORAGE -->
@@ -529,7 +541,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
         <div class="ha-controls-grid" id="haControls"></div>
         <button class="btn-ghost" id="haAddBtn" style="width:100%;margin-top:12px;">➕ Add control</button>
       </div>
-      <div class="app-footer">Kitchen Hub · v6</div>
+      <div class="app-footer">Kitchen Hub · v7</div>
     </section>
 
   </div>
