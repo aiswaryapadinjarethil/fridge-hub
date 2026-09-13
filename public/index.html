@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -456,7 +456,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
           <button class="music-btn youtube" onclick="window.open('https://youtube.com','_blank','noopener')"><span class="em">&#x25B6;&#xFE0F;</span>YouTube</button>
         </div>
       </div>
-      <div class="app-footer">Kitchen Hub · v7.5</div>
+      <div class="app-footer">Kitchen Hub · v7.6</div>
     </section>
 
     <!-- PAGE 2: STORAGE -->
@@ -539,6 +539,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
       <div class="card">
         <div class="home-sec-title">&#128190; Backup &amp; Transfer</div>
         <p style="font-size:13px;color:var(--muted);margin:0 0 10px;">Export your data to a file, then import on another phone.</p>
+        <button class="btn-ghost" id="recatBtn" style="width:100%;margin-bottom:10px;">&#x1F504; Re-categorise all items</button>
         <div style="display:flex;gap:10px;margin-bottom:10px;">
           <button class="btn-primary" id="syncPushBtn" style="flex:1;">&#9729; Push to cloud</button>
           <button class="btn-ghost" id="syncPullBtn" style="flex:1;">&#9729; Pull from cloud</button>
@@ -549,7 +550,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
           <input type="file" id="importFile" accept=".json" style="display:none;">
         </div>
       </div>
-      <div class="app-footer">Kitchen Hub · v7.5</div>
+      <div class="app-footer">Kitchen Hub · v7.6</div>
     </section>
 
   </div>
@@ -1670,6 +1671,15 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     syncTimer = setTimeout(syncToCloud, 2000);
   }
 
+  function recategoriseAll(){
+    let changed=0;
+    inventory=inventory.map(i=>{ const cat=guessCategory(i.name); if(cat!==i.cat){ changed++; return Object.assign({},i,{cat}); } return i; });
+    save(LS.inv,inventory);
+    renderInventory(); renderHome();
+    toast(changed+" item"+(changed===1?" ":"s ")+"re-categorised");
+    scheduleSyncToCloud();
+  }
+
   // ---------- init ----------
   function init(){
     populateCats();
@@ -1726,6 +1736,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     $("timerCustom").addEventListener("keydown",e=>{ if(e.key==="Enter") setCustom(); });
     $("syncPushBtn").onclick=syncToCloud;
     $("syncPullBtn").onclick=syncFromCloud;
+    $("recatBtn").onclick=recategoriseAll;
     $("exportBtn").onclick=exportData;
     $("importBtn").onclick=()=>$("importFile").click();
     $("importFile").onchange=e=>importData(e.target.files[0]);
