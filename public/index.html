@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -456,7 +456,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
           <button class="music-btn youtube" onclick="window.open('https://youtube.com','_blank','noopener')"><span class="em">&#x25B6;&#xFE0F;</span>YouTube</button>
         </div>
       </div>
-      <div class="app-footer">Kitchen Hub · v7.2</div>
+      <div class="app-footer">Kitchen Hub · v7.3</div>
     </section>
 
     <!-- PAGE 2: STORAGE -->
@@ -539,13 +539,17 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
       <div class="card">
         <div class="home-sec-title">&#128190; Backup &amp; Transfer</div>
         <p style="font-size:13px;color:var(--muted);margin:0 0 10px;">Export your data to a file, then import on another phone.</p>
+        <div style="display:flex;gap:10px;margin-bottom:10px;">
+          <button class="btn-primary" id="syncPushBtn" style="flex:1;">&#9729; Push to cloud</button>
+          <button class="btn-ghost" id="syncPullBtn" style="flex:1;">&#9729; Pull from cloud</button>
+        </div>
         <div style="display:flex;gap:10px;">
-          <button class="btn-primary" id="exportBtn" style="flex:1;">&#11014; Export</button>
-          <button class="btn-ghost" id="importBtn" style="flex:1;">&#11015; Import</button>
+          <button class="btn-primary" id="exportBtn" style="flex:1;">&#11014; Export file</button>
+          <button class="btn-ghost" id="importBtn" style="flex:1;">&#11015; Import file</button>
           <input type="file" id="importFile" accept=".json" style="display:none;">
         </div>
       </div>
-      <div class="app-footer">Kitchen Hub · v7.2</div>
+      <div class="app-footer">Kitchen Hub · v7.3</div>
     </section>
 
   </div>
@@ -1617,6 +1621,45 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     reader.readAsText(file);
   }
 
+  // ---------- cloud sync ----------
+  let syncTimer = null;
+  async function syncToCloud(){
+    try {
+      const data = {
+        inventory: load(LS.inv,[]),
+        shopping: load(LS.shop,[]),
+        ha: load(LS.ha,""),
+        haControls: load(LS.haControls,[]),
+        loc: load(LS.loc,"Fridge")
+      };
+      await fetch("/api/sync", {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({data})
+      });
+    } catch(e){ console.warn("Sync failed",e); }
+  }
+  async function syncFromCloud(){
+    try {
+      const res = await fetch("/api/sync");
+      if(!res.ok) return;
+      const {data} = await res.json();
+      if(!data) return;
+      if(data.inventory) { save(LS.inv, data.inventory); inventory=data.inventory; }
+      if(data.shopping) { save(LS.shop, data.shopping); shopping=data.shopping; }
+      if(data.ha) save(LS.ha, data.ha);
+      if(data.haControls) { save(LS.haControls, data.haControls); haControls=data.haControls; }
+      if(data.loc) { save(LS.loc, data.loc); }
+      renderInventory(); renderShopping(); renderHome(); renderHA();
+      const t=data.syncedAt?new Date(data.syncedAt).toLocaleTimeString():"";
+      toast("Synced" + (t?" at "+t:""));
+    } catch(e){ toast("Sync failed - offline?"); }
+  }
+  function scheduleSyncToCloud(){
+    clearTimeout(syncTimer);
+    syncTimer = setTimeout(syncToCloud, 2000);
+  }
+
   // ---------- init ----------
   function init(){
     populateCats();
@@ -1634,6 +1677,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     setLocation(currentLoc);
 
     renderShopping(); renderHA(); renderHome();
+    syncFromCloud();
 
     $("addItemBtn").onclick=()=>openModal(null);
     $("scanBtn").onclick=openCam;
@@ -1670,6 +1714,8 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     $("timerReset").onclick=resetTimer;
     $("timerSet").onclick=setCustom;
     $("timerCustom").addEventListener("keydown",e=>{ if(e.key==="Enter") setCustom(); });
+    $("syncPushBtn").onclick=syncToCloud;
+    $("syncPullBtn").onclick=syncFromCloud;
     $("exportBtn").onclick=exportData;
     $("importBtn").onclick=()=>$("importFile").click();
     $("importFile").onchange=e=>importData(e.target.files[0]);
