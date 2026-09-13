@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -456,7 +456,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
           <button class="music-btn youtube" onclick="window.open('https://youtube.com','_blank','noopener')"><span class="em">&#x25B6;&#xFE0F;</span>YouTube</button>
         </div>
       </div>
-      <div class="app-footer">Kitchen Hub · v7</div>
+      <div class="app-footer">Kitchen Hub · v7.2</div>
     </section>
 
     <!-- PAGE 2: STORAGE -->
@@ -536,7 +536,16 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
         <div class="ha-controls-grid" id="haControls"></div>
         <button class="btn-ghost" id="haAddBtn" style="width:100%;margin-top:12px;">➕ Add control</button>
       </div>
-      <div class="app-footer">Kitchen Hub · v7</div>
+      <div class="card">
+        <div class="home-sec-title">&#128190; Backup &amp; Transfer</div>
+        <p style="font-size:13px;color:var(--muted);margin:0 0 10px;">Export your data to a file, then import on another phone.</p>
+        <div style="display:flex;gap:10px;">
+          <button class="btn-primary" id="exportBtn" style="flex:1;">&#11014; Export</button>
+          <button class="btn-ghost" id="importBtn" style="flex:1;">&#11015; Import</button>
+          <input type="file" id="importFile" accept=".json" style="display:none;">
+        </div>
+      </div>
+      <div class="app-footer">Kitchen Hub · v7.2</div>
     </section>
 
   </div>
@@ -1579,6 +1588,35 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     toast(LOCS[loc]+" Added "+added+" item"+(added===1?"":"s")); $("camResult").innerHTML="";
   }
 
+  // ---------- export/import ----------
+  function exportData(){
+    const data={version:1,exported:new Date().toISOString(),inventory:load(LS.inv,[]),shopping:load(LS.shop,[]),ha:load(LS.ha,""),haToken:load(LS.haToken,""),haControls:load(LS.haControls,[]),city:load(LS.city,""),loc:load(LS.loc,"Fridge")};
+    const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a"); a.href=url; a.download="kitchenhub-backup-"+new Date().toISOString().slice(0,10)+".json";
+    a.click(); URL.revokeObjectURL(url);
+    toast("Backup saved - send the file to your other phone!");
+  }
+  function importData(file){
+    if(!file) return;
+    const reader=new FileReader();
+    reader.onload=e=>{
+      try {
+        const data=JSON.parse(e.target.result);
+        if(!data.version){ throw new Error("Invalid backup file"); }
+        if(data.inventory) save(LS.inv,data.inventory);
+        if(data.shopping) save(LS.shop,data.shopping);
+        if(data.ha) save(LS.ha,data.ha);
+        if(data.haToken) save(LS.haToken,data.haToken);
+        if(data.haControls) save(LS.haControls,data.haControls);
+        if(data.city) save(LS.city,data.city);
+        if(data.loc) save(LS.loc,data.loc);
+        toast("Import done! Reloading..."); setTimeout(()=>location.reload(),1200);
+      } catch(err){ toast("Import failed: "+err.message); }
+    };
+    reader.readAsText(file);
+  }
+
   // ---------- init ----------
   function init(){
     populateCats();
@@ -1632,6 +1670,9 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     $("timerReset").onclick=resetTimer;
     $("timerSet").onclick=setCustom;
     $("timerCustom").addEventListener("keydown",e=>{ if(e.key==="Enter") setCustom(); });
+    $("exportBtn").onclick=exportData;
+    $("importBtn").onclick=()=>$("importFile").click();
+    $("importFile").onchange=e=>importData(e.target.files[0]);
     $("haSaveBtn").onclick=saveHA;
     $("haTestBtn").onclick=testHA;
     $("haRefreshBtn").onclick=refreshHAStates;
