@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -456,7 +456,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
           <button class="music-btn youtube" onclick="window.open('https://youtube.com','_blank','noopener')"><span class="em">&#x25B6;&#xFE0F;</span>YouTube</button>
         </div>
       </div>
-      <div class="app-footer">Kitchen Hub · v7.4</div>
+      <div class="app-footer">Kitchen Hub · v7.5</div>
     </section>
 
     <!-- PAGE 2: STORAGE -->
@@ -549,7 +549,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
           <input type="file" id="importFile" accept=".json" style="display:none;">
         </div>
       </div>
-      <div class="app-footer">Kitchen Hub · v7.4</div>
+      <div class="app-footer">Kitchen Hub · v7.5</div>
     </section>
 
   </div>
@@ -668,7 +668,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
 (function(){
   "use strict";
 
-  const CATS = { "Dairy":"🥛","Produce":"🥬","Meat":"🍖","Drinks":"🧃","Leftovers":"🍱","Condiments":"🧂","Frozen":"🧊","Bakery":"🍞","Dry goods":"🌾","Other":"📦" };
+    const CATS = { "Dairy":"ðŸ¥›","Vegetables":"ðŸ¥¦","Meat":"ðŸ¥©","Seafood":"ðŸŸ","Drinks":"ðŸ¥¤","Leftovers":"ðŸ±","Spices":"ðŸŒ¶ï¸","Pickles & Chutneys":"ðŸ«™","Rice & Grains":"ðŸš","Lentils & Pulses":"ðŸ«˜","Oils & Ghee":"ðŸ«™","Tea & Coffee":"ðŸµ","Bread & Roti":"ðŸ«“","Frozen":"ðŸ§Š","Condiments":"ðŸ§´","Bakery":"ðŸž","Other":"ðŸ”˜" };
   const CAT_COLORS = { "Dairy":"#5b8def","Produce":"#4dd0a7","Meat":"#e07a7a","Drinks":"#e8a33d","Leftovers":"#c07ae0","Condiments":"#d4b45a","Frozen":"#5ec7e0","Bakery":"#d99a5b","Dry goods":"#b5a26a","Other":"#8b95a3" };
   const LOCS = { "Fridge":"🧊", "Freezer":"❄️", "Pantry":"🗄️" };
   const LOC_DEFAULT_EXP = { "Fridge":7, "Freezer":90, "Pantry":180 };
@@ -698,15 +698,23 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
 
   function guessCategory(name){
     const n=(name||"").toLowerCase();
-    if(/milk|cheese|yog|yoghurt|yogurt|butter|cream|egg/.test(n)) return "Dairy";
-    if(/apple|banana|lettuce|tomato|onion|carrot|spinach|pepper|fruit|veg|salad|berry|grape|orange|lemon/.test(n)) return "Produce";
-    if(/chicken|beef|pork|bacon|ham|sausage|steak|fish|salmon|turkey|meat/.test(n)) return "Meat";
-    if(/juice|soda|cola|water|drink|beer|wine|tea|coffee|smoothie/.test(n)) return "Drinks";
-    if(/leftover|pasta|rice|soup|curry/.test(n)) return "Leftovers";
-    if(/sauce|ketchup|mayo|mustard|dressing|jam|honey|oil|vinegar|condiment/.test(n)) return "Condiments";
+    if(/milk|cheese|yog|yoghurt|yogurt|butter|cream|paneer|ghee.*dairy|curd/.test(n)) return "Dairy";
+    if(/chicken|beef|pork|bacon|ham|sausage|steak|turkey|lamb|mutton|keema|mince|meat/.test(n)) return "Meat";
+    if(/fish|salmon|prawn|shrimp|tuna|cod|seafood|crab|lobster|squid|mackerel/.test(n)) return "Seafood";
+    if(/apple|banana|lettuce|tomato|onion|carrot|spinach|pepper|potato|capsicum|brinjal|eggplant|aubergine|okra|bhindi|cauliflower|cabbage|peas|gourd|zucchini|cucumber|ginger|garlic|coriander|cilantro|mint|curry leaf|drumstick|radish|beetroot|fruit|veg|salad|berry|grape|orange|lemon|mango|coconut|plantain/.test(n)) return "Vegetables";
+    if(/tea|coffee|chai/.test(n)) return "Tea & Coffee";
+    if(/juice|soda|cola|water|drink|beer|wine|smoothie|lassi|buttermilk/.test(n)) return "Drinks";
+    if(/leftover|sabzi|dal.*left|curry.*left/.test(n)) return "Leftovers";
+    if(/turmeric|cumin|coriander powder|chilli powder|garam masala|masala|cardamom|clove|cinnamon|pepper|mustard seed|fenugreek|methi|ajwain|asafoetida|hing|star anise|bay leaf|saffron|paprika|chili|spice|seasoning/.test(n)) return "Spices";
+    if(/pickle|achar|chutney|raita|sambar|relish/.test(n)) return "Pickles & Chutneys";
+    if(/rice|basmati|jeera rice|brown rice|quinoa|millet|jowar|bajra|ragi|oats|poha|semolina|rava|suji|vermicelli|upma|grain/.test(n)) return "Rice & Grains";
+    if(/dal|lentil|bean|chickpea|chana|rajma|moong|urad|toor|masoor|kidney|black eye|pea|pulse/.test(n)) return "Lentils & Pulses";
+    if(/oil|ghee|coconut oil|mustard oil|sesame oil|sunflower|olive/.test(n)) return "Oils & Ghee";
+    if(/sauce|ketchup|mayo|mustard|dressing|jam|honey|vinegar|soy sauce|condiment/.test(n)) return "Condiments";
     if(/frozen|ice cream|pizza/.test(n)) return "Frozen";
-    if(/bread|bun|roll|bagel|croissant|cake/.test(n)) return "Bakery";
-    if(/flour|sugar|cereal|oats|beans|lentil|can|tin|pasta|rice|noodle/.test(n)) return "Dry goods";
+    if(/bread|roti|chapati|naan|paratha|puri|dosa|idli|bun|roll|bagel|croissant/.test(n)) return "Bread & Roti";
+    if(/flour|maida|atta|wheat|sugar|jaggery|cereal|can|tin|pasta|noodle|maggi/.test(n)) return "Rice & Grains";
+    if(/cake|biscuit|cookie|pastry|muffin|bakery/.test(n)) return "Bakery";
     return "Other";
   }
 
