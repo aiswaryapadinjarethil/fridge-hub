@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -456,7 +456,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
           <button class="music-btn youtube" onclick="window.open('https://youtube.com','_blank','noopener')"><span class="em">&#x25B6;&#xFE0F;</span>YouTube</button>
         </div>
       </div>
-      <div class="app-footer">Kitchen Hub · v7.3</div>
+      <div class="app-footer">Kitchen Hub · v7.4</div>
     </section>
 
     <!-- PAGE 2: STORAGE -->
@@ -549,7 +549,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
           <input type="file" id="importFile" accept=".json" style="display:none;">
         </div>
       </div>
-      <div class="app-footer">Kitchen Hub · v7.3</div>
+      <div class="app-footer">Kitchen Hub · v7.4</div>
     </section>
 
   </div>
@@ -1629,6 +1629,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
         inventory: load(LS.inv,[]),
         shopping: load(LS.shop,[]),
         ha: load(LS.ha,""),
+        haToken: load(LS.haToken,""),
         haControls: load(LS.haControls,[]),
         loc: load(LS.loc,"Fridge")
       };
@@ -1648,6 +1649,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
       if(data.inventory) { save(LS.inv, data.inventory); inventory=data.inventory; }
       if(data.shopping) { save(LS.shop, data.shopping); shopping=data.shopping; }
       if(data.ha) save(LS.ha, data.ha);
+      if(data.haToken) save(LS.haToken, data.haToken);
       if(data.haControls) { save(LS.haControls, data.haControls); haControls=data.haControls; }
       if(data.loc) { save(LS.loc, data.loc); }
       renderInventory(); renderShopping(); renderHome(); renderHA();
