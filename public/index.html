@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -456,7 +456,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
           <button class="music-btn youtube" onclick="window.open('https://youtube.com','_blank','noopener')"><span class="em">&#x25B6;&#xFE0F;</span>YouTube</button>
         </div>
       </div>
-      <div class="app-footer">Kitchen Hub · v7.8</div>
+      <div class="app-footer">Kitchen Hub · v7.9</div>
     </section>
 
     <!-- PAGE 2: STORAGE -->
@@ -550,7 +550,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
           <input type="file" id="importFile" accept=".json" style="display:none;">
         </div>
       </div>
-      <div class="app-footer">Kitchen Hub · v7.8</div>
+      <div class="app-footer">Kitchen Hub · v7.9</div>
     </section>
 
   </div>
@@ -1633,6 +1633,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
   // ---------- cloud sync ----------
   let syncTimer = null;
   async function syncToCloud(){
+    toast("Pushing to cloud...");
     try {
       const data = {
         inventory: load(LS.inv,[]),
@@ -1642,19 +1643,28 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
         haControls: load(LS.haControls,[]),
         loc: load(LS.loc,"Fridge")
       };
-      await fetch("/api/sync", {
+      const res = await fetch("/api/sync", {
         method: "POST",
         headers: {"Content-Type":"application/json"},
         body: JSON.stringify({data})
       });
-    } catch(e){ console.warn("Sync failed",e); }
+      if(!res.ok) throw new Error("Server error "+res.status);
+      toast("Pushed " + data.inventory.length + " items to cloud successfully!");
+    } catch(e){ toast("Push FAILED - check connection: "+e.message); }
   }
-  async function syncFromCloud(){
+  async function syncFromCloud(force){
     try {
       const res = await fetch("/api/sync");
-      if(!res.ok) return;
+      if(!res.ok){ toast("Could not reach cloud"); return; }
       const {data} = await res.json();
-      if(!data) return;
+      if(!data){ toast("No cloud data found"); return; }
+      const cloudTime = data.syncedAt ? new Date(data.syncedAt).toLocaleString() : "unknown time";
+      const cloudCount = (data.inventory||[]).length;
+      const localCount = inventory.length;
+      if(!force){
+        const msg = "Cloud has " + cloudCount + " items (saved " + cloudTime + ").\nYour phone has " + localCount + " items.\n\nReplace phone data with cloud data?";
+        if(!window.confirm(msg)) return;
+      }
       if(data.inventory) { save(LS.inv, data.inventory); inventory=data.inventory; }
       if(data.shopping) { save(LS.shop, data.shopping); shopping=data.shopping; }
       if(data.ha) save(LS.ha, data.ha);
@@ -1662,8 +1672,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
       if(data.haControls) { save(LS.haControls, data.haControls); haControls=data.haControls; }
       if(data.loc) { save(LS.loc, data.loc); }
       renderInventory(); renderShopping(); renderHome(); renderHA();
-      const t=data.syncedAt?new Date(data.syncedAt).toLocaleTimeString():"";
-      toast("Synced" + (t?" at "+t:""));
+      toast("Pulled " + cloudCount + " items from cloud");
     } catch(e){ toast("Sync failed - offline?"); }
   }
   function scheduleSyncToCloud(){
@@ -1697,7 +1706,6 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     setLocation(currentLoc);
 
     renderShopping(); renderHA(); renderHome();
-    syncFromCloud();
 
     $("addItemBtn").onclick=()=>openModal(null);
     $("scanBtn").onclick=openCam;
