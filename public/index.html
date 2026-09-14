@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -222,6 +222,7 @@
   .loc-header .lh-meta { font-size: 13px; color: var(--muted); font-weight: 600; }
 
   .inv-actions { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
+  .inv-search { width:100%; padding:12px 14px; font-size:15px; border-radius:12px; border:1px solid var(--panel-2); background:var(--card); color:var(--text); margin-bottom:10px; box-sizing:border-box; min-height:46px; }
   .inv-filters { display: flex; gap: 8px; margin-bottom: 14px; }
   .inv-filters select { font-size: 14px; padding: 10px; min-height: 46px; }
 
@@ -456,7 +457,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
           <button class="music-btn youtube" onclick="window.open('https://youtube.com','_blank','noopener')"><span class="em">&#x25B6;&#xFE0F;</span>YouTube</button>
         </div>
       </div>
-      <div class="app-footer">Kitchen Hub · v8.3</div>
+      <div class="app-footer">Kitchen Hub · v8.4</div>
     </section>
 
     <!-- PAGE 2: STORAGE -->
@@ -482,6 +483,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
         <button class="btn-scan" id="scanBtn">📷 Scan Items</button>
         <button class="btn-ghost" id="addItemBtn">➕ Add Item Manually</button>
       </div>
+      <input type="search" id="invSearch" class="inv-search" placeholder="&#x1F50D; Search items...">
       <div class="inv-filters">
         <select id="filterCat"><option value="all">All categories</option></select>
         <select id="sortBy">
@@ -550,7 +552,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
           <input type="file" id="importFile" accept=".json" style="display:none;">
         </div>
       </div>
-      <div class="app-footer">Kitchen Hub · v8.3</div>
+      <div class="app-footer">Kitchen Hub · v8.4</div>
     </section>
 
   </div>
@@ -674,6 +676,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
   const LOCS = { "Fridge":"🧊", "Freezer":"❄️", "Pantry":"🗄️" };
   const LOC_DEFAULT_EXP = { "Fridge":7, "Freezer":90, "Pantry":180 };
   const EXPIRY_EXCLUDE = ["Condiments","Other","Spices","Pickles & Chutneys","Oils & Ghee","Tea & Coffee","Rice & Grains","Lentils & Pulses","Bread & Roti","Frozen","Bakery","Drinks"];
+  const HOME_SHOW_CATS = ["Dairy","Vegetables","Meat","Seafood","Leftovers"];
 
   const LS = { inv:"kitchenhub_inventory_v2", shop:"kitchenhub_shopping_v2", ha:"kitchenhub_ha_url_v1", haToken:"kitchenhub_ha_token_v1", haControls:"kitchenhub_ha_controls_v1", seeded:"kitchenhub_seeded_v3", city:"kitchenhub_city_v1", loc:"kitchenhub_curloc_v1" };
   const DEFAULT_HA_URL = "https://ha.ashcasa.cc";
@@ -811,8 +814,10 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
   // ---------- inventory ----------
   function renderInventory(){
     const grid=$("invGrid"), filter=$("filterCat").value, sortBy=$("sortBy").value;
+    const searchQ=($("invSearch")?$("invSearch").value.trim().toLowerCase():"");
     let list=inventory.filter(i=>i.loc===currentLoc);
     if(filter!=="all") list=list.filter(i=>i.cat===filter);
+    if(searchQ) list=list.filter(i=>i.name.toLowerCase().includes(searchQ)||(i.cat||"").toLowerCase().includes(searchQ));
     list.sort((a,b)=>{
       if(sortBy==="name") return a.name.localeCompare(b.name);
       if(sortBy==="category") return a.cat.localeCompare(b.cat)||a.name.localeCompare(b.name);
@@ -950,7 +955,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     $("homeExp").textContent=soon+past;
     $("homeBuy").textContent=shopping.filter(s=>!s.done).length;
 
-    const urgent=inventory.map(i=>({i,s:expState(i.exp)})).filter(x=>(x.s.key==="past"||x.s.key==="soon"||x.s.key==="week")&&!EXPIRY_EXCLUDE.includes(x.i.cat)).sort((a,b)=>parseDate(a.i.exp)-parseDate(b.i.exp)).slice(0,5);
+    const urgent=inventory.map(i=>({i,s:expState(i.exp)})).filter(x=>(x.s.key==="past"||x.s.key==="soon"||x.s.key==="week")&&HOME_SHOW_CATS.includes(x.i.cat)&&x.i.loc==="Fridge").sort((a,b)=>parseDate(a.i.exp)-parseDate(b.i.exp)).slice(0,5);
     const list=$("homeExpList");
     if(!urgent.length){ list.innerHTML='<div class="page-sub">All fresh 🎉</div>'; }
     else {
@@ -1730,6 +1735,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     [...$("fLocPick").children].forEach(b=>{ b.onclick=()=>{ setModalLoc(b.dataset.loc); if(!editingId) $("fExp").value=isoOffset(LOC_DEFAULT_EXP[b.dataset.loc]||7); }; });
     $("fName").addEventListener("keydown",e=>{ if(e.key==="Enter") saveModal(); });
     $("filterCat").onchange=renderInventory;
+    $("invSearch").addEventListener("input",renderInventory);
     $("sortBy").onchange=renderInventory;
 
     [...$("mvLocPick").children].forEach(b=>{ b.onclick=()=>doMove(b.dataset.loc); });
