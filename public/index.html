@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -457,7 +457,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
           <button class="music-btn youtube" onclick="window.open('https://youtube.com','_blank','noopener')"><span class="em">&#x25B6;&#xFE0F;</span>YouTube</button>
         </div>
       </div>
-      <div class="app-footer">Kitchen Hub · v8.6</div>
+      <div class="app-footer">Kitchen Hub · v8.7</div>
     </section>
 
     <!-- PAGE 2: STORAGE -->
@@ -552,10 +552,28 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
           <input type="file" id="importFile" accept=".json" style="display:none;">
         </div>
       </div>
-      <div class="app-footer">Kitchen Hub · v8.6</div>
+      <div class="app-footer">Kitchen Hub · v8.7</div>
     </section>
 
   </div>
+
+    <!-- PAGE 5: MENU -->
+    <section class="page" data-page="menu">
+      <div class="page-head"><div><div class="page-title">🍴 Menu &amp; Recipes</div><div class="page-sub">Weekly plan and saved recipes</div></div></div>
+      <div class="card">
+        <div class="home-sec-title">📝 This week</div>
+        <div id="menuWeek"></div>
+      </div>
+      <div class="card">
+        <div class="page-head" style="margin-bottom:10px;">
+          <div class="home-sec-title" style="margin:0;">🍴 Recipes</div>
+          <button class="btn-ghost" id="recipeAddBtn" style="flex-shrink:0;">➕ Add</button>
+        </div>
+        <div id="recipeList"></div>
+        <div class="empty" id="recipeEmpty" style="display:block;"><span>No recipes yet - tap + Add!</span></div>
+      </div>
+      <div class="app-footer">Kitchen Hub · v8.7</div>
+    </section>
 
   <!-- BOTTOM NAV -->
   <nav class="bottom-nav" id="bottomNav">
