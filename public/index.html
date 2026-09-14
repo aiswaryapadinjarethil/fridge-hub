@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -457,7 +457,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
           <button class="music-btn youtube" onclick="window.open('https://youtube.com','_blank','noopener')"><span class="em">&#x25B6;&#xFE0F;</span>YouTube</button>
         </div>
       </div>
-      <div class="app-footer">Kitchen Hub · v8.5</div>
+      <div class="app-footer">Kitchen Hub · v8.6</div>
     </section>
 
     <!-- PAGE 2: STORAGE -->
@@ -552,7 +552,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
           <input type="file" id="importFile" accept=".json" style="display:none;">
         </div>
       </div>
-      <div class="app-footer">Kitchen Hub · v8.5</div>
+      <div class="app-footer">Kitchen Hub · v8.6</div>
     </section>
 
   </div>
@@ -563,6 +563,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     <button class="nav-btn" data-idx="1"><span class="ic">🗃️</span><span class="lb">Storage</span></button>
     <button class="nav-btn" data-idx="2"><span class="ic">🛒</span><span class="lb">Shop</span></button>
     <button class="nav-btn ha-nav" data-idx="3"><span class="ic">🏠</span><span class="lb">Smart</span></button>
+    <button class="nav-btn" data-idx="4"><span class="ic">🍴</span><span class="lb">Menu</span></button>
   </nav>
 
   <!-- ITEM MODAL -->
@@ -678,7 +679,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
   const EXPIRY_EXCLUDE = ["Condiments","Other","Spices","Pickles & Chutneys","Oils & Ghee","Tea & Coffee","Rice & Grains","Lentils & Pulses","Bread & Roti","Frozen","Bakery","Drinks"];
   const HOME_SHOW_CATS = ["Dairy","Vegetables","Meat","Seafood","Leftovers"];
 
-  const LS = { inv:"kitchenhub_inventory_v2", shop:"kitchenhub_shopping_v2", ha:"kitchenhub_ha_url_v1", haToken:"kitchenhub_ha_token_v1", haControls:"kitchenhub_ha_controls_v1", seeded:"kitchenhub_seeded_v3", city:"kitchenhub_city_v1", loc:"kitchenhub_curloc_v1" };
+  const LS = { inv:"kitchenhub_inventory_v2", shop:"kitchenhub_shopping_v2", ha:"kitchenhub_ha_url_v1", haToken:"kitchenhub_ha_token_v1", haControls:"kitchenhub_ha_controls_v1", menu:"kitchenhub_menu_v1", recipes:"kitchenhub_recipes_v1", seeded:"kitchenhub_seeded_v3", city:"kitchenhub_city_v1", loc:"kitchenhub_curloc_v1" };
   const DEFAULT_HA_URL = "https://ha.ashcasa.cc";
   const OLD_INV = "fridgehub_inventory_v1";
 
@@ -771,7 +772,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
 
   // ---------- PAGER ----------
   let currentPage=0;
-  const PAGES=4;
+  const PAGES=5;
   function updateActive(idx){
     currentPage=idx;
     [...$("dots").children].forEach((d,i)=>d.classList.toggle("active",i===idx));
@@ -1709,6 +1710,67 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     scheduleSyncToCloud();
   }
 
+  // ---------- menu & recipes ----------
+  const DAYS=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+  let weekMenu=[], recipes=[];
+
+  function renderWeek(){
+    const wrap=$("menuWeek"); if(!wrap) return;
+    wrap.innerHTML="";
+    DAYS.forEach(function(day,i){
+      const meal=weekMenu[i]||"";
+      const d=document.createElement("div"); d.className="menu-day";
+      const mealSpan=document.createElement("span"); mealSpan.className="day-meal"+(meal?"":" empty"); mealSpan.textContent=meal||"Tap to set...";
+      const daySpan=document.createElement("span"); daySpan.className="day-label"; daySpan.textContent=day;
+      d.appendChild(daySpan); d.appendChild(mealSpan);
+      d.onclick=function(){
+        const v=prompt("Meal for "+day+":", meal||"");
+        if(v===null) return;
+        weekMenu[i]=v.trim();
+        save(LS.menu, weekMenu);
+        renderWeek();
+      };
+      wrap.appendChild(d);
+    });
+  }
+
+  function renderRecipes(){
+    const list=$("recipeList"), empty=$("recipeEmpty"); if(!list) return;
+    list.innerHTML="";
+    empty.style.display=recipes.length?"none":"block";
+    recipes.forEach(function(r,i){
+      const card=document.createElement("div"); card.className="recipe-card";
+      const name=document.createElement("div"); name.className="recipe-name"; name.textContent=r.name||"Untitled";
+      card.appendChild(name);
+      if(r.note){ const note=document.createElement("div"); note.className="recipe-note"; note.textContent=r.note; card.appendChild(note); }
+      const acts=document.createElement("div"); acts.className="recipe-actions";
+      const editBtn=document.createElement("button"); editBtn.className="btn-ghost"; editBtn.style.flex="1"; editBtn.textContent="Edit"; editBtn.onclick=function(){ editRecipe(i); };
+      const delBtn=document.createElement("button"); delBtn.className="btn-ghost"; delBtn.style.flex="1"; delBtn.style.color="var(--danger)"; delBtn.textContent="Delete"; delBtn.onclick=function(){ deleteRecipe(i); };
+      acts.appendChild(editBtn); acts.appendChild(delBtn); card.appendChild(acts);
+      list.appendChild(card);
+    });
+  }
+
+  function addRecipe(){
+    const name=prompt("Recipe name:",""); if(!name||!name.trim()) return;
+    const note=prompt("Notes / ingredients (optional):","");
+    recipes.push({name:name.trim(), note:(note||"").trim()});
+    save(LS.recipes, recipes); renderRecipes(); toast("Recipe saved!");
+  }
+
+  function editRecipe(i){
+    const r=recipes[i]; if(!r) return;
+    const name=prompt("Recipe name:", r.name); if(name===null) return;
+    const note=prompt("Notes / ingredients:", r.note||""); if(note===null) return;
+    recipes[i]={name:name.trim(), note:note.trim()};
+    save(LS.recipes, recipes); renderRecipes();
+  }
+
+  function deleteRecipe(i){
+    if(!confirm("Delete recipe \""+recipes[i].name+"\"?")) return;
+    recipes.splice(i,1); save(LS.recipes, recipes); renderRecipes(); toast("Recipe deleted");
+  }
+
   // ---------- init ----------
   function init(){
     populateCats();
@@ -1725,7 +1787,9 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     [...$("locToggle").children].forEach(b=>{ b.onclick=()=>setLocation(b.dataset.loc); });
     setLocation(currentLoc);
 
-    renderShopping(); renderHA(); renderHome();
+    weekMenu=load(LS.menu, new Array(7).fill(""));
+    recipes=load(LS.recipes,[]);
+    renderShopping(); renderHA(); renderHome(); renderWeek(); renderRecipes();
 
     $("addItemBtn").onclick=()=>openModal(null);
     $("scanBtn").onclick=openCam;
@@ -1766,6 +1830,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     $("syncPushBtn").onclick=syncToCloud;
     $("syncPullBtn").onclick=syncFromCloud;
     $("recatBtn").onclick=recategoriseAll;
+    $("recipeAddBtn").onclick=addRecipe;
     $("exportBtn").onclick=exportData;
     $("importBtn").onclick=()=>$("importFile").click();
     $("importFile").onchange=e=>importData(e.target.files[0]);
