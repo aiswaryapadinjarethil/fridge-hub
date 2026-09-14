@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -457,7 +457,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
           <button class="music-btn youtube" onclick="window.open('https://youtube.com','_blank','noopener')"><span class="em">&#x25B6;&#xFE0F;</span>YouTube</button>
         </div>
       </div>
-      <div class="app-footer">Kitchen Hub · v8.4</div>
+      <div class="app-footer">Kitchen Hub · v8.5</div>
     </section>
 
     <!-- PAGE 2: STORAGE -->
@@ -552,7 +552,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
           <input type="file" id="importFile" accept=".json" style="display:none;">
         </div>
       </div>
-      <div class="app-footer">Kitchen Hub · v8.4</div>
+      <div class="app-footer">Kitchen Hub · v8.5</div>
     </section>
 
   </div>
@@ -1656,8 +1656,8 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     toast("Pushing to cloud...");
     try {
       const data = {
-        inventory: load(LS.inv,[]).map(i=>{ if(!i.img) return i; const c=Object.assign({},i,{img:compressImg(i.img)}); return c; }),
-        shopping: load(LS.shop,[]),
+        inventory: inventory.map(i=>{ const c=Object.assign({},i); c.img=i.img?compressImg(i.img):""; return c; }),
+        shopping: shopping,
         ha: load(LS.ha,""),
         haToken: load(LS.haToken,""),
         haControls: load(LS.haControls,[]),
