@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -457,7 +457,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
           <button class="music-btn youtube" onclick="window.open('https://youtube.com','_blank','noopener')"><span class="em">&#x25B6;&#xFE0F;</span>YouTube</button>
         </div>
       </div>
-      <div class="app-footer">Kitchen Hub · v8.7</div>
+      <div class="app-footer">Kitchen Hub · v8.8</div>
     </section>
 
     <!-- PAGE 2: STORAGE -->
@@ -552,7 +552,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
           <input type="file" id="importFile" accept=".json" style="display:none;">
         </div>
       </div>
-      <div class="app-footer">Kitchen Hub · v8.7</div>
+      <div class="app-footer">Kitchen Hub · v8.8</div>
     </section>
 
     <!-- PAGE 5: MENU -->
@@ -570,7 +570,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
         <div id="recipeList"></div>
         <div class="empty" id="recipeEmpty" style="display:block;"><span>No recipes yet - tap + Add!</span></div>
       </div>
-      <div class="app-footer">Kitchen Hub · v8.7</div>
+      <div class="app-footer">Kitchen Hub · v8.8</div>
     </section>
 
   </div>
@@ -1680,7 +1680,9 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
         ha: load(LS.ha,""),
         haToken: load(LS.haToken,""),
         haControls: load(LS.haControls,[]),
-        loc: load(LS.loc,"Fridge")
+        loc: load(LS.loc,"Fridge"),
+        menu: weekMenu,
+        recipes: recipes
       };
       const res = await fetch("/api/sync", {
         method: "POST",
@@ -1710,6 +1712,8 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
       if(data.haToken) save(LS.haToken, data.haToken);
       if(data.haControls) { save(LS.haControls, data.haControls); haControls=data.haControls; }
       if(data.loc) { save(LS.loc, data.loc); }
+      if(data.menu) { weekMenu=data.menu; save(LS.menu, data.menu); renderWeek(); }
+      if(data.recipes) { recipes=data.recipes; save(LS.recipes, data.recipes); renderRecipes(); }
       renderInventory(); renderShopping(); renderHome(); renderHA();
       toast("Pulled " + cloudCount + " items from cloud");
     } catch(e){ toast("Sync failed - offline?"); }
