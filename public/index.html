@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -153,6 +153,18 @@
   .ha-tile .big { font-size: 26px; }
 
   .ha-home-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
+  .menu-day { background:linear-gradient(135deg,#1f2937,#232a34); border-radius:20px; padding:14px 16px; margin-bottom:10px; display:flex; align-items:center; gap:14px; cursor:pointer; min-height:64px; border:1px solid rgba(255,255,255,.06); transition:transform .15s; }
+  .menu-day:active { transform:scale(.98); }
+  .day-circle { width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg,#a78bfa,#7c3aed); display:flex; align-items:center; justify-content:center; font-weight:900; font-size:12px; color:#fff; flex-shrink:0; }
+  .menu-day .day-meal { font-size:16px; font-weight:600; color:var(--text); flex:1; }
+  .menu-day .day-meal.empty { color:var(--muted); font-style:italic; font-weight:400; }
+  .menu-past-label { font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; margin:16px 0 8px; }
+  .menu-day.past { opacity:.5; }
+  .recipe-card { background:linear-gradient(135deg,#1f2937,#232a34); border-radius:20px; padding:16px; margin-bottom:12px; border:1px solid rgba(255,255,255,.06); }
+  .recipe-emoji { font-size:32px; margin-bottom:8px; }
+  .recipe-name { font-weight:800; font-size:17px; margin-bottom:4px; }
+  .recipe-note { font-size:13px; color:var(--muted); line-height:1.5; }
+  .recipe-actions { display:flex; gap:8px; margin-top:12px; }
   .music-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:8px; }
   .music-btn { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; padding:18px 8px; border-radius:14px; border:none; cursor:pointer; font-size:14px; font-weight:700; color:#fff; min-height:76px; width:100%; }
   .music-btn.spotify { background:#1DB954; }
@@ -457,7 +469,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
           <button class="music-btn youtube" onclick="window.open('https://youtube.com','_blank','noopener')"><span class="em">&#x25B6;&#xFE0F;</span>YouTube</button>
         </div>
       </div>
-      <div class="app-footer">Kitchen Hub · v8.8</div>
+      <div class="app-footer">Kitchen Hub · v8.9</div>
     </section>
 
     <!-- PAGE 2: STORAGE -->
@@ -552,7 +564,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
           <input type="file" id="importFile" accept=".json" style="display:none;">
         </div>
       </div>
-      <div class="app-footer">Kitchen Hub · v8.8</div>
+      <div class="app-footer">Kitchen Hub · v8.9</div>
     </section>
 
     <!-- PAGE 5: MENU -->
@@ -560,6 +572,10 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
       <div class="page-head"><div><div class="page-title">🍴 Menu &amp; Recipes</div><div class="page-sub">Weekly plan and saved recipes</div></div></div>
       <div class="card">
         <div class="home-sec-title">📝 This week</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <div class="home-sec-title" style="margin:0;">&#x1F4DD; This week</div>
+          <button class="btn-ghost" id="archiveWeekBtn" style="font-size:12px;padding:8px 12px;min-height:36px;">Archive week</button>
+        </div>
         <div id="menuWeek"></div>
       </div>
       <div class="card">
@@ -570,7 +586,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
         <div id="recipeList"></div>
         <div class="empty" id="recipeEmpty" style="display:block;"><span>No recipes yet - tap + Add!</span></div>
       </div>
-      <div class="app-footer">Kitchen Hub · v8.8</div>
+      <div class="app-footer">Kitchen Hub · v8.9</div>
     </section>
 
   </div>
@@ -1742,9 +1758,9 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     DAYS.forEach(function(day,i){
       const meal=weekMenu[i]||"";
       const d=document.createElement("div"); d.className="menu-day";
+      const circle=document.createElement("span"); circle.className="day-circle"; circle.textContent=day;
       const mealSpan=document.createElement("span"); mealSpan.className="day-meal"+(meal?"":" empty"); mealSpan.textContent=meal||"Tap to set...";
-      const daySpan=document.createElement("span"); daySpan.className="day-label"; daySpan.textContent=day;
-      d.appendChild(daySpan); d.appendChild(mealSpan);
+      d.appendChild(circle); d.appendChild(mealSpan);
       d.onclick=function(){
         const v=prompt("Meal for "+day+":", meal||"");
         if(v===null) return;
@@ -1754,6 +1770,38 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
       };
       wrap.appendChild(d);
     });
+    const pastWeeks=load("kitchenhub_past_menus_v1",[]);
+    if(pastWeeks.length){
+      const lbl=document.createElement("div"); lbl.className="menu-past-label"; lbl.textContent="Previous weeks";
+      wrap.appendChild(lbl);
+      pastWeeks.slice().reverse().forEach(function(week){
+        const saved=week.savedAt?new Date(week.savedAt).toLocaleDateString(undefined,{month:"short",day:"numeric"}):"";
+        const hdr=document.createElement("div"); hdr.style.cssText="font-size:12px;color:var(--muted);margin:8px 0 4px;font-weight:700;"; hdr.textContent="Week of "+saved;
+        wrap.appendChild(hdr);
+        DAYS.forEach(function(day,i){
+          const meal=week.menu[i]||"";
+          if(!meal) return;
+          const d=document.createElement("div"); d.className="menu-day past";
+          const circle=document.createElement("span"); circle.className="day-circle"; circle.style.background="linear-gradient(135deg,#4b5563,#374151)"; circle.textContent=day;
+          const mealSpan=document.createElement("span"); mealSpan.className="day-meal"; mealSpan.textContent=meal;
+          d.appendChild(circle); d.appendChild(mealSpan);
+          wrap.appendChild(d);
+        });
+      });
+    }
+  }
+
+  function archiveCurrentWeek(){
+    const hasAny=weekMenu.some(function(m){ return m&&m.trim(); });
+    if(!hasAny){ toast("Nothing to archive - add meals first"); return; }
+    const pastWeeks=load("kitchenhub_past_menus_v1",[]);
+    pastWeeks.push({menu:weekMenu.slice(), savedAt:new Date().toISOString()});
+    if(pastWeeks.length>8) pastWeeks.shift();
+    save("kitchenhub_past_menus_v1", pastWeeks);
+    weekMenu=new Array(7).fill("");
+    save(LS.menu, weekMenu);
+    renderWeek();
+    toast("Week archived! Starting fresh.");
   }
 
   function renderRecipes(){
@@ -1762,8 +1810,9 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     empty.style.display=recipes.length?"none":"block";
     recipes.forEach(function(r,i){
       const card=document.createElement("div"); card.className="recipe-card";
+      const emoji=document.createElement("div"); emoji.className="recipe-emoji"; emoji.textContent=r.emoji||"\uD83C\uDF7D";
       const name=document.createElement("div"); name.className="recipe-name"; name.textContent=r.name||"Untitled";
-      card.appendChild(name);
+      card.appendChild(emoji); card.appendChild(name);
       if(r.note){ const note=document.createElement("div"); note.className="recipe-note"; note.textContent=r.note; card.appendChild(note); }
       const acts=document.createElement("div"); acts.className="recipe-actions";
       const editBtn=document.createElement("button"); editBtn.className="btn-ghost"; editBtn.style.flex="1"; editBtn.textContent="Edit"; editBtn.onclick=function(){ editRecipe(i); };
@@ -1775,16 +1824,18 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
 
   function addRecipe(){
     const name=prompt("Recipe name:",""); if(!name||!name.trim()) return;
+    const emoji=prompt("Emoji icon (e.g. paste one):","") || "\uD83C\uDF7D";
     const note=prompt("Notes / ingredients (optional):","");
-    recipes.push({name:name.trim(), note:(note||"").trim()});
+    recipes.push({name:name.trim(), emoji:emoji.trim(), note:(note||"").trim()});
     save(LS.recipes, recipes); renderRecipes(); toast("Recipe saved!");
   }
 
   function editRecipe(i){
     const r=recipes[i]; if(!r) return;
     const name=prompt("Recipe name:", r.name); if(name===null) return;
+    const emoji=prompt("Emoji icon:", r.emoji||"\uD83C\uDF7D"); if(emoji===null) return;
     const note=prompt("Notes / ingredients:", r.note||""); if(note===null) return;
-    recipes[i]={name:name.trim(), note:note.trim()};
+    recipes[i]={name:name.trim(), emoji:emoji.trim()||"\uD83C\uDF7D", note:note.trim()};
     save(LS.recipes, recipes); renderRecipes();
   }
 
@@ -1792,6 +1843,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     if(!confirm("Delete recipe \""+recipes[i].name+"\"?")) return;
     recipes.splice(i,1); save(LS.recipes, recipes); renderRecipes(); toast("Recipe deleted");
   }
+
 
   // ---------- init ----------
   function init(){
@@ -1853,6 +1905,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     $("syncPullBtn").onclick=syncFromCloud;
     $("recatBtn").onclick=recategoriseAll;
     $("recipeAddBtn").onclick=addRecipe;
+    if($("archiveWeekBtn")) $("archiveWeekBtn").onclick=archiveCurrentWeek;
     $("exportBtn").onclick=exportData;
     $("importBtn").onclick=()=>$("importFile").click();
     $("importFile").onchange=e=>importData(e.target.files[0]);
