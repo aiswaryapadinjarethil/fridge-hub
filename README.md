@@ -7,9 +7,12 @@ dark mode, with big touch-friendly controls.
 
 ## Features
 
-- **📷 Camera scanning** — add fridge items by scanning a barcode (looked up via
-  [Open Food Facts](https://world.openfoodfacts.org/)) or by snapping a photo /
-  receipt for quick multi-item entry.
+- **🏷️ Barcode scanning** — add items by scanning a barcode (looked up via
+  [Open Food Facts](https://world.openfoodfacts.org/)).
+- **🧾 Receipt OCR** — snap a paper receipt and let [Tesseract.js](https://tesseract.js.org/)
+  read the text locally on the device. The app extracts likely product lines,
+  guesses categories, and shows an editable preview before adding to your inventory.
+- **📷 Photo entry** — snap a photo of a shelf and enter items manually.
 - **🧊 Fridge inventory** — categories, quantities, and per-item expiry dates.
 - **⏳ Expiry tracking** — items sorted soonest-first with badges: ❌ Expired,
   ⚠️ Expiring soon (≤3 days), 🔔 Use this week (≤7 days), ✅ Fresh, plus an
@@ -53,5 +56,7 @@ the folder locally (e.g. `npx serve public`) to test camera features over
 ## Data & privacy
 
 All data lives in the browser's `localStorage`, tied to the specific browser +
-URL. Nothing is sent to a server (aside from the weather and Open Food Facts
-lookups). There is no cross-device sync yet.
+URL. Receipt photos are processed entirely in the browser by Tesseract.js; the
+image and OCR text never leave the device. Nothing else is sent to a server
+(aside from the weather and Open Food Facts lookups). There is no cross-device
+sync yet.
