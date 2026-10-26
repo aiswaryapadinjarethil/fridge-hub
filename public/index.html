@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -312,7 +312,7 @@
   .cam-title { font-size: 17px; font-weight: 800; display: flex; align-items: center; gap: 6px; }
   .cam-topbar .btn-ghost { padding: 8px 12px; min-height: 40px; font-size: 14px; }
   .mode-toggle { display: flex; background: var(--panel-2); border-radius: 12px; padding: 4px; gap: 4px; margin: 10px 14px 0; }
-  .mode-toggle button { flex: 1; background: transparent; color: var(--muted); padding: 11px 8px; min-height: 46px; font-weight: 700; border-radius: 9px; font-size: 14px; }
+  .mode-toggle button { flex: 1; background: transparent; color: var(--muted); padding: 11px 4px; min-height: 46px; font-weight: 700; border-radius: 9px; font-size: 13px; }
   .mode-toggle button.active { background: var(--accent); color: #06120f; }
   .cam-body { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
   .cam-stage { position: relative; width: 100%; max-width: 500px; aspect-ratio: 3/4; background: #000; border-radius: 16px; overflow: hidden; border: 1px solid #333; }
@@ -346,8 +346,17 @@
   .manual-wrap .ml { font-size:12px; color:var(--muted); font-weight:700; margin-bottom:6px; text-transform:uppercase; letter-spacing:.4px; }
   .line-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-items: center; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 10px; margin-bottom: 10px; }
   .line-row .ln-name { grid-column: 1 / -1; }
+  .line-row .ln-check { width: 22px; height: 22px; accent-color: var(--accent); justify-self: start; }
+  .line-row .ln-skip { text-decoration: line-through; opacity: .45; }
   .line-del { background: rgba(224,92,92,.15); color: var(--danger); height: 48px; border-radius: 10px; font-size: 16px; grid-column: 1 / -1; }
   .receipt-thumb { max-width: 120px; max-height: 120px; border-radius: 12px; border: 1px solid var(--border); }
+  .ocr-progress { width: 100%; max-width: 500px; background: var(--panel-2); border: 1px solid var(--border); border-radius: 12px; padding: 14px; text-align: center; }
+  .ocr-progress progress { width: 100%; height: 10px; border-radius: 5px; overflow: hidden; }
+  .ocr-progress progress::-webkit-progress-bar { background: var(--card); }
+  .ocr-progress progress::-webkit-progress-value { background: var(--accent); }
+  .ocr-hint { color: var(--muted); font-size: 13px; margin-top: 8px; }
+  .receipt-actions { display: flex; gap: 10px; flex-wrap: wrap; margin: 8px 0 14px; }
+  .receipt-actions button { flex: 1; min-height: 44px; }
 
   .toast { position: fixed; bottom: calc(var(--nav-h) + 16px); left: 50%; transform: translateX(-50%) translateY(120px); background: var(--accent); color: #08130f; font-weight: 700; padding: 13px 20px; border-radius: 14px; z-index: 200; box-shadow: 0 8px 24px rgba(0,0,0,.4); transition: transform .3s ease; font-size: 15px; max-width: 90vw; text-align: center; }
   .toast.show { transform: translateX(-50%) translateY(0); }
@@ -669,7 +678,8 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     </div>
     <div class="mode-toggle">
       <button id="modeBarcode" class="active">🏷️ Barcode</button>
-      <button id="modePhoto">🧾 Photo</button>
+      <button id="modeReceipt">🧾 Receipt</button>
+      <button id="modePhoto">📷 Photo</button>
     </div>
     <div class="cam-body" id="camBody">
       <div class="cam-stage" id="camStage">
@@ -737,23 +747,22 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
 
   function guessCategory(name){
     const n=(name||"").toLowerCase();
-    if(/milk|cheese|yog|yoghurt|yogurt|butter|cream|paneer|ghee.*dairy|curd/.test(n)) return "Dairy";
-    if(/chicken|beef|pork|bacon|ham|sausage|steak|turkey|lamb|mutton|keema|mince|meat/.test(n)) return "Meat";
-    if(/fish|salmon|prawn|shrimp|tuna|cod|seafood|crab|lobster|squid|mackerel/.test(n)) return "Seafood";
-    if(/apple|banana|lettuce|tomato|onion|carrot|spinach|pepper|potato|capsicum|brinjal|eggplant|aubergine|okra|bhindi|cauliflower|cabbage|peas|gourd|zucchini|cucumber|ginger|garlic|coriander|cilantro|mint|curry leaf|drumstick|radish|beetroot|fruit|veg|salad|berry|grape|orange|lemon|mango|coconut|plantain/.test(n)) return "Vegetables";
-    if(/tea|coffee|chai/.test(n)) return "Tea & Coffee";
-    if(/juice|soda|cola|water|drink|beer|wine|smoothie|lassi|buttermilk/.test(n)) return "Drinks";
-    if(/leftover|sabzi|dal.*left|curry.*left/.test(n)) return "Leftovers";
-    if(/turmeric|cumin|coriander powder|chilli powder|garam masala|masala|cardamom|clove|cinnamon|pepper|mustard seed|fenugreek|methi|ajwain|asafoetida|hing|star anise|bay leaf|saffron|paprika|chili|spice|seasoning/.test(n)) return "Spices";
+    if(/milk|mælk|melk|cheese|ost|yog|yoghurt|yogurt|butter|smør|cream|fløde|paneer|ghee.*dairy|curd|ymer|kærnemælk/.test(n)) return "Dairy";
+    if(/chicken|kylling|beef|oksekød|pork|bacon|ham|sausage|pølse|steak|turkey|lamb|mutton|keema|mince|meat|kød|frikadelle|medister|mørbrad/.test(n)) return "Meat";
+    if(/fish|fisk|salmon|laks|prawn|shrimp|tuna|cod|seafood|crab|lobster|squid|mackerel|makrel|rejer/.test(n)) return "Seafood";
+    if(/apple|æbler|banana|lettuce|tomato|tomat|onion|løg|carrot|gulerod|spinach|pepper|potato|kartoffel|capsicum|brinjal|eggplant|aubergine|okra|bhindi|cauliflower|blomkål|cabbage|kål|peas|ærter|gourd|zucchini|cucumber|agurk|ginger|garlic|hvidløg|coriander|cilantro|mint|curry leaf|drumstick|radish|beetroot|fruit|frugt|veg|grønt|salad|salat|berry|grape|orange|lemon|citron|mango|coconut|kokos|plantain|pære|ananas/.test(n)) return "Vegetables";
+    if(/tea|coffee|kaffe|chai/.test(n)) return "Tea & Coffee";
+    if(/juice|soda|cola|water|vand|drink|beer|øl|wine|vin|smoothie|lassi|buttermilk/.test(n)) return "Drinks";
+    if(/leftover|sabzi|dal.*left|curry.*left|rester/.test(n)) return "Leftovers";
+    if(/turmeric|cumin|coriander powder|chilli powder|garam masala|masala|cardamom|clove|cinnamon|pepper|mustard seed|fenugreek|methi|ajwain|asafoetida|hing|star anise|bay leaf|saffron|paprika|chili|spice|seasoning|krydderi|karry/.test(n)) return "Spices";
     if(/pickle|achar|chutney|raita|sambar|relish/.test(n)) return "Pickles & Chutneys";
-    if(/rice|basmati|jeera rice|brown rice|quinoa|millet|jowar|bajra|ragi|oats|poha|semolina|rava|suji|vermicelli|upma|grain/.test(n)) return "Rice & Grains";
+    if(/rice|ris|basmati|jeera rice|brown rice|quinoa|millet|jowar|bajra|ragi|oats|havregryn|poha|semolina|rava|suji|vermicelli|upma|grain|pasta|noodle|maggi|mel|flour|sugar|jaggery|cereal|can|tin/.test(n)) return "Rice & Grains";
     if(/dal|lentil|bean|chickpea|chana|rajma|moong|urad|toor|masoor|kidney|black eye|pea|pulse/.test(n)) return "Lentils & Pulses";
-    if(/oil|ghee|coconut oil|mustard oil|sesame oil|sunflower|olive/.test(n)) return "Oils & Ghee";
-    if(/sauce|ketchup|mayo|mustard|dressing|jam|honey|vinegar|soy sauce|condiment/.test(n)) return "Condiments";
-    if(/frozen|ice cream|pizza/.test(n)) return "Frozen";
-    if(/bread|roti|chapati|naan|paratha|puri|dosa|idli|bun|roll|bagel|croissant/.test(n)) return "Bread & Roti";
-    if(/flour|maida|atta|wheat|sugar|jaggery|cereal|can|tin|pasta|noodle|maggi/.test(n)) return "Rice & Grains";
-    if(/cake|biscuit|cookie|pastry|muffin|bakery/.test(n)) return "Bakery";
+    if(/oil|ghee|coconut oil|mustard oil|sesame oil|sunflower|olive|olie/.test(n)) return "Oils & Ghee";
+    if(/sauce|ketchup|mayo|mustard|dressing|jam|honey|honning|vinegar|soy sauce|condiment|mayonnaise/.test(n)) return "Condiments";
+    if(/frozen|ice cream|is|pizza/.test(n)) return "Frozen";
+    if(/bread|brød|rugbrød|franskbrød|roti|chapati|naan|paratha|puri|dosa|idli|bun|roll|bagel|croissant/.test(n)) return "Bread & Roti";
+    if(/cake|kage|biscuit|cookie|pastry|muffin|bakery/.test(n)) return "Bakery";
     return "Other";
   }
 
@@ -1260,6 +1269,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
   let nativeTimer=null;
   let zxingReader=null, zxingControls=null; // ZXing (iPhone/Safari) — loaded from LOCAL ./zxing-browser.min.js
   let zxingLibPromise=null;
+  let tesseractLibPromise=null;             // Tesseract.js for receipt OCR
   let scanActive=false, lastBarcode=null, busyLookup=false;
 
   function setStatus(msg, kind){
@@ -1318,9 +1328,28 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     return zxingLibPromise;
   }
 
+  // ---- Tesseract.js loader (receipt OCR). Uses jsDelivr CDN. ----
+  function loadTesseractLib(){
+    if(window.Tesseract) return Promise.resolve();
+    if(tesseractLibPromise) return tesseractLibPromise;
+    tesseractLibPromise=new Promise((resolve,reject)=>{
+      const s=document.createElement("script");
+      s.src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js";
+      s.async=true;
+      s.onload=()=>{
+        if(window.Tesseract) resolve();
+        else reject(new Error("Tesseract global not found after load"));
+      };
+      s.onerror=()=>reject(new Error("failed to load Tesseract.js"));
+      document.head.appendChild(s);
+    });
+    return tesseractLibPromise;
+  }
+
   function setMode(mode){
     camMode=mode;
     $("modeBarcode").classList.toggle("active", mode==="barcode");
+    $("modeReceipt").classList.toggle("active", mode==="receipt");
     $("modePhoto").classList.toggle("active", mode==="photo");
     $("camResult").innerHTML=""; lastBarcode=null; busyLookup=false;
     stopScan();
@@ -1331,12 +1360,12 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
       $("camCapture").style.display="none";
       $("manualBarcodeWrap").style.display="block";
       startBarcodeFlow();
-    } else {
+    } else if(mode==="receipt" || mode==="photo"){
       $("scanLine").style.display="none";
       $("reticle").style.display="none";
       $("camCapture").style.display="";
       $("manualBarcodeWrap").style.display="none";
-      startPhotoCamera();
+      startPhotoCamera(mode==="receipt"?"Snap a receipt — text will be read automatically":"Tap Capture to snap the shelf/receipt");
     }
   }
 
@@ -1466,7 +1495,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     }
   }
 
-  async function startPhotoCamera(){
+  async function startPhotoCamera(hint){
     setStatus("📷 Starting camera…");
     $("camError").style.display="none";
     $("fileDrop").style.display="none";
@@ -1475,7 +1504,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
       camFail("Camera API not available."); return;
     }
     const ok=await startPlainCamera();
-    if(ok) setStatus("📸 Tap Capture to snap the shelf/receipt");
+    if(ok) setStatus(hint||"📸 Tap Capture to snap the shelf/receipt");
   }
 
   function camFail(msg){
@@ -1586,9 +1615,164 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     const video=$("camVideo"); if(!video || video.readyState<2){ toast("Camera not ready"); return; }
     const c=$("camCanvas"); c.width=video.videoWidth||640; c.height=video.videoHeight||480;
     c.getContext("2d").drawImage(video,0,0,c.width,c.height);
-    showPhotoForm(c.toDataURL("image/jpeg",0.6));
+    const imgData=c.toDataURL("image/jpeg",0.6);
+    if(camMode==="receipt") runReceiptOCR(imgData);
+    else showPhotoForm(imgData);
   }
-  function handleFile(file){ if(!file) return; const reader=new FileReader(); reader.onload=e=>showPhotoForm(e.target.result); reader.readAsDataURL(file); }
+  function handleFile(file){ if(!file) return; const reader=new FileReader(); reader.onload=e=>{
+    const imgData=e.target.result;
+    if(camMode==="receipt") runReceiptOCR(imgData);
+    else showPhotoForm(imgData);
+  }; reader.readAsDataURL(file); }
+
+  // ---------- receipt OCR ----------
+  async function runReceiptOCR(imgData){
+    const box=$("camResult");
+    box.innerHTML=
+      '<div class="ocr-progress">'+
+        '<div style="font-weight:800;margin-bottom:8px;">🧾 Reading receipt…</div>'+
+        '<progress id="ocrProg" value="0" max="1"></progress>'+
+        '<div class="ocr-hint" id="ocrHint">Loading text reader…</div>'+
+      '</div>';
+    box.scrollIntoView({behavior:"smooth"});
+    try {
+      await loadTesseractLib();
+      $("ocrHint").textContent="Extracting text from photo…";
+      const worker=await Tesseract.createWorker("eng", 1, {
+        logger:(p)=>{
+          try{
+            $("ocrProg").value=Math.max(0,Math.min(1,p.progress||0));
+            if(p.status) $("ocrHint").textContent=p.status;
+          }catch(e){}
+        }
+      });
+      const {data:{text}}=await worker.recognize(imgData);
+      await worker.terminate();
+      const items=parseReceiptText(text);
+      showReceiptItems(imgData, items, text);
+    } catch(e){
+      box.innerHTML='<div class="cam-error">Could not read receipt: '+esc(e.message)+'<br><button class="btn-ghost" id="ocrRetry" style="margin-top:10px;">Try manual photo</button></div>';
+      $("ocrRetry").onclick=()=>showPhotoForm(imgData);
+    }
+  }
+
+  function parseReceiptText(text){
+    if(!text) return [];
+    const allLines=text.split(/\r?\n/).map(l=>l.trim()).filter(l=>l.length>0);
+    const items=[];
+    const skipWords=/\b(total|subtotal|sum|balance|change|cash|card|visa|master|maestro|mobilepay|vipps|discount|vat|tax|gst|moms|kr|dkk|euro|eur|\$|€|qty|quantity|item|price|amount|thank|welcome|receipt|invoice|date|time|cashier|terminal|fiscal|purchase|paid|change due|open|close|bon|kvittering|køb|betalt|kontant|kredit|dankort|tak for|kom igen|have a nice|god dag|tilbud|klubpris|sparet|rabat|return|bytte|kasse|lås|tlf|cvr|sælger|sælges| moms)\b/i;
+    const addressLike=/^(\d{4}\s+[A-Za-zæøåÆØÅ]|.*\b(vej|gade|alle|plads|torv|stræde|boulevard|center|centre|butik|apotek|kiosk)\b.*)$/i;
+    const paymentLike=/\b(kort|konto|kontonr|betaling|dankort|visa|mastercard|mobilepay|vipps|kontant|modtaget|betalt)\b/i;
+    const priceLine=/\b\d+[.,]\d{2}\b/;
+    const onlyNumbers=/^[\d\s.,\-x×]+$/;
+    const shortCode=/^\d{1,4}$/;
+    const uppercase=/^[A-ZÆØÅ0-9\s.,\-]+$/;
+    // Find likely product block: between first price-looking line and first total/payment line
+    let startIdx=0, endIdx=allLines.length;
+    for(let i=0;i<allLines.length;i++){ if(priceLine.test(allLines[i])){ startIdx=i; break; } }
+    for(let i=allLines.length-1;i>=0;i--){ const l=allLines[i].toLowerCase(); if(/\b(total|sum|betalt|dankort|kort|kontant|mobilepay|vipps)\b/.test(l)){ endIdx=i; break; } }
+    const candidateLines=allLines.slice(startIdx, Math.max(endIdx, startIdx+1));
+
+    candidateLines.forEach(line=>{
+      let raw=line.replace(/^[^A-Za-z0-9æøåÆØÅ]+|[^A-Za-z0-9æøåÆØÅ]+$/g,"");
+      if(raw.length<3 || raw.length>55) return;
+      if(onlyNumbers.test(raw)) return;
+      if(shortCode.test(raw.replace(/\s/g,""))) return;
+      const lower=raw.toLowerCase();
+      if(skipWords.test(lower)) return;
+      if(addressLike.test(raw)) return;
+      if(paymentLike.test(lower)) return;
+      // Skip lines that are fully uppercase and short (headers/footers)
+      if(uppercase.test(raw) && raw.length<20) return;
+      // Strip trailing price/weight and other receipt noise
+      let name=raw;
+      if(priceLine.test(name)){
+        name=name.replace(/\s*\d+[.,]\d{2}\b.*$/,"").trim();
+      }
+      name=name.replace(/\s*\d+[.,]?\d*\s*(kg|g|gr|lb|oz|l|ml|ltr|pct|%|stk|pk|ps|pr)\b.*$/i,"").trim();
+      name=name.replace(/\s+(kg|g|gr|lb|oz|l|ml|ltr|pct|%|stk|pk|ps|pr)$/i,"").trim();
+      name=name.replace(/\s*\d+\s*[x×]\s*\d+/i,"").trim();
+      name=name.replace(/\s*@\s*\d+/,"").trim();
+      name=name.replace(/[*#@]/g," ").replace(/\s+/g," ").trim();
+      // Remove leading quantity digits not followed by unit, keep embedded numbers like "coke 1.5L"
+      name=name.replace(/^\d+\s*(?=\D)/, "").trim();
+      if(name.length<3 || /^\d+$/.test(name)) return;
+      // Remove common trailing receipt abbreviations
+      name=name.replace(/\s+(F|FRP|M|U|MOMS)$/i,"").trim();
+      const cat=guessCategory(name);
+      items.push({name, qty:1, cat, checked:true});
+    });
+    // Deduplicate similar names
+    const seen=new Set();
+    return items.filter(it=>{
+      const key=it.name.toLowerCase().replace(/[^a-z0-9æøå]/g,"");
+      if(seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }
+
+  function showReceiptItems(imgData, items, rawText){
+    const box=$("camResult");
+    const loc=currentLoc;
+    const defaultExp=isoOffset(LOC_DEFAULT_EXP[loc]||7);
+    let rowsHtml="";
+    if(items.length===0){
+      box.innerHTML=
+        '<div class="confirm-box">'+
+          '<div style="font-weight:800;font-size:17px;margin-bottom:8px;">No items found</div>'+
+          '<div style="color:var(--muted);font-size:13px;margin-bottom:12px;">Try a clearer photo or add items manually.</div>'+
+          '<textarea id="rawReceipt" style="width:100%;min-height:120px;font-size:14px;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:12px;color:var(--muted);" readonly>'+esc(rawText)+'</textarea>'+
+          '<div class="modal-actions"><button class="btn-ghost" id="rcCancel">Cancel</button><button class="btn-primary" id="rcManual">Add manually</button></div>'+
+        '</div>';
+      $("rcCancel").onclick=()=>{ box.innerHTML=""; };
+      $("rcManual").onclick=()=>showPhotoForm(imgData);
+      return;
+    }
+    items.forEach((it,i)=>{
+      rowsHtml+=
+        '<div class="line-row" data-idx="'+i+'">'+
+          '<label style="display:flex;align-items:center;gap:8px;grid-column:1/-1;color:var(--muted);font-size:13px;"><input type="checkbox" class="ln-check" checked> Include</label>'+
+          '<input type="text" class="ln-name" value="'+esc(it.name)+'" placeholder="Item name">'+
+          '<input type="number" class="ln-qty" min="1" value="'+it.qty+'" title="Qty">'+
+          '<select class="ln-cat">'+catOptions(it.cat)+'</select>'+
+          '<input type="date" class="ln-exp" value="'+defaultExp+'">'+
+          '<button class="line-del">✕ Remove line</button>'+
+        '</div>';
+    });
+    box.innerHTML=
+      '<div class="confirm-box">'+
+        '<div style="display:flex;gap:14px;align-items:center;margin-bottom:14px;">'+
+          '<img class="receipt-thumb" src="'+imgData+'" alt="captured">'+
+          '<div><div style="font-weight:800;font-size:17px;">🧾 '+items.length+' item'+(items.length===1?"":"s")+' found</div>'+
+          '<div style="color:var(--muted);font-size:13px;">Uncheck lines you don’t want. Location: <select id="phLoc" style="min-height:38px;padding:6px 8px;width:auto;display:inline-block;">'+locOptions(loc)+'</select></div></div>'+
+        '</div>'+
+        '<div class="receipt-actions"><button class="btn-ghost" id="checkAll">Select all</button><button class="btn-ghost" id="uncheckAll">Deselect all</button><button class="btn-ghost" id="addLine2">＋ Add line</button></div>'+
+        '<div id="lineRows">'+rowsHtml+'</div>'+
+        '<div class="modal-actions">'+
+          '<button class="btn-ghost" id="phCancel">Cancel</button>'+
+          '<button class="btn-primary" id="phAddAll">➕ Add selected</button>'+
+        '</div>'+
+      '</div>';
+    box.querySelectorAll(".ln-name").forEach(inp=>{
+      inp.addEventListener("input",function(){ this.closest(".line-row").querySelector(".ln-cat").value=guessCategory(this.value); });
+    });
+    box.querySelectorAll(".line-del").forEach(btn=>{
+      btn.onclick=()=>{ const row=btn.closest(".line-row"); if($("lineRows").children.length>1) row.remove(); else { row.querySelector(".ln-name").value=""; row.querySelector(".ln-check").checked=false; } };
+    });
+    $("phLoc").onchange=function(){ updateReceiptExp($(this).value); };
+    $("checkAll").onclick=()=>{ box.querySelectorAll(".ln-check").forEach(c=>c.checked=true); };
+    $("uncheckAll").onclick=()=>{ box.querySelectorAll(".ln-check").forEach(c=>c.checked=false); };
+    $("addLine2").onclick=addLineRow;
+    $("phCancel").onclick=()=>{ box.innerHTML=""; };
+    $("phAddAll").onclick=()=>addAllLines(imgData);
+    box.scrollIntoView({behavior:"smooth"});
+  }
+  function updateReceiptExp(loc){
+    const exp=isoOffset(LOC_DEFAULT_EXP[loc]||7);
+    document.querySelectorAll("#lineRows .ln-exp").forEach(el=>el.value=exp);
+  }
+
   function showPhotoForm(imgData){
     const box=$("camResult");
     box.innerHTML=
@@ -1630,6 +1814,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
     const rows=[...document.querySelectorAll("#lineRows .line-row")];
     let added=0, missingExp=false, first=true;
     rows.forEach(r=>{
+      const chk=r.querySelector(".ln-check"); if(chk && !chk.checked) return;
       const name=r.querySelector(".ln-name").value.trim(); if(!name) return;
       const exp=r.querySelector(".ln-exp").value; if(!exp){ missingExp=true; return; }
       addItem({ name, qty:Math.max(1,parseInt(r.querySelector(".ln-qty").value)||1), cat:r.querySelector(".ln-cat").value, exp, loc, img: first?imgData:"" });
@@ -1882,6 +2067,7 @@ Clean calm modern dark UI; rounded cards; smooth transitions; tap feedback; full
 
     $("camClose").onclick=closeCam;
     $("modeBarcode").onclick=()=>setMode("barcode");
+    $("modeReceipt").onclick=()=>setMode("receipt");
     $("modePhoto").onclick=()=>setMode("photo");
     $("camSwitch").onclick=switchCamera;
     $("camCapture").onclick=capturePhoto;
